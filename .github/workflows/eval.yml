@@ -1,0 +1,64 @@
+name: AuditGPT Contract Eval
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    name: Contract hardness check
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run contract eval
+        run: bun run eval:json > eval-results.json
+        continue-on-error: true
+
+      - name: Parse and report results
+        run: |
+          PASS=$(jq -r '.summary.pass' eval-results.json)
+          AUDITS=$(jq -r '.summary.audits' eval-results.json)
+          BANNED=$(jq -r '.summary.bannedPhraseViolations' eval-results.json)
+          SENTENCES=$(jq -r '.summary.sentenceCapViolations' eval-results.json)
+          COVERAGE=$(jq -r '.summary.insufficientDataCoverage' eval-results.json)
+          BADGE=$(jq -r '.badge' eval-results.json)
+
+          echo "## AuditGPT Contract Eval" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Audits:** $AUDITS" >> $GITHUB_STEP_SUMMARY
+          echo "**Banned phrases:** $BANNED" >> $GITHUB_STEP_SUMMARY
+          echo "**Over-length fields:** $SENTENCES" >> $GITHUB_STEP_SUMMARY
+          echo "**Insufficient-data coverage:** $COVERAGE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Badge citation:**" >> $GITHUB_STEP_SUMMARY
+          echo "> $BADGE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$PASS" = "true" ]; then
+            echo "✅ All hard checks passed" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          else
+            echo "❌ Contract violations detected" >> $GITHUB_STEP_SUMMARY
+            jq '.results[] | select(.pass == false)' eval-results.json | jq -r '"  - " + .id' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: eval-results.json
+          retention-days: 30
