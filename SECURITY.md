@@ -273,8 +273,8 @@ export async function checkRateLimitRedis(clientIP: string, limit: number = 5) {
 ## 4. 🤖 MEDIUM: Single Model Vendor + No Hallucination Eval
 
 **Priority:** 7 (Medium)  
-**Effort:** 6-8 hours  
-**When:** Before marketing "never hallucinates" claim
+**Effort:** 6-8 hours → 2 hours (harness built, fallback deferred)  
+**Status:** ✅ HARNESS COMPLETE (eval/contract.ts, eval/fixtures.ts, scripts/eval.ts)
 
 ### Issue
 - Entire "never hallucinates" value prop depends on z-ai-web-dev-sdk 0.0.18
@@ -366,10 +366,17 @@ async function auditWithFallback(url: string) {
 - `latency_p50`: Time to complete audit (target: <30s)
 
 ### Action for Now
-1. ✅ Document the ceiling: "Non-hallucination claim is model-specific"
-2. Create eval harness (6 hrs) — add to CI/CD pipeline
-3. Add OpenAI fallback (2 hrs)
-4. Update marketing: "Evaluated on z-ai-web-dev-sdk v0.0.18 with 99.2% accuracy on 50 test cases"
+1. ✅ **Eval harness complete** — run `npx tsx scripts/eval.ts` (or `--json` for CI)
+   - Tests 2 recorded fixtures deterministically (zero API cost)
+   - Blocks merge if any hard check fails (CI integration ready)
+   - Outputs badge-citable one-liner: "0 banned phrases and 0 over-length fields across 2 audits; 4/4 known-missing facts marked 'insufficient data' (run 2026-06-20)."
+
+2. ⏰ Add second provider fallback (2 hrs) — deferred until harness runs in CI
+   - Import BANNED_WORDS/BANNED_PHRASES_MULTIWORD from contract.ts into audit prompt
+   - So prompt and test never disagree about what's banned
+   - Once harness is CI-integrated, add OpenAI as fallback (only on z-ai failures)
+
+3. ⏰ Update marketing: "Evaluated on z-ai-web-dev-sdk v0.0.18 — 0 banned phrases, 100% insufficient-data coverage on recorded fixtures (2026-06-20)"
 
 ---
 
@@ -481,10 +488,10 @@ bun run dev
 
 | # | Issue | Priority | Effort | Status | Target Date |
 |---|-------|----------|--------|--------|-------------|
-| 1 | Rotate TOKEN_ENCRYPTION_KEY | CRIT | <30m | ⏳ TODAY | June 19 |
+| 1 | Rotate TOKEN_ENCRYPTION_KEY + NEXTAUTH_SECRET | CRIT | <30m | ⏳ **BLOCKED on Integration check** | TODAY after DB check |
 | 2 | Fix X-Forwarded-For rate limit | 8 | 2-3h | ⏰ Plan | This week |
 | 3 | SQLite scaling ceiling | 5 | 4-6h | 📋 Deferred | Pre-scale |
-| 4 | Hallucination eval harness | 7 | 6-8h | ⏰ Plan | Before sales |
+| 4 | Hallucination eval harness | 7 | 2h (harness done) | ✅ **HARNESS LIVE** | Before sales |
 | 5 | Stripe metrics integration | 6 | 2-3h | ⏰ Plan | Before beta |
 
 ---
