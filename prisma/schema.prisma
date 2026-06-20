@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  subscriptions Subscription[]
+  audits        Audit[]
+  agentConfigs  AgentConfig[]
+  agentRuns     AgentRun[]
+  integrations  Integration[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Subscription {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId      String   @unique
+  stripePriceId         String
+  stripeSubscriptionId  String   @unique
+  status                String // "active", "canceled", "past_due", "trialing"
+  plan                  String // "pro" | "agent"
+  currentPeriodEnd      DateTime
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Audit {
+  id          String         @id @default(cuid())
+  path        String // "new" | "grow"
+  companyName String?
+  websiteUrl  String?
+  industry    String?
+  focusNotes  String?
+  auditJson   String // full JSON output from the LLM
+  publicId    String   @unique // 10-char slug for sharing
+  userId      String? // optional - set when the creator is logged in
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  verified    Boolean  @default(false) // true when this audit passed re-audit criteria
+  verifiedAt  DateTime?
+  agentConfigs AgentConfig[]
+  createdAt   DateTime @default(now())
+
+  @@index([publicId])
+  @@index([userId])
+  @@index([verified])
+}
+
+model AgentConfig {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // "ad_copy", "seo_blog", "support", "outreach", "competitor_watch"
+  config    String // JSON string: { channels, product_focus, schedule, etc. }
+  active    Boolean    @default(true)
+  auditId   String
+  audit     Audit      @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  runs      AgentRun[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model AgentRun {
+  id            String      @id @default(cuid())
+  agentConfigId String
+  agentConfig   AgentConfig @relation(fields: [agentConfigId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  output        String // JSON string: the agent's generated output
+  triggered     String // "manual" | "scheduled"
+  createdAt     DateTime    @default(now())
+
+  @@index([agentConfigId])
+  @@index([userId])
+}
+
+model Integration {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider  String // "stripe", "google_analytics", etc.
+  status    String // "connected", "disconnected", "error"
+  accessToken  String?
+  refreshToken String?
+  externalId   String? // Stripe customer ID, GA property ID, etc.
+  metadata     String? // JSON string of provider-specific data
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, provider])
+  @@index([userId])
+}
+
+model OAuthState {
+  token     String   @id
+  userId    String
+  provider  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
