@@ -3,6 +3,18 @@
 
 import { BANNED_WORDS, BANNED_PHRASES_MULTIWORD } from './eval/contract';
 
+// Build the banned-phrases instruction from the SAME arrays the eval
+// enforces, so the prompt and the test cannot drift. The trailing items
+// (metaphor/simile, the "Learn More" CTA, the "inspiring" rewrite rule)
+// are intentionally NOT in the arrays — they are not machine-checkable
+// (see CONTRACT.md) — so they stay as fixed prose here.
+const enforceable = [...BANNED_WORDS, ...BANNED_PHRASES_MULTIWORD]
+  .map((p) => `"${p}"`)
+  .join(', ');
+const BANNED_PHRASES_LINE =
+  `1. BANNED PHRASES. Forbidden: ${enforceable}, any metaphor or simile, ` +
+  `"Learn More" (as a CTA). If a sentence feels "inspiring," rewrite it.`;
+
 export interface Benchmark {
   metric: string;
   this_business: string;
@@ -46,18 +58,13 @@ export interface AuditResult {
 }
 
 // Shared banned-phrases block + anti-slop rules. Used by every prompt.
-// SINGLE SOURCE OF TRUTH: BANNED_WORDS and BANNED_PHRASES_MULTIWORD are imported
-// from contract.ts so the prompt and the eval harness never disagree about what's banned.
-export function getANTI_SLOP_PREAMBLE(): string {
-  const bannedWords = BANNED_WORDS.map((w) => `"${w}"`).join(', ');
-  const bannedPhrases = BANNED_PHRASES_MULTIWORD.map((p) => `"${p}"`).join(', ');
-  return `## CORE PERSONALITY
+export const ANTI_SLOP_PREAMBLE = `## CORE PERSONALITY
 - You are a senior analyst at an elite due-diligence firm.
 - Tone: deadpan, forensic, precise. Zero cheerleading. Zero meanness for its own sake.
 - You respect founders by telling them the unvarnished truth. No metaphors. No sarcasm.
 
 ## ABSOLUTE CONSTRAINTS
-1. BANNED PHRASES. Forbidden: ${bannedWords}, ${bannedPhrases}, any metaphor or simile. If a sentence feels "inspiring," rewrite it.
+${BANNED_PHRASES_LINE}
 2. NO HALLUCINATION. Never invent a number, date, statistic, competitor fact, or financial figure. If something is not in the audit data, scraped content, or hardcoded industry benchmarks, write exactly: "insufficient data".
 3. MAXIMUM SENTENCE LENGTH PER FIELD: 2 sentences. No exceptions.
 4. EVERY SENTENCE MUST CONTAIN A FACT. A fact is: a number, a proper name, a direct comparison, or a cited benchmark. If a sentence doesn't contain one of these, delete it.
@@ -77,10 +84,6 @@ export function getANTI_SLOP_PREAMBLE(): string {
 2. Run a final scan for any banned phrase. If found, delete the sentence.
 3. If a section has no factual content, output an empty array or "insufficient data" - never filler.
 4. For "new" path businesses with no website, the audit data is the only fact source. Treat all founder claims as assumptions.`;
-}
-
-// Export const for backward compatibility; callers should use getANTI_SLOP_PREAMBLE()
-export const ANTI_SLOP_PREAMBLE = getANTI_SLOP_PREAMBLE();
 
 // Sanitize user-supplied input to prevent prompt injection.
 export function sanitizeInput(input: string, maxLength = 2000): string {
