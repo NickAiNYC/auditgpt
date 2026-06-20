@@ -11,6 +11,7 @@
 
 // Single-word bans: matched on word boundaries so "great" does not
 // fire on "greater" and "delusion" does not fire on a longer word.
+// KEEP SYNCHRONIZED WITH audit-context.ts ANTI_SLOP_PREAMBLE.
 export const BANNED_WORDS = [
   'great',
   'exciting',
@@ -19,12 +20,20 @@ export const BANNED_WORDS = [
 ] as const;
 
 // Multi-word bans: matched as normalized-whitespace substrings.
+// KEEP SYNCHRONIZED WITH audit-context.ts ANTI_SLOP_PREAMBLE.
 export const BANNED_PHRASES_MULTIWORD = [
   "let's be honest",
   'the reality is',
   'founder probably believes',
   'learn more', // banned as a CTA; flagged anywhere, see note in report
 ] as const;
+
+// Helper: format banned words for display in preamble
+export function formatBannedList(): string {
+  const words = BANNED_WORDS.map((w) => `"${w}"`).join(', ');
+  const phrases = BANNED_PHRASES_MULTIWORD.map((p) => `"${p}"`).join(', ');
+  return `${words}, ${phrases}`;
+}
 
 export const INSUFFICIENT_DATA = 'insufficient data';
 
