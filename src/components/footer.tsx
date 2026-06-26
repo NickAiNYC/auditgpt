@@ -26,8 +26,11 @@ export function Footer() {
             Promises &amp; Anti-Promises
           </Link>
         </div>
-        <div className="text-[10px] text-muted-foreground tracking-wider uppercase font-mono text-center">
-          AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage
+        <div className="mt-10 md:mt-0 flex flex-col items-center md:items-end text-xs text-muted-foreground">
+          <p>AuditGPT · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage</p>
+          <a href="https://scrutexity.com" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 underline hover:opacity-80 transition-opacity">
+            Parent company: Scrutexity →
+          </a>
         </div>
       </div>
     </footer>

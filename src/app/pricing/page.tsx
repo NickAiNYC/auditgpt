@@ -288,7 +288,10 @@ export default function PricingPage() {
 
       <footer className="border-t border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-muted-foreground font-mono">
-          System 01 // AuditGPT by Scrutexity
+          System 01 // AuditGPT <br />
+          <a href="https://scrutexity.com" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 underline hover:opacity-80 transition-opacity">
+            Parent company: Scrutexity →
+          </a>
         </div>
       </footer>
     </div>

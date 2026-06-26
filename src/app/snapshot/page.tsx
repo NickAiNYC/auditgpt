@@ -170,6 +170,10 @@ export default function SnapshotPage() {
 
         <p className="relative z-10 text-[10px] font-mono uppercase tracking-widest text-stone-400 mt-8 text-center max-w-xl">
           AuditGPT outputs are based on public website review. They are not legal, clinical, regulatory, or compliance guarantees.
+          <br />
+          <a href="https://scrutexity.com" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 underline hover:text-stone-600 transition-colors">
+            Parent company: Scrutexity →
+          </a>
         </p>
       </div>
     </div>
