@@ -71,14 +71,6 @@ export default function ProofCenterPage() {
                   </div>
                   <p className="text-sm text-stone-600">SOC2 compliance posture, edge-redaction of PHI, and data retention guarantees.</p>
                 </a>
-                
-                <a href="/security/incident-response" className="block group bg-white border border-stone-200 p-6 rounded-sm hover:border-stone-400 transition-colors shadow-sm print:shadow-none">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">Incident Response Protocol</h3>
-                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Public</span>
-                  </div>
-                  <p className="text-sm text-stone-600">Severity tiering, 1-hour containment SLAs, and security contact pathways.</p>
-                </a>
               </div>
             </section>
 
@@ -94,14 +86,6 @@ export default function ProofCenterPage() {
                   </div>
                   <p className="text-sm text-stone-600">Visual mapping of the read-only, asynchronous PMS integration and pilot timeline.</p>
                 </a>
-                
-                <a href="/pilot-agreement" className="block group bg-white border border-stone-200 p-6 rounded-sm hover:border-stone-400 transition-colors shadow-sm print:shadow-none">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">Radar Pilot Scope Agreement</h3>
-                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Public</span>
-                  </div>
-                  <p className="text-sm text-stone-600">Mutual pilot constraints, zero-downtime guarantees, and unilateral revocation clauses.</p>
-                </a>
               </div>
             </section>
 
@@ -115,16 +99,8 @@ export default function ProofCenterPage() {
                 <span className="w-4 h-[1px] bg-stone-300"></span> 03. Telemetry & Case Studies
               </h2>
               <div className="space-y-4">
-                <a href="/proof/alpha-telemetry" className="block group bg-stone-900 text-stone-100 border border-stone-800 p-6 rounded-sm hover:bg-stone-800 transition-colors shadow-sm print:bg-white print:text-black print:border-stone-400 print:shadow-none">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium group-hover:underline decoration-stone-500 underline-offset-4">Alpha Telemetry Record</h3>
-                    <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest print:text-stone-600">Declassified</span>
-                  </div>
-                  <p className="text-sm text-stone-400 print:text-stone-600">A redacted 14-day telemetry audit detailing baseline mapping, identified demand leakage, and verified yield recovery.</p>
-                </a>
-                
                 <div className="bg-stone-100 border border-stone-200 border-dashed p-6 rounded-sm flex items-center justify-center print:hidden h-32">
-                  <span className="font-mono text-xs text-stone-400 uppercase tracking-widest">More records pending declassification...</span>
+                  <span className="font-mono text-xs text-stone-400 uppercase tracking-widest">Records pending declassification...</span>
                 </div>
               </div>
             </section>

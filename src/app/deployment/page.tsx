@@ -188,16 +188,6 @@ export default function DeploymentPage() {
               </dd>
             </div>
           </dl>
-          
-          <div className="mt-12 p-6 bg-stone-100 border-l-2 border-stone-400 print:break-inside-avoid">
-            <h3 className="font-medium text-stone-900 mb-2">Formal Procurement Scope</h3>
-            <p className="text-sm text-stone-600 mb-4">
-              All boundaries, data handling policies, and unilateral revocation rights are legally codified in our standard Pilot Agreement.
-            </p>
-            <a href="/pilot-agreement" className="font-mono text-xs uppercase tracking-widest text-stone-900 bg-white border border-stone-300 px-4 py-2 hover:bg-stone-50 transition-colors inline-block shadow-sm">
-              Review Pilot Agreement →
-            </a>
-          </div>
         </section>
 
         {/* Bottom CTA */}

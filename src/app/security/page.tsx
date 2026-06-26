@@ -85,8 +85,8 @@ export default function SecurityPage() {
             <li className="flex gap-4 print:break-inside-avoid">
               <div className="mt-1.5 w-1.5 h-1.5 bg-stone-400 rounded-full shrink-0 print:border print:border-black" />
               <div>
-                <strong className="block text-stone-900 font-medium mb-1">Verifiable Integrity & Response</strong>
-                <span className="text-stone-600 text-sm leading-relaxed">We maintain an active, requestable security portal where enterprise procurement teams can verify our real-time compliance status, subprocessor agreements, and penetration testing summaries before initiating a Radar Pilot. View our formal <a href="/security/incident-response" className="underline hover:text-stone-900 transition-colors">Incident Handling Protocol</a> for guaranteed SLAs and containment procedures.</span>
+                <strong className="block text-stone-900 font-medium mb-1">Verifiable Integrity</strong>
+                <span className="text-stone-600 text-sm leading-relaxed">We maintain an active, requestable security portal where enterprise procurement teams can verify our real-time compliance status, subprocessor agreements, and penetration testing summaries before initiating a Radar Pilot.</span>
               </div>
             </li>
           </ul>
