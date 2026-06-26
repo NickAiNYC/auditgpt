@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { topCities, CityData } from './cities';
 import { Logo } from '@/components/logo';
+import { JsonLd, generateLocalFaqSchema } from '@/components/json-ld';
 
 type Props = {
   params: { city: string };
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Medical Spa Compliance & Demand Governance Audit in ${cityData.name}, ${cityData.state} | Scrutexity`,
-    description: `Stop demand leakage for your medical aesthetics practice in ${cityData.name}. Get a diagnostic snapshot mapping the gap between your clinical claims, evidence, and local booking conversions.`,
+    description: `Stop demand leakage for your medical aesthetics practice in ${cityData.name}. Understand ${cityData.state} compliance risks and map the gap between your clinical claims and evidence.`,
   };
 }
 
@@ -33,8 +34,11 @@ export default function MedspaAuditCityPage({ params }: Props) {
     notFound();
   }
 
+  const faqSchema = generateLocalFaqSchema(cityData.name, cityData.topLocalClaim);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#faf9f8] text-stone-900 font-sans selection:bg-stone-200">
+      <JsonLd type="FAQPage" data={faqSchema} />
       <header className="border-b border-stone-200/50 bg-white/40 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
@@ -48,7 +52,7 @@ export default function MedspaAuditCityPage({ params }: Props) {
 
       <main className="flex-1 max-w-4xl mx-auto px-6 py-20 w-full text-center">
         <span className="inline-block py-1 px-3 rounded-full bg-stone-100 border border-stone-200 text-xs font-mono uppercase tracking-widest text-stone-500 mb-8">
-          Local Availability: {cityData.name}, {cityData.state}
+          Local Market Report: {cityData.name}, {cityData.state}
         </span>
         
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight mb-6 font-serif" style={{ fontFamily: '"Instrument Serif", serif' }}>
@@ -57,7 +61,7 @@ export default function MedspaAuditCityPage({ params }: Props) {
         </h1>
         
         <p className="text-lg md:text-xl text-stone-600 font-light leading-relaxed max-w-2xl mx-auto mb-12">
-          High-volume clinics in {cityData.name} are losing bookings because their marketing claims are disconnected from their clinical governance. We map exactly where your high-intent traffic abandons.
+          The {cityData.name} market is <strong>{cityData.marketSaturation.toLowerCase()}ly saturated</strong>. Clinics are losing bookings because aggressive marketing claims—like <em>"{cityData.topLocalClaim}"</em>—are disconnected from clinical governance.
         </p>
 
         <a 
@@ -67,14 +71,44 @@ export default function MedspaAuditCityPage({ params }: Props) {
           Request Baseline Snapshot
         </a>
 
-        <div className="mt-20 text-left border border-stone-200 bg-white p-8 rounded-sm shadow-sm">
-          <h2 className="text-xl font-medium mb-4">Why {cityData.name} Clinics Need Demand Governance</h2>
-          <p className="text-stone-600 leading-relaxed mb-4">
-            The medical aesthetics market in {cityData.name} is highly competitive. When patients search for "zero-downtime" or "FDA-approved" treatments, they expect immediate clinical substantiation. 
-          </p>
-          <p className="text-stone-600 leading-relaxed">
-            If your marketing funnel makes an aggressive claim that isn't instantly supported by an executing provider's bio or a clinical study, educated patients bounce. Our Radar Pilot establishes a read-only parallel connection to your booking software to measure exactly how much revenue this disconnect is costing you locally.
-          </p>
+        <div className="mt-20 text-left grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="border border-stone-200 bg-white p-8 rounded-sm shadow-sm">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-stone-500 mb-4 border-b border-stone-100 pb-2">The Leakage Vector</h2>
+            <p className="text-stone-600 leading-relaxed text-sm mb-4">
+              When patients search for advanced aesthetic treatments in {cityData.name}, they expect immediate clinical substantiation. If your funnel makes a claim that isn't instantly supported by an executing provider's bio or a clinical study, educated patients bounce.
+            </p>
+            <p className="text-stone-600 leading-relaxed text-sm">
+              Our Radar Pilot establishes a read-only parallel connection to your booking software to measure exactly how much revenue this disconnect is costing you locally.
+            </p>
+          </div>
+
+          <div className="border border-amber-200 bg-amber-50/50 p-8 rounded-sm shadow-sm">
+            <h2 className="text-sm font-mono uppercase tracking-widest text-amber-800 mb-4 border-b border-amber-200/50 pb-2">State Compliance Risk: {cityData.state}</h2>
+            <p className="text-amber-900/80 leading-relaxed text-sm">
+              Beyond lost conversions, unsupported claims carry significant regulatory exposure. In {cityData.state}, clinics face intense scrutiny:
+            </p>
+            <div className="mt-4 p-4 bg-white/60 border border-amber-200 rounded text-sm text-amber-900 font-medium">
+              {cityData.stateComplianceRisk}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16 text-left max-w-3xl mx-auto">
+          <h2 className="text-2xl font-medium mb-8 text-center">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            <div className="border-b border-stone-200 pb-6">
+              <h3 className="font-medium text-lg mb-2">Why are medical spas in {cityData.name} losing bookings to competitors?</h3>
+              <p className="text-stone-600 text-sm leading-relaxed">
+                Many clinics in {cityData.name} lose high-intent traffic because their marketing makes claims (like "{cityData.topLocalClaim}") that aren't substantiated by clinical evidence on their website. Educated patients abandon the booking funnel when claims seem unsupported.
+              </p>
+            </div>
+            <div className="border-b border-stone-200 pb-6">
+              <h3 className="font-medium text-lg mb-2">What is a demand governance audit for {cityData.name} aesthetics practices?</h3>
+              <p className="text-stone-600 text-sm leading-relaxed">
+                A demand governance audit securely maps the gap between your marketing claims and your actual clinical evidence. It helps {cityData.name} medspas identify exactly where patients drop off before booking a consultation.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
 
