@@ -114,6 +114,15 @@ export default function Home() {
             <Logo variant="full" height={28} />
           </a>
           <nav className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            <a href="/proof" className="hover:text-foreground hidden sm:inline-block">
+              Proof Center
+            </a>
+            <a href="/security" className="hover:text-foreground">
+              Trust & Security
+            </a>
+            <a href="/deployment" className="hover:text-foreground">
+              Deployment
+            </a>
             <a href="/sample-report" className="hover:text-foreground">
               Sample report
             </a>

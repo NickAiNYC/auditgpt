@@ -122,6 +122,15 @@ export default function PricingPage() {
             <Logo variant="full" height={28} />
           </a>
           <div className="flex items-center gap-4">
+            <a href="/proof" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
+              Proof Center
+            </a>
+            <a href="/security" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
+              Trust & Security
+            </a>
+            <a href="/deployment" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
+              Deployment
+            </a>
             <a href="/snapshot" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground">
               Initialize Free Snapshot
             </a>

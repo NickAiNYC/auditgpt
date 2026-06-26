@@ -13,6 +13,27 @@ export function Footer() {
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
+            href="/proof"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Proof Center
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/security"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Security
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/deployment"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Deployment
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
             href="/snapshot"
             className="text-muted-foreground hover:text-foreground underline underline-offset-4"
           >

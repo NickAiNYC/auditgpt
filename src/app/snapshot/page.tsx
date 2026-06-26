@@ -71,9 +71,20 @@ export default function SnapshotPage() {
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
           </a>
-          <a href="/pricing" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900">
-            Pricing →
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="/proof" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900 hidden sm:inline-block">
+              Proof Center
+            </a>
+            <a href="/security" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900 hidden sm:inline-block">
+              Trust & Security
+            </a>
+            <a href="/deployment" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900 hidden sm:inline-block">
+              Deployment
+            </a>
+            <a href="/pricing" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900">
+              Pricing →
+            </a>
+          </div>
         </div>
       </header>
 
