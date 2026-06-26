@@ -128,9 +128,9 @@ export default function Home() {
       </header>
 
       <main className="flex-1 px-4 sm:px-6 py-12 sm:py-20">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Hero */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="h-1.5 w-1.5 rounded-full bg-black" />
               <span className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -140,34 +140,106 @@ export default function Home() {
             <h1 className="font-serif text-4xl sm:text-6xl leading-tight mb-4">
               Find the claims your website cannot prove.
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               AuditGPT shows which claims are supported, which proof is missing, and what your buyers, investors, and AI search systems actually see.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-6">
-              <a href="#intake" className="btn-cta">
-                Run a Free Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
-              </a>
-              <a href="/sample-report" className="underline underline-offset-4 text-muted-foreground hover:text-foreground">
-                View Sample Report
+              <a href="#intake" className="btn-cta text-base px-8 py-4">
+                Get a 1-Page Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
               </a>
             </div>
             <p className="text-sm font-medium">
-              Before you launch, fundraise, or bet on a category, know which claims hold up.
+              See your results in 60 seconds.
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              AI builds the site. AuditGPT checks what it cannot prove.
+              Not SEO. Not reputation management. Not CRO. <strong>Claim Intelligence.</strong>
             </p>
           </div>
 
-          {/* Contrast Strip */}
-          <div className="mb-10 text-center py-4 bg-neutral-50 border border-border rounded-sm">
-            <span className="text-sm font-mono uppercase tracking-widest text-foreground/80">
-              Not SEO. Not reputation management. Not CRO. <strong className="text-black">Claim Intelligence.</strong>
-            </span>
+          {/* CSS-based Mini Report Preview */}
+          <div className="mb-20 max-w-3xl mx-auto">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-center text-muted-foreground mb-4">
+              See what AuditGPT finds on your site
+            </div>
+            
+            <div className="bg-white border border-border shadow-xl rounded-md overflow-hidden transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="bg-neutral-50 border-b border-border p-3 flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div className="text-xs font-mono text-muted-foreground">auditgpt-report-snapshot.pdf</div>
+              </div>
+              <div className="p-6 sm:p-8 space-y-6">
+                
+                {/* Example Finding 1 */}
+                <div className="border border-border rounded-sm p-4 sm:p-5 relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-red-50 text-red-900 border border-red-200">
+                      Unsupported
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-neutral-100 text-neutral-800">
+                      Performance Claim
+                    </span>
+                  </div>
+                  <p className="font-serif text-lg mb-4">&ldquo;The fastest AI agent on the market.&rdquo;</p>
+                  
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="bg-red-50/50 rounded-sm p-3 border border-red-100">
+                      <div className="text-[10px] uppercase tracking-widest text-red-800 mb-1 font-bold">Missing Evidence</div>
+                      <p className="text-xs text-red-900/80 leading-relaxed font-mono">No third-party benchmarks, speed tests, or comparison data linked on the page. AI search systems will ignore this claim.</p>
+                    </div>
+                    <div className="bg-green-50/50 rounded-sm p-3 border border-green-100">
+                      <div className="text-[10px] uppercase tracking-widest text-green-800 mb-1 font-bold">Safer Framing</div>
+                      <p className="text-xs text-green-900/80 leading-relaxed font-mono">&ldquo;Built for low-latency enterprise workflows (sub-200ms response time).&rdquo;</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Example Finding 2 */}
+                <div className="border border-border rounded-sm p-4 sm:p-5 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-amber-50 text-amber-900 border border-amber-200">
+                      Overstated
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-neutral-100 text-neutral-800">
+                      Trust Claim
+                    </span>
+                  </div>
+                  <p className="font-serif text-lg mb-4">&ldquo;Trusted by over 10,000 businesses globally.&rdquo;</p>
+                  
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="bg-amber-50/50 rounded-sm p-3 border border-amber-100">
+                      <div className="text-[10px] uppercase tracking-widest text-amber-800 mb-1 font-bold">Missing Evidence</div>
+                      <p className="text-xs text-amber-900/80 leading-relaxed font-mono">The logo wall shows 4 companies. There are no case studies, G2 reviews, or user testimonials to support the 10,000+ volume claim.</p>
+                    </div>
+                    <div className="bg-green-50/50 rounded-sm p-3 border border-green-100">
+                      <div className="text-[10px] uppercase tracking-widest text-green-800 mb-1 font-bold">Safer Framing</div>
+                      <p className="text-xs text-green-900/80 leading-relaxed font-mono">&ldquo;Trusted by teams at [Logo 1] and [Logo 2].&rdquo; or add a link to a live customer counter.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* Founder Testimonial */}
+          <div className="mb-8 flex items-center justify-center gap-4 text-center">
+            <div className="h-10 w-10 rounded-full bg-neutral-200 overflow-hidden flex-shrink-0">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=f3f4f6" alt="Founder avatar" className="w-full h-full object-cover mix-blend-multiply" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-serif italic text-foreground/90">&ldquo;We built AuditGPT after watching too many startups lose deals because AI wrote claims their product couldn't actually prove.&rdquo;</p>
+              <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mt-1">Founder, Scrutexity</p>
+            </div>
           </div>
 
           {/* Intake Form */}
-          <div id="intake" className="bg-white border border-border rounded-sm p-6 sm:p-8 mb-12">
+          <div id="intake" className="bg-white border border-border shadow-md rounded-sm p-6 sm:p-8 mb-16">
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground mb-4">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Single-Page Starter Audit ($99)</span>
@@ -294,17 +366,23 @@ export default function Home() {
             </div>
 
             <button
-              onClick={run}
-              disabled={!valid || loading}
-              className="btn-cta w-full"
+              onClick={() => {
+                if (!valid) {
+                  toast.error(inputType === 'website' ? "Please enter a valid Website URL." : "Please enter a valid transcript (min 10 chars).");
+                  return;
+                }
+                run();
+              }}
+              disabled={loading}
+              className="btn-cta w-full py-4 text-base"
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin inline" /> RUNNING AUDIT...
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin inline" /> RUNNING AUDIT...
                 </>
               ) : (
                 <>
-                  RUN STARTER AUDIT <ArrowRight className="h-4 w-4 ml-2 inline" />
+                  GET MY 1-PAGE SNAPSHOT <ArrowRight className="h-5 w-5 ml-2 inline" />
                 </>
               )}
             </button>
@@ -312,7 +390,54 @@ export default function Home() {
 
           {/* Content Sections */}
 
-          <div className="space-y-16">
+          <div className="space-y-20">
+            
+            {/* How it Works */}
+            <section className="bg-neutral-50 border border-border p-8 rounded-sm">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-center text-muted-foreground mb-6">How it Works</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-serif text-xl mx-auto mb-4">1</div>
+                  <h3 className="font-serif text-lg mb-2">Paste your URL</h3>
+                  <p className="text-sm text-muted-foreground">Give us a single buyer-facing page where you make your biggest claims.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-serif text-xl mx-auto mb-4">2</div>
+                  <h3 className="font-serif text-lg mb-2">AI Extraction</h3>
+                  <p className="text-sm text-muted-foreground">Our specialized claim-detection system extracts every factual promise on the page.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-serif text-xl mx-auto mb-4">3</div>
+                  <h3 className="font-serif text-lg mb-2">Get the Report</h3>
+                  <p className="text-sm text-muted-foreground">Within 60 seconds, see which claims are fully supported and which are dangerously naked.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Methodology Box */}
+            <section>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">The AuditGPT Methodology</div>
+              <h2 className="font-serif text-2xl mb-6">How we label your claims</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="border border-green-200 bg-green-50/30 p-4 rounded-sm">
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-green-50 text-green-900 border border-green-200 mb-2">Supported</span>
+                  <p className="text-sm text-foreground/80 leading-relaxed">The claim is specific, measurable, and has visible proof (a link, case study, or data) directly adjacent to it.</p>
+                </div>
+                <div className="border border-blue-200 bg-blue-50/30 p-4 rounded-sm">
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-blue-50 text-blue-900 border border-blue-200 mb-2">Weakly Supported</span>
+                  <p className="text-sm text-foreground/80 leading-relaxed">There is some proof, but it's vague, buried on another page, or requires the buyer to connect the dots.</p>
+                </div>
+                <div className="border border-amber-200 bg-amber-50/30 p-4 rounded-sm">
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-amber-50 text-amber-900 border border-amber-200 mb-2">Overstated</span>
+                  <p className="text-sm text-foreground/80 leading-relaxed">The business likely does this, but the language used ("#1 globally", "instant") stretches beyond what the evidence proves.</p>
+                </div>
+                <div className="border border-red-200 bg-red-50/30 p-4 rounded-sm">
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-red-50 text-red-900 border border-red-200 mb-2">Unsupported</span>
+                  <p className="text-sm text-foreground/80 leading-relaxed">A naked claim. No data, no customer quotes, no screenshots, and no links. Highly likely to be ignored by buyers and AI search.</p>
+                </div>
+              </div>
+            </section>
+
             <section>
               <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">Why AuditGPT Exists</div>
               <p className="text-lg text-foreground/90 leading-relaxed mb-4">

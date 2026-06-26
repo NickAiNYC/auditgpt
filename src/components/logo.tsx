@@ -21,43 +21,52 @@ export function Logo({
   height = 36,
   priority = false,
 }: LogoProps) {
-  const actualHeight = Math.max(36, height); // override the hardcoded 28px in the codebase
+  const actualHeight = Math.max(36, height); 
+  const displayHeight = actualHeight * 1.1; 
 
   if (variant === 'shield') {
     return (
       <Image
-        src="/logo.svg"
+        src="/logo-shield.png"
         alt="AuditGPT"
-        width={actualHeight}
-        height={actualHeight}
+        width={displayHeight}
+        height={displayHeight}
         priority={priority}
-        className={className}
-        style={{ height: actualHeight, width: 'auto' }}
+        className={`mix-blend-multiply dark:invert ${className}`}
+        style={{ 
+          height: displayHeight, 
+          width: 'auto',
+          filter: 'grayscale(100%) contrast(500%) brightness(120%)',
+          transform: 'scale(2.2)',
+          transformOrigin: 'left center'
+        }}
       />
     );
   }
 
+  // Render the full logo which contains both the shield and the text
   return (
     <span
       aria-label="AuditGPT"
-      className={`inline-flex items-center gap-2.5 text-foreground ${className}`}
+      className={`inline-flex items-center text-foreground ${className}`}
       style={{ height: actualHeight }}
     >
       <Image
-        src="/logo.svg"
-        alt=""
-        width={actualHeight}
-        height={actualHeight}
+        src="/logo-full.png"
+        alt="AuditGPT"
+        width={displayHeight * 4} 
+        height={displayHeight}
         priority={priority}
-        aria-hidden="true"
-        style={{ height: actualHeight * 1.15, width: actualHeight * 1.15 }}
+        className="mix-blend-multiply dark:invert"
+        style={{ 
+          height: displayHeight, 
+          width: 'auto',
+          objectFit: 'contain',
+          filter: 'grayscale(100%) contrast(500%) brightness(120%)',
+          transform: 'scale(2.2)',
+          transformOrigin: 'left center'
+        }}
       />
-      <span
-        className="font-bold leading-none tracking-tight"
-        style={{ fontSize: Math.max(20, Math.round(actualHeight * 0.85)) }}
-      >
-        AuditGPT
-      </span>
     </span>
   );
 }

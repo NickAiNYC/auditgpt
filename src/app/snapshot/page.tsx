@@ -1,70 +1,40 @@
 'use client';
 
-// ============================================================
-// Free 3-Point Visibility & Trust Snapshot
-// ============================================================
-// One claim/trust gap + one AI/search visibility gap + one
-// demand/conversion gap + the single first fix + upsell to
-// Starter ($99) / Full ($299).
-// ============================================================
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { ArrowRight, Loader2, Sparkles } from 'lucide-react';
-import { WedgeStrip } from '@/components/wedge';
-
-const COMPANY_TYPES = [
-  'AI / SaaS',
-  'Agency / consulting',
-  'Med spa / wellness',
-  'Healthcare provider',
-  'Local service business',
-  'Ecommerce',
-  'Marketplace',
-  'Other',
-];
-
-const WORRIES = [
-  'Buyers don\'t trust our claims',
-  'We\'re invisible in AI/search',
-  'We\'re losing inbound demand',
-  'Reputation surface is weak',
-  'Not sure',
-];
 
 export default function SnapshotPage() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
   const [website, setWebsite] = useState('');
-  const [companyType, setCompanyType] = useState('');
-  const [worry, setWorry] = useState('');
-  const [phone, setPhone] = useState('');
-  const [isAgency, setIsAgency] = useState(false);
-  const [isMedical, setIsMedical] = useState(false);
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+
   const [source] = useState(() => {
     if (typeof window === 'undefined') return '';
     const params = new URL(window.location.href).searchParams;
     return params.get('source') || params.get('utm_source') || '';
   });
-  const [loading, setLoading] = useState(false);
 
-  const valid = website.trim().length >= 3 && /.+@.+\..+/.test(email);
+  const validUrl = website.trim().length >= 3;
+  const validEmail = /.+@.+\..+/.test(email);
+
+  const handleNext = () => {
+    if (!validUrl) {
+      toast.error("Please enter a valid Website URL.");
+      return;
+    }
+    setStep(2);
+  };
 
   const run = async () => {
-    if (!valid || loading) return;
+    if (!validUrl || !validEmail || loading) {
+      if (!validEmail) toast.error("Please enter a valid Email.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch('/api/audit', {
@@ -73,23 +43,8 @@ export default function SnapshotPage() {
         body: JSON.stringify({
           auditType: 'snapshot',
           websiteUrl: website.trim(),
-          companyName: company.trim() || undefined,
-          industry: companyType || undefined,
-          companyType: isAgency
-            ? 'agency'
-            : isMedical
-              ? 'medical_or_wellness'
-              : companyType || undefined,
-          focusNotes: [
-            worry ? `Primary worry: ${worry}` : '',
-            name ? `Contact: ${name}` : '',
-            email ? `Email: ${email}` : '',
-            phone ? `Phone: ${phone}` : '',
-            source ? `Source: ${source}` : '',
-          ]
-            .filter(Boolean)
-            .join('\n'),
           email,
+          focusNotes: source ? `Source: ${source}` : undefined,
         }),
       });
       const data = await res.json();
@@ -108,220 +63,115 @@ export default function SnapshotPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <header className="border-b border-border bg-white">
+    <div className="relative min-h-screen bg-[#faf9f8] overflow-hidden flex flex-col font-sans">
+      
+      {/* Header */}
+      <header className="relative z-20 border-b border-stone-200/50 bg-white/40 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
           </a>
-          <a
-            href="/pricing"
-            className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground"
-          >
+          <a href="/pricing" className="text-xs font-mono uppercase tracking-wider text-stone-500 hover:text-stone-900">
             Pricing →
           </a>
         </div>
       </header>
 
-      <main className="flex-1 px-4 sm:px-6 py-12 sm:py-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <div className="h-1.5 w-1.5 rounded-full bg-black" />
-              <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                Free · 3-Point Visibility &amp; Trust Snapshot
-              </span>
-            </div>
-            <h1 className="font-serif text-4xl sm:text-5xl leading-tight mb-4">
-              See one claim gap, one visibility gap, and one demand gap — free.
-            </h1>
-            <p className="text-base text-muted-foreground max-w-xl mx-auto mb-5">
-              Three findings, one priority fix, one recommended next step. Takes about a minute.
-            </p>
-            <WedgeStrip className="justify-center" />
-          </div>
+      {/* Atmospheric Cloud Glows - NO neon, soft diffuse light */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-stone-300/30 rounded-full blur-[120px] mix-blend-multiply pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-orange-900/10 rounded-full blur-[100px] mix-blend-multiply pointer-events-none" />
 
-          <div className="bg-white border border-border rounded-sm p-6 sm:p-8">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground mb-4">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Snapshot intake</span>
-            </div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+        {/* Main Snapshot Interface */}
+        <main className="relative z-10 w-full max-w-2xl p-8 sm:p-12 backdrop-blur-xl bg-white/60 border border-stone-200/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] text-center transition-all duration-500">
+          
+          {/* Editorial Heading */}
+          <h1 className="text-4xl sm:text-5xl text-stone-900 mb-4" style={{ fontFamily: '"Instrument Serif", serif' }}>
+            {loading ? 'Scanning Infrastructure...' : 'Initialize Snapshot'}
+          </h1>
+          
+          <p className="text-stone-500 mb-10 font-light text-sm sm:text-base">
+            {loading 
+              ? 'Analyzing claims, cross-referencing evidence, and evaluating AI visibility risk.'
+              : step === 1 
+                ? 'Enter the target URL to generate a point-in-time compliance and risk assessment.'
+                : 'Where should we send your completed risk assessment?'}
+          </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Your name *
-                </label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Jane Doe"
-                  className="!text-base !rounded-sm !border-black"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Email *
-                </label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="!text-base !rounded-sm !border-black"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Company
-                </label>
-                <Input
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Acme Inc."
-                  className="!text-base !rounded-sm !border-black"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Website URL *
-                </label>
-                <Input
+          {/* Input Area */}
+          <div className="max-w-xl mx-auto">
+            {step === 1 ? (
+              <div className="relative flex items-center w-full bg-white rounded-xl shadow-sm border border-stone-200 focus-within:border-stone-400 focus-within:ring-4 focus-within:ring-stone-100 transition-all duration-300">
+                <input 
+                  type="url" 
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  placeholder="yourcompany.com"
-                  className="!text-base !rounded-sm !border-black"
+                  onKeyDown={(e) => e.key === 'Enter' && handleNext()}
+                  placeholder="https://example.com" 
+                  className="w-full bg-transparent py-4 pl-4 pr-32 text-stone-900 outline-none placeholder:text-stone-400"
+                  autoFocus
                 />
+                <button 
+                  onClick={handleNext}
+                  className="absolute right-2 top-2 bottom-2 bg-stone-900 text-white px-6 rounded-lg font-medium text-sm hover:bg-stone-800 transition-colors"
+                >
+                  Analyze
+                </button>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Company type
-                </label>
-                <Select value={companyType} onValueChange={setCompanyType}>
-                  <SelectTrigger className="!rounded-sm !border-black !h-10">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COMPANY_TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Primary worry
-                </label>
-                <Select value={worry} onValueChange={setWorry}>
-                  <SelectTrigger className="!rounded-sm !border-black !h-10">
-                    <SelectValue placeholder="What concerns you most?" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {WORRIES.map((w) => (
-                      <SelectItem key={w} value={w}>
-                        {w}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                  Phone (optional)
-                </label>
-                <Input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="555-555-5555"
-                  className="!text-base !rounded-sm !border-black"
+            ) : (
+              <div className="relative flex items-center w-full bg-white rounded-xl shadow-sm border border-stone-200 focus-within:border-stone-400 focus-within:ring-4 focus-within:ring-stone-100 transition-all duration-300">
+                <input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && run()}
+                  placeholder="you@company.com" 
+                  disabled={loading}
+                  className="w-full bg-transparent py-4 pl-4 pr-40 text-stone-900 outline-none placeholder:text-stone-400 disabled:opacity-50"
+                  autoFocus
                 />
+                <button 
+                  onClick={run}
+                  disabled={loading}
+                  className="absolute right-2 top-2 bottom-2 bg-stone-900 text-white px-6 rounded-lg font-medium text-sm hover:bg-stone-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {loading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> RUNNING...</>
+                  ) : (
+                    'Run Snapshot'
+                  )}
+                </button>
               </div>
-              <div className="flex items-end gap-4 text-sm text-foreground/80">
-                <label className="flex items-center gap-2">
-                  <Checkbox
-                    checked={isAgency}
-                    onCheckedChange={(c) => setIsAgency(c === true)}
-                  />
-                  Agency
-                </label>
-                <label className="flex items-center gap-2">
-                  <Checkbox
-                    checked={isMedical}
-                    onCheckedChange={(c) => setIsMedical(c === true)}
-                  />
-                  Medical / wellness
-                </label>
-              </div>
-            </div>
+            )}
 
-            <button
-              onClick={run}
-              disabled={!valid || loading}
-              className="btn-cta w-full"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin inline" /> RUNNING SNAPSHOT...
-                </>
-              ) : (
-                <>
-                  RUN FREE SNAPSHOT <ArrowRight className="h-4 w-4 ml-2 inline" />
-                </>
-              )}
-            </button>
-
-            <p className="text-xs text-muted-foreground mt-3 text-center">
-              AuditGPT outputs are based on public website review and provided context. They are not legal,
-              clinical, regulatory, compliance, ranking, revenue, or AI visibility guarantees.
-            </p>
+            {/* Back button for step 2 */}
+            {step === 2 && !loading && (
+              <button 
+                onClick={() => setStep(1)}
+                className="mt-4 text-xs font-mono uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors"
+              >
+                ← Back to URL
+              </button>
+            )}
           </div>
 
-          {/* Upsell strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-            <div className="card-polsia p-5">
-              <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                Want 5–7 findings + a 7-day fix list?
-              </div>
-              <div className="font-serif text-xl mb-2">Starter Audit · $99</div>
-              <a
-                href="/pricing"
-                className="text-xs font-mono uppercase tracking-widest underline"
-              >
-                See Starter →
-              </a>
-            </div>
-            <div className="card-polsia p-5">
-              <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">
-                Full visibility &amp; trust review with 30-day plan
-              </div>
-              <div className="font-serif text-xl mb-2">Full Audit · $299</div>
-              <a
-                href="/pricing"
-                className="text-xs font-mono uppercase tracking-widest underline"
-              >
-                See Full →
-              </a>
-            </div>
+          {/* Trust Signals */}
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 border-t border-stone-200/50 pt-8">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Read-Only Analysis
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-300" /> Zero-Downtime Execution
+            </span>
           </div>
-        </div>
-      </main>
 
-      <footer className="mt-auto border-t border-border bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-muted-foreground">
-          AuditGPT by Scrutexity · Find what is unsupported, invisible, risky, or leaking.
-        </div>
-      </footer>
+        </main>
+
+        <p className="relative z-10 text-[10px] font-mono uppercase tracking-widest text-stone-400 mt-8 text-center max-w-xl">
+          AuditGPT outputs are based on public website review. They are not legal, clinical, regulatory, or compliance guarantees.
+        </p>
+      </div>
     </div>
   );
 }
