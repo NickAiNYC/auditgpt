@@ -3,9 +3,10 @@ import "./globals.css";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers";
 import { CookieConsent } from "@/components/cookie-consent";
+import { JsonLd, ScrutexityOrganizationSchema, AuditGPTSoftwareSchema } from "@/components/json-ld";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://auditgpt.ai"),
+  metadataBase: new URL("https://scrutexity.com"),
   title: "AuditGPT — Find what is unsupported, invisible, risky, or leaking",
   description:
     "AuditGPT by Scrutexity. The diagnostic that maps the gap between claim, evidence, AI/search readability, and demand leakage. Free Visibility & Trust Snapshot.",
@@ -47,6 +48,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <JsonLd type="Organization" data={ScrutexityOrganizationSchema} />
+        <JsonLd type="SoftwareApplication" data={AuditGPTSoftwareSchema} />
+      </head>
       <body
         className="antialiased bg-background text-foreground min-h-screen"
       >
