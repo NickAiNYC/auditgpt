@@ -94,13 +94,54 @@ export async function POST(req: NextRequest) {
       transcript: sanitizeInput(input.transcript || '', 100000),
     });
 
+    const isFullMode = req.nextUrl.searchParams.get('mode') === 'full';
+    try {
+      const { generateSimulation } = await import('@/lib/audit/ai-claim-readability');
+      const claimFindings = parsed.claim_audit.claims.map(c => ({
+        id: c.id,
+        text: c.original_text,
+        label: (c.claim_status === 'verified' ? 'Supported' :
+                c.claim_status === 'weakly_supported' || c.claim_status === 'insufficient_public_evidence' ? 'Weakly Supported' :
+                c.claim_status === 'overstated' ? 'Overstated' : 'Unsupported') as any,
+        evidenceFound: [],
+        evidenceMissing: [c.support_gap].filter(Boolean),
+        riskToBuyer: '',
+        riskToInvestorOrAiSystem: '',
+        saferFraming: c.safer_framing
+      }));
+      
+      const pageInput = {
+        url: scraped.url || input.websiteUrl || '',
+        content: scraped.rawText || '',
+        metadata: {
+          title: scraped.title,
+          description: scraped.description,
+          organizationName: input.companyName
+        }
+      };
+
+      const simulationResult = await generateSimulation({
+        page: pageInput,
+        claims: claimFindings,
+      }, { mode: isFullMode ? 'full' : 'free' });
+
+      (parsed as any).aiVisibilitySimulation = simulationResult.simulations;
+      (parsed as any).entityUnderstandingGaps = simulationResult.entityUnderstandingGaps;
+    } catch (simErr) {
+      console.error('Simulation step failed in API route:', simErr);
+    }
+
     let publicId: string | null = null;
     try {
       const { persistAudit } = await import('@/lib/audit-persistence');
       const { getCurrentUserId } = await import('@/lib/subscription');
       const userId = await getCurrentUserId();
+      const auditType =
+        input.auditType === 'snapshot' || input.auditType === 'full'
+          ? input.auditType
+          : 'starter';
       publicId = await persistAudit({
-        auditType: 'starter',
+        auditType,
         path: input.auditType === 'snapshot' ? 'snapshot' : 'audit',
         companyName: input.companyName || null,
         websiteUrl: input.websiteUrl || scraped.url || null,

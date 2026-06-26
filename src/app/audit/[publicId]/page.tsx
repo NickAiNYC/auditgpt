@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getPublicAudit, computeReportReview } from '@/lib/audit-persistence';
 import { PublicAuditView } from '@/components/public-audit-view';
+import { EnhancedSnapshotReport } from '@/components/enhanced-snapshot-report';
+import { enhancedSnapshotFromAuditResult } from '@/lib/audit/snapshot-report-adapter';
 import { Logo } from '@/components/logo';
 import { ShareButtons } from '@/components/share-buttons';
 import Link from 'next/link';
@@ -35,6 +37,19 @@ export default async function PublicAuditPage({ params }: PageProps) {
   if (!audit) notFound();
 
   const review = computeReportReview(audit);
+  const isSnapshot = audit.auditType === 'snapshot' || audit.path === 'snapshot';
+  const enhancedSnapshot = isSnapshot
+    ? enhancedSnapshotFromAuditResult({
+        audit: audit.auditJson,
+        url: audit.websiteUrl || audit.auditJson.claim_audit.claims[0]?.source_url || '',
+        metadata: {
+          title: audit.companyName || audit.auditJson.verdict_header,
+          organizationName: audit.companyName || undefined,
+          canonicalUrl: audit.websiteUrl || undefined,
+        },
+        generatedAt: audit.createdAt,
+      })
+    : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -65,12 +80,20 @@ export default async function PublicAuditPage({ params }: PageProps) {
               claimsReviewed={review.scope.claimsReviewed}
             />
           </div>
-          <PublicAuditView
-            audit={audit.auditJson}
-            createdAt={audit.createdAt}
-            showCta={true}
-            publicId={audit.publicId}
-          />
+          {enhancedSnapshot ? (
+            <EnhancedSnapshotReport
+              report={enhancedSnapshot}
+              mode="free"
+              publicId={audit.publicId}
+            />
+          ) : (
+            <PublicAuditView
+              audit={audit.auditJson}
+              createdAt={audit.createdAt}
+              showCta={true}
+              publicId={audit.publicId}
+            />
+          )}
         </div>
       </main>
 

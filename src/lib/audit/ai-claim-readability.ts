@@ -6,6 +6,7 @@ import type {
   CompetitorPreview,
   PageInput,
 } from './snapshot-report-model';
+import { extractJson } from '@/lib/audit-context';
 
 export interface AIClaimReadabilityInput {
   page: PageInput;
@@ -42,7 +43,21 @@ export function buildAIClaimReadabilityPrompt(
       `Tone: ${TONE_GUIDELINES.voice}`,
       'Do not provide generic SEO, reputation management, or CRO recommendations.',
       'Evaluate how AI answer engines may understand, cite, qualify, or ignore buyer-facing claims.',
-      'Return structured JSON only.',
+      'Return strictly valid JSON only. Do not wrap in markdown blocks.',
+      'JSON SCHEMA:',
+      '{',
+      '  "simulations": [',
+      '    {',
+      '      "engine": "ChatGPT" | "Perplexity" | "Gemini" | "Google AIO",',
+      '      "simulatedDescription": "string",',
+      '      "citationLikelihood": "High" | "Medium" | "Low",',
+      '      "strengths": ["string"],',
+      '      "weaknesses": ["string"],',
+      '      "entityGaps": ["string"]',
+      '    }',
+      '  ],',
+      '  "entityUnderstandingGaps": ["string"]',
+      '}',
     ].join('\n'),
     user: [
       `URL: ${input.page.url}`,
@@ -53,13 +68,12 @@ export function buildAIClaimReadabilityPrompt(
       claimLines || '- No explicit claims detected.',
       'For ChatGPT, Perplexity, Gemini, and Google AIO, provide simulatedDescription, citationLikelihood, strengths, weaknesses, and entityGaps.',
       'Every weakness must tie back to buyer trust, investor diligence, or AI-system citation confidence.',
+      'Output ONLY the JSON object matching the requested schema.',
     ].join('\n'),
   };
 }
 
 // Deterministic fallback simulation for fast snapshots, tests, and monitoring.
-// A production LLM adapter can replace or augment this function while preserving
-// the same structured output contract.
 export function simulateAIClaimReadability(
   input: AIClaimReadabilityInput,
 ): AIClaimReadabilityResult {
@@ -74,6 +88,55 @@ export function simulateAIClaimReadability(
     competitorPreviews: buildCompetitorPreviews(input.competitorUrls),
     prompt,
   };
+}
+
+export async function generateSimulation(
+  input: AIClaimReadabilityInput,
+  options: { mode: 'free' | 'full' }
+): Promise<AIClaimReadabilityResult> {
+  if (options.mode === 'free') {
+    return simulateAIClaimReadability(input);
+  }
+
+  const prompt = buildAIClaimReadabilityPrompt(input);
+
+  try {
+    const { callLLM } = await import('@/lib/llm-provider');
+    
+    // Create a 6-second timeout promise
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error('LLM simulation timeout (>6s)')), 6000)
+    );
+
+    const llmPromise = callLLM({
+      system: prompt.system,
+      user: prompt.user,
+      temperature: 0.2,
+      maxTokens: 1500,
+    });
+
+    const result = await Promise.race([llmPromise, timeoutPromise]);
+    
+    const jsonString = extractJson(result.text);
+    const parsed = JSON.parse(jsonString) as {
+      simulations: AIVisibilityEngineSimulation[];
+      entityUnderstandingGaps: string[];
+    };
+
+    if (!Array.isArray(parsed.simulations)) {
+      throw new Error('LLM output missing simulations array');
+    }
+
+    return {
+      simulations: parsed.simulations,
+      entityUnderstandingGaps: parsed.entityUnderstandingGaps || [],
+      competitorPreviews: buildCompetitorPreviews(input.competitorUrls),
+      prompt,
+    };
+  } catch (error) {
+    console.warn('[AI Visibility Simulation] Deep mode failed, falling back to heuristic:', error instanceof Error ? error.message : String(error));
+    return simulateAIClaimReadability(input);
+  }
 }
 
 function simulateEngine(
