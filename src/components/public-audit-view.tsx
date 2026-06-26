@@ -115,7 +115,7 @@ function VerdictHero({ audit }: { audit: AuditResult }) {
       <div className="flex flex-col justify-center text-center md:text-left">
         <h2 className="font-sans text-2xl sm:text-3xl font-semibold mb-3 text-slate-900">{audit.verdict_header}</h2>
         <p className="text-base text-slate-600 leading-relaxed print:text-black">
-          {audit.verdict || audit.executive_summary || "Audit processing completed. Review findings below."}
+          {audit.verdict || audit.claim_audit.summary.executive_summary || "Audit processing completed. Review findings below."}
         </p>
       </div>
     </div>
