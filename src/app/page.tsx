@@ -156,6 +156,9 @@ export default function Home() {
               <a href="#intake" className="btn-cta text-base px-8 py-4">
                 Get a 1-Page Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
               </a>
+              <a href="/sample-report" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
+                See what real claim governance looks like in action
+              </a>
             </div>
             <p className="text-sm font-medium">
               See your results in 60 seconds.
