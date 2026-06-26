@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { notFound } from 'next/navigation';
 
 type ScanResult = {
   url: string;
@@ -9,6 +10,10 @@ type ScanResult = {
 };
 
 export default function ProspectScanner() {
+  if (process.env.NODE_ENV === 'production') {
+    notFound();
+  }
+
   const [urls, setUrls] = useState('');
   const [results, setResults] = useState<ScanResult[]>([]);
   const [isScanning, setIsScanning] = useState(false);

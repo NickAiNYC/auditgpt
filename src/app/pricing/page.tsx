@@ -27,34 +27,34 @@ interface Tier {
 const TIERS: Tier[] = [
   {
     id: 'starter',
-    name: 'Single Node / On-Demand',
+    name: 'Single-Page Audit',
     price: '$99',
-    cadence: 'One-time deployment',
+    cadence: 'One-time',
     description: 'Targeted single-URL claim extraction and evidence check.',
     priceId: STRIPE_PRICE_IDS.starter,
-    cta: 'Initialize Baseline',
+    cta: 'Start',
     highlight: false,
     mode: 'payment',
   },
   {
     id: 'full',
-    name: 'Multi-Surface Deployment',
+    name: 'Multi-Surface Audit',
     price: '$499',
-    cadence: 'One-time deployment',
+    cadence: 'One-time',
     description: 'Correlated review across up to 5 buyer-facing surfaces.',
     priceId: STRIPE_PRICE_IDS.full,
-    cta: 'Initialize Deployment',
+    cta: 'Get the Audit',
     highlight: false,
     mode: 'payment',
   },
   {
     id: 'agency',
-    name: 'Radar Pilot / Enterprise',
+    name: 'Agency / Volume',
     price: '$799',
     cadence: '/month',
-    description: 'Monthly volume infrastructure for agencies and rapid-shipping teams.',
+    description: 'Monthly claim audits for agencies and high-volume teams.',
     priceId: STRIPE_PRICE_IDS.agency,
-    cta: 'Request Pilot',
+    cta: 'Start Monthly',
     highlight: true,
     mode: 'subscription',
   },
@@ -266,29 +266,29 @@ export default function PricingPage() {
             <div className="max-w-md">
               <div className="flex items-center gap-2 text-slate-900 mb-3">
                 <ShieldCheck className="h-5 w-5" />
-                <h3 className="font-serif text-xl">Governance &amp; Infrastructure</h3>
+                <h3 className="font-serif text-xl">How we handle your data</h3>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                The AuditGPT platform is designed for enterprise resilience, treating your claims and marketing data as strict liabilities.
+                AuditGPT reads only public web pages. We don&rsquo;t connect to your systems and we don&rsquo;t process patient data.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />
-                <span className="text-xs font-mono text-slate-700">SOC2 Compliance Framework</span>
+                <span className="text-xs font-mono text-slate-700">Public-page analysis only</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />
-                <span className="text-xs font-mono text-slate-700">Read-Only Data Architecture</span>
+                <span className="text-xs font-mono text-slate-700">Read-only — no system access</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />
-                <span className="text-xs font-mono text-slate-700">Zero-Downtime Telemetry</span>
+                <span className="text-xs font-mono text-slate-700">Zero-retention model processing</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />
-                <span className="text-xs font-mono text-slate-700">No Persistent Storage of Auth Tokens</span>
+                <span className="text-xs font-mono text-slate-700">Report deletable on request</span>
               </div>
             </div>
           </div>
