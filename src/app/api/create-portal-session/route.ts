@@ -8,7 +8,7 @@ function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error('STRIPE_SECRET_KEY env var is not set');
   return new Stripe(key, {
-    apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+    apiVersion: '2025-01-27.acacia' as any,
   });
 }
 

@@ -23,6 +23,7 @@ model User {
   agentConfigs  AgentConfig[]
   agentRuns     AgentRun[]
   integrations  Integration[]
+  deployFixPRs  DeployFixPR[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -75,25 +76,133 @@ model Subscription {
   updatedAt             DateTime @updatedAt
 }
 
+model MonitoredSite {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  audits    Audit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditClaim {
+  id           String   @id @default(cuid())
+  auditId      String
+  audit        Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  claimHash    String
+  claimText    String
+  claimType    String
+  status       String
+  severity     String
+  sourceKind   String
+  sourceUrl    String?
+  sourceText   String?
+  section      String
+  position     Int
+  ruleVersion  String
+  crawledAt    DateTime
+  expiresAt    DateTime?
+  supersededAt DateTime?
+  createdAt    DateTime @default(now())
+
+  @@unique([auditId, section, position])
+  @@index([auditId, status])
+  @@index([claimHash])
+  @@index([expiresAt])
+}
+
+model RescanLock {
+  auditId   String   @id
+  audit     Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model ExpiryNotification {
+  id           String    @id @default(cuid())
+  auditId      String    @unique
+  audit        Audit     @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  attemptedAt  DateTime  @default(now())
+  sentAt       DateTime?
+  error        String?
+
+  @@index([sentAt])
+}
+
+model ExpiryRescanJob {
+  id        String   @id @default(cuid())
+  auditId   String   @unique
+  audit     Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  userId    String
+  reason    String   @default("claim_expiry")
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+model AuditUsageBucket {
+  id                String   @id @default(cuid())
+  key               String
+  kind              String
+  count             Int      @default(0)
+  estimatedCostCents Int     @default(0)
+  windowStart       DateTime
+  windowEnd         DateTime
+  updatedAt         DateTime @updatedAt
+
+  @@index([kind, windowEnd])
+}
+
+model DeployFixPR {
+  id          String   @id @default(cuid())
+  auditId     String   @unique
+  audit       Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prNumber    Int
+  prUrl       String
+  branchName  String
+  status      String   @default("open")
+  deployedAt  DateTime @default(now())
+}
+
 model Audit {
-  id          String         @id @default(cuid())
-  path        String // "new" | "grow"
-  companyName String?
-  websiteUrl  String?
-  industry    String?
-  focusNotes  String?
-  auditJson   String // full JSON output from the LLM
-  publicId    String   @unique // 10-char slug for sharing
-  userId      String? // optional - set when the creator is logged in
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  verified    Boolean  @default(false) // true when this audit passed re-audit criteria
-  verifiedAt  DateTime?
-  agentConfigs AgentConfig[]
-  createdAt   DateTime @default(now())
+  id                String               @id @default(cuid())
+  path              String // "new" | "grow"
+  inputType         String               @default("website") // "website" | "agent_transcript"
+  transcript        String?
+  companyName       String?
+  websiteUrl        String?
+  industry          String?
+  focusNotes        String?
+  auditJson         String // full JSON output from the LLM
+  publicId          String               @unique // 10-char slug for sharing
+  score             Int?
+  verdict           String?
+  staleClaims       Boolean              @default(false)
+  staleAt           DateTime?
+  previousAuditId   String?              @unique
+  previousAudit     Audit?               @relation("AuditLineage", fields: [previousAuditId], references: [id], onDelete: SetNull)
+  nextAudit         Audit?               @relation("AuditLineage")
+  userId            String?
+  user              User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  monitoredSiteId   String?
+  monitoredSite     MonitoredSite?       @relation(fields: [monitoredSiteId], references: [id], onDelete: SetNull)
+  verified          Boolean              @default(false)
+  verifiedAt        DateTime?
+  agentConfigs      AgentConfig[]
+  claims            AuditClaim[]
+  rescanLock        RescanLock?
+  expiryNotification ExpiryNotification?
+  expiryRescanJob   ExpiryRescanJob?
+  deployFixPR       DeployFixPR?
+  createdAt         DateTime             @default(now())
 
   @@index([publicId])
   @@index([userId])
   @@index([verified])
+  @@index([monitoredSiteId])
 }
 
 model AgentConfig {
@@ -151,4 +260,18 @@ model OAuthState {
   expiresAt DateTime
 
   @@index([expiresAt])
+}
+
+model Consequence {
+  id               String   @id @default(cuid())
+  claimText        String
+  industry         String?
+  sourceSnippet    String?
+  supportGap       String?
+  saferFraming     String
+  evidenceNeeded   String?
+  auditId          String?
+  createdAt        DateTime @default(now())
+
+  @@index([industry])
 }

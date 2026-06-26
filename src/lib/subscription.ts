@@ -4,7 +4,7 @@ import { db } from './db';
 
 export interface ActiveSubscription {
   id: string;
-  plan: 'pro' | 'agent';
+  plan: 'agency' | 'starter' | 'full' | 'pro' | 'agent';
   status: string;
   currentPeriodEnd: Date;
   stripeCustomerId: string;
@@ -26,7 +26,28 @@ export async function getActiveSubscription(): Promise<ActiveSubscription | null
   if (!subscription) return null;
   return {
     id: subscription.id,
-    plan: subscription.plan as 'pro' | 'agent',
+    plan: subscription.plan as ActiveSubscription['plan'],
+    status: subscription.status,
+    currentPeriodEnd: subscription.currentPeriodEnd,
+    stripeCustomerId: subscription.stripeCustomerId,
+  };
+}
+
+// Returns the active subscription for a specific userId (session-free).
+// Use this from cron jobs, webhooks, and other non-request contexts.
+export async function getActiveSubscriptionForUser(userId: string): Promise<ActiveSubscription | null> {
+  const subscription = await db.subscription.findFirst({
+    where: {
+      userId,
+      status: { in: ['active', 'trialing'] },
+    },
+    orderBy: { currentPeriodEnd: 'desc' },
+  });
+
+  if (!subscription) return null;
+  return {
+    id: subscription.id,
+    plan: subscription.plan as ActiveSubscription['plan'],
     status: subscription.status,
     currentPeriodEnd: subscription.currentPeriodEnd,
     stripeCustomerId: subscription.stripeCustomerId,

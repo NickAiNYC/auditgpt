@@ -1,0 +1,112 @@
+{
+  "audited_by": "auditgpt.ai",
+  "verdict": "C",
+  "verdict_header": "Aurelia Aesthetics — Premium Med-Spa, Single Location (61/100)",
+  "grade_stamp": "C",
+  "company_info": "Owner-operator aesthetic clinic, one NYC location. Founded year insufficient data.",
+  "report_card": [
+    "Brand presentation signals premium positioning.",
+    "Service menu is clear; treatments are named on dedicated pages."
+  ],
+  "support_gaps": [
+    "Premium claims appear without visible before/after proof.",
+    "The practitioner is not present on high-traffic pages."
+  ],
+  "assumptions_to_test": [
+    "Assumes patients trust the brand without seeing the practitioner.",
+    "Assumes gated pricing reads as premium rather than as friction."
+  ],
+  "website_fixes": [
+    "Add consented before/after sets to top service pages.",
+    "Place practitioner name, face, and credentials on the homepage."
+  ],
+  "recommended_next_steps": [
+    "Publish starting-price ranges per treatment.",
+    "Add a trust element beside every booking CTA."
+  ],
+  "action_plan": [
+    "Week 1: add proof and practitioner presence.",
+    "Week 2: open pricing and reduce booking friction."
+  ],
+  "industry_benchmarks_table": [],
+  "claim_audit": {
+    "summary": {
+      "total_claims": 3,
+      "verified_count": 0,
+      "weakly_supported_count": 1,
+      "unsupported_count": 1,
+      "overstated_count": 1,
+      "insufficient_public_evidence_count": 0,
+      "high_priority_count": 2,
+      "critical_priority_count": 0,
+      "claim_support_score": 38,
+      "executive_summary": "Premium claims carry budget proof. The support gap is the conversion gap."
+    },
+    "claims": [
+      {
+        "id": "claim-001",
+        "original_text": "NYC's premier med-spa",
+        "normalized_claim": "Clinic is the leading med-spa in NYC.",
+        "source_url": "https://example.com/",
+        "source_type": "homepage",
+        "claim_type": "market_leadership",
+        "claim_status": "overstated",
+        "priority": "medium",
+        "visible_evidence": "None on page.",
+        "support_gap": "No visible basis for 'premier' superlative.",
+        "evidence_needed": "A specific, verifiable distinction (years, specialization, named recognition).",
+        "business_impact": "Generic superlative every competitor uses; builds no trust.",
+        "trust_gap": "Reads as marketing language, not proof.",
+        "positioning_risk": "Sounds identical to nearby clinics; no differentiation.",
+        "safer_framing": "Injector-led aesthetic care in [neighborhood].",
+        "proof_needed": ["Years in practice", "Specialization", "Verifiable distinction"],
+        "recommended_next_step": "rewrite"
+      },
+      {
+        "id": "claim-002",
+        "original_text": "Natural, undetectable results",
+        "normalized_claim": "Treatments produce natural-looking outcomes.",
+        "source_url": "https://example.com/services",
+        "source_type": "product",
+        "claim_type": "performance",
+        "claim_status": "unsupported",
+        "priority": "high",
+        "visible_evidence": "No before/after images visible.",
+        "support_gap": "Strong outcome claim with no visual proof.",
+        "evidence_needed": "Consented before/after sets on the service page.",
+        "business_impact": "The exact claim a cautious patient most wants to verify before booking.",
+        "trust_gap": "Patient cannot confirm results, so they bounce to a clinic that shows the work.",
+        "positioning_risk": "Undifferentiated from every other results claim in the category.",
+        "safer_framing": "See real, consented results below.",
+        "proof_needed": ["Consented before/after gallery"],
+        "recommended_next_step": "add_proof"
+      },
+      {
+        "id": "claim-003",
+        "original_text": "Trusted by thousands of patients",
+        "normalized_claim": "Thousands of patients have used the clinic.",
+        "source_url": "https://example.com/",
+        "source_type": "homepage",
+        "claim_type": "customer_proof",
+        "claim_status": "weakly_supported",
+        "priority": "high",
+        "visible_evidence": "No review count or testimonials shown on page.",
+        "support_gap": "Number stated with no visible source.",
+        "evidence_needed": "Verified review count and on-page reviews.",
+        "business_impact": "A number with no source reads as filler, not proof.",
+        "trust_gap": "Unsubstantiated count lowers credibility rather than raising it.",
+        "positioning_risk": "Common claim; adds no distinction.",
+        "safer_framing": "[X] reviews — see them here.",
+        "proof_needed": ["Verified review count", "On-page testimonials"],
+        "recommended_next_step": "add_proof"
+      }
+    ]
+  },
+  "badge_eligibility": {
+    "eligible": false,
+    "badge_level": "amber",
+    "badge_label": "Review Recommended",
+    "public_verification_url": ""
+  },
+  "disclaimer": "Business and marketing audit only. Not legal, medical, regulatory, or compliance advice. Missing evidence is reported as a visibility gap, not a finding of falsity."
+}

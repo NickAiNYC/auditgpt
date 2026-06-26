@@ -1,0 +1,115 @@
+{
+  "_fixture_note": "Schema-conformant fixture matching the patched AuditResultSchema + system prompt rules. NOT a live LLM call (sandbox has no model network access). Run locally with `bun run dev` against a real key to confirm live model behavior.",
+  "audited_by": "auditgpt.ai",
+  "verdict": "C",
+  "verdict_header": "Northwind AI — Workflow Automation SaaS (58/100)",
+  "grade_stamp": "C",
+  "company_info": "Seed-stage AI workflow automation company. Founding year insufficient data.",
+  "report_card": [
+    "Product page names specific integrations (Slack, Notion).",
+    "Pricing page is public with three tiers."
+  ],
+  "support_gaps": [
+    "Performance claims appear without a visible benchmark or source.",
+    "Customer-proof claims name no customers on the page."
+  ],
+  "assumptions_to_test": [
+    "Assumes buyers accept '10x faster' without a stated baseline.",
+    "Assumes 'enterprise-ready' is read as proven, not aspirational."
+  ],
+  "website_fixes": [
+    "Add a sourced benchmark behind the '10x faster' claim.",
+    "Name or logo-wall at least three real customers."
+  ],
+  "recommended_next_steps": [
+    "Publish one methodology note for the performance claim.",
+    "Add a security page if 'enterprise-ready' stays on the site."
+  ],
+  "action_plan": [
+    "Close the two high-priority support gaps first.",
+    "Re-audit after proof is added."
+  ],
+  "industry_benchmarks_table": [
+    { "metric": "SaaS churn", "this_business": "insufficient data", "industry_avg": "<5%/mo" }
+  ],
+  "claim_audit": {
+    "summary": {
+      "total_claims": 3,
+      "verified_count": 0,
+      "weakly_supported_count": 1,
+      "unsupported_count": 1,
+      "overstated_count": 1,
+      "insufficient_public_evidence_count": 0,
+      "high_priority_count": 2,
+      "critical_priority_count": 0,
+      "claim_support_score": 42,
+      "executive_summary": "Performance and proof claims outrun the visible evidence. The support gap is the credibility gap for technical buyers."
+    },
+    "claims": [
+      {
+        "id": "claim-001",
+        "original_text": "10x faster than manual workflows",
+        "normalized_claim": "Product is ten times faster than manual work.",
+        "source_url": "https://example.com/product",
+        "source_type": "product",
+        "claim_type": "performance",
+        "claim_status": "overstated",
+        "priority": "high",
+        "visible_evidence": "No benchmark, baseline, or methodology shown.",
+        "support_gap": "Quantified speed claim with no stated baseline or source.",
+        "evidence_needed": "A defined baseline and a repeatable benchmark methodology.",
+        "business_impact": "Technical buyers discount unquantified speed claims immediately.",
+        "trust_gap": "An unsourced number reads as marketing, lowering credibility.",
+        "positioning_risk": "Every competitor claims a speed multiple; this adds no distinction.",
+        "safer_framing": "Cut [task] from [X] minutes to [Y] in our [defined] benchmark.",
+        "proof_needed": ["Baseline definition", "Benchmark methodology"],
+        "recommended_next_step": "add_proof"
+      },
+      {
+        "id": "claim-002",
+        "original_text": "Trusted by leading enterprises",
+        "normalized_claim": "Major enterprises use the product.",
+        "source_url": "https://example.com/",
+        "source_type": "homepage",
+        "claim_type": "customer_proof",
+        "claim_status": "unsupported",
+        "priority": "high",
+        "visible_evidence": "No customer names, logos, or case studies on the page.",
+        "support_gap": "Customer-proof claim with no named customer.",
+        "evidence_needed": "Named logos or a case study with a consenting customer.",
+        "business_impact": "Unnamed proof reads as filler to a buyer doing diligence.",
+        "trust_gap": "Claiming customers without showing them weakens trust.",
+        "positioning_risk": "Generic 'leading enterprises' is interchangeable with any vendor.",
+        "safer_framing": "Used by [Customer A], [Customer B] — see their results.",
+        "proof_needed": ["Customer logos", "Consented case study"],
+        "recommended_next_step": "add_proof"
+      },
+      {
+        "id": "claim-003",
+        "original_text": "Enterprise-ready security",
+        "normalized_claim": "Product meets enterprise security expectations.",
+        "source_url": "https://example.com/",
+        "source_type": "homepage",
+        "claim_type": "security",
+        "claim_status": "weakly_supported",
+        "priority": "medium",
+        "visible_evidence": "Phrase used; no security page or detail linked.",
+        "support_gap": "Security posture asserted but not described anywhere on site.",
+        "evidence_needed": "A security page describing actual controls and practices.",
+        "business_impact": "Procurement and security review need detail the page does not give.",
+        "trust_gap": "An undocumented security claim invites doubt during review.",
+        "positioning_risk": "Undifferentiated from any vendor that types the same phrase.",
+        "safer_framing": "Our security practices: [list] — full details on our security page.",
+        "proof_needed": ["Security/trust page", "Stated controls"],
+        "recommended_next_step": "add_proof"
+      }
+    ]
+  },
+  "badge_eligibility": {
+    "eligible": false,
+    "badge_level": "amber",
+    "badge_label": "Review Recommended",
+    "public_verification_url": ""
+  },
+  "disclaimer": "Business and marketing audit only. Not legal, medical, regulatory, or compliance advice. Missing evidence is reported as a visibility gap, not a finding of falsity."
+}

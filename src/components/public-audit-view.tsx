@@ -1,382 +1,251 @@
 'use client';
 
-// Reusable read-only audit display. Used by:
-// 1. The authenticated dashboard (Audit tab)
-// 2. The public shareable page /audit/[publicId]
-//
-// This file is shared to keep both views visually identical.
-
 import {
-  TrendingUp,
-  AlertTriangle,
-  Wrench,
-  Users,
-  ListChecks,
-  Lightbulb,
-  RefreshCw,
+  ShieldCheck, AlertTriangle, ListChecks, ArrowRight,
+  TrendingUp, BookOpen, AlertOctagon, Wrench
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import { WedgeStrip } from '@/components/wedge';
+import type { AuditResult, Claim } from '@/lib/audit-schema';
 
-export interface Benchmark {
-  metric: string;
-  this_business: string;
-  industry_avg: string;
-}
-
-export interface SlopMarkers {
-  detected: boolean;
-  probability: number;
-  signals: string[];
-  rebuild_recommended: boolean;
-}
-
-export interface CompetitorAnalysis {
-  summary: string;
-  vs_makerpad: string;
-  vs_cofounder: string;
-  vs_polsia: string;
-  vs_nanocorp: string;
-  differentiation_angles: string[];
-}
-
-export interface PublicAuditData {
-  verdict: string;
-  score?: number;
-  verdict_header: string;
-  grade_stamp: string;
-  company_info: string;
-  company_name?: string;
-  report_card: string[];
-  red_flags: string[];
-  assumptions_to_test: string[];
-  website_fixes: string[];
-  services_to_hire: string[];
-  action_plan: string[];
-  industry_benchmarks_table: Benchmark[];
-  slop_markers?: SlopMarkers;
-  competitor_analysis?: CompetitorAnalysis;
-  audited_by?: string;
-}
-
-function gradeColorClass(g: string): string {
-  if (g.startsWith('A')) return 'grade-a';
-  if (g.startsWith('B')) return 'grade-b';
-  if (g.startsWith('C')) return 'grade-c';
-  if (g.startsWith('D')) return 'grade-d';
-  return 'grade-f';
-}
-function gradeBgClass(g: string): string {
-  if (g.startsWith('A')) return 'grade-bg-a';
-  if (g.startsWith('B')) return 'grade-bg-b';
-  if (g.startsWith('C')) return 'grade-bg-c';
-  if (g.startsWith('D')) return 'grade-bg-d';
-  return 'grade-bg-f';
-}
-
-function extractScore(audit: { score?: number; verdict_header?: string }): string | null {
-  if (typeof audit.score === 'number' && !isNaN(audit.score)) {
-    return String(audit.score);
+// ──────────────────────────────────────────────────────────────
+// Helpers
+// ──────────────────────────────────────────────────────────────
+function getRiskColor(risk: string) {
+  switch (risk) {
+    case 'critical': return 'bg-red-50 text-red-900 border-red-200';
+    case 'high': return 'bg-orange-50 text-orange-900 border-orange-200';
+    case 'medium': return 'bg-yellow-50 text-yellow-900 border-yellow-200';
+    case 'low': return 'bg-green-50 text-green-900 border-green-200';
+    default: return 'bg-gray-50 text-gray-900 border-gray-200';
   }
-  const m = audit.verdict_header?.match(/\((\d{1,3})\/100\)/);
-  return m ? m[1] : null;
-}
-function extractCompanyName(audit: { company_name?: string; verdict_header?: string }): string {
-  if (audit.company_name && audit.company_name !== 'insufficient data') {
-    return audit.company_name;
-  }
-  const header = audit.verdict_header || '';
-  const emIdx = header.indexOf(' — ');
-  if (emIdx > 0) return header.slice(0, emIdx).trim();
-  const hyphIdx = header.indexOf(' - ');
-  if (hyphIdx > 0) return header.slice(0, hyphIdx).trim();
-  return header;
-}
-function extractJudgment(header: string): string {
-  const emIdx = header.indexOf(' — ');
-  if (emIdx > 0) return header.slice(emIdx + 3).trim();
-  const hyphIdx = header.indexOf(' - ');
-  if (hyphIdx > 0) return header.slice(hyphIdx + 3).trim();
-  return '';
 }
 
-function VerdictHeader({ audit }: { audit: PublicAuditData }) {
-  const g = audit.grade_stamp || audit.verdict;
-  const score = extractScore(audit);
-  const companyName = extractCompanyName(audit);
-  const judgment = extractJudgment(audit.verdict_header);
+// ──────────────────────────────────────────────────────────────
+// Components
+// ──────────────────────────────────────────────────────────────
 
+function VerdictHeader({ audit }: { audit: AuditResult }) {
   return (
-    <div className="card-polsia p-6 sm:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-        <div className="flex-shrink-0">
-          <div
-            className={`font-serif font-bold text-7xl sm:text-8xl leading-none ${gradeColorClass(g)} ${gradeBgClass(g)} px-4 py-2 inline-block`}
-            style={{ borderRadius: '0.25rem' }}
-          >
-            {g}
-          </div>
-          {score && (
-            <div className="text-xs uppercase tracking-widest text-muted-foreground mt-2 text-center">
-              {score}/100
-            </div>
-          )}
+    <div className="bg-black text-white p-6 sm:p-8 rounded-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/50 font-mono">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>Proof-Backed Claim Cleanup</span>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              DUE-DILIGENCE REPORT
-            </div>
-            {audit.audited_by && (
-              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground border border-border px-2 py-0.5 rounded-sm">
-                Audited by {audit.audited_by}
-              </div>
-            )}
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl mb-1 leading-tight">{companyName}</h1>
-          {judgment && (
-            <p className="font-serif text-lg text-muted-foreground italic mb-3">{judgment}</p>
-          )}
-          {audit.company_info && (
-            <p className="text-sm text-foreground/80 leading-relaxed mb-3">{audit.company_info}</p>
-          )}
-        </div>
+        <div className="font-serif text-3xl font-bold">{audit.grade_stamp}</div>
       </div>
+      <h1 className="font-serif text-2xl sm:text-3xl mb-2">{audit.verdict_header}</h1>
+      <p className="text-sm text-white/80 max-w-2xl font-mono">{audit.company_info}</p>
     </div>
   );
 }
 
-function SectionCard({
-  icon: Icon,
-  title,
-  count,
-  items,
-  numbered = false,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  count?: number;
-  items: string[];
-  numbered?: boolean;
-}) {
+function SectionList({ title, icon: Icon, items, colorClass }: { title: string, icon: any, items: string[], colorClass?: string }) {
+  if (!items || items.length === 0) return null;
   return (
-    <div className="card-polsia p-5">
-      <div className="flex items-center gap-2 mb-4">
+    <div className={`border border-border p-5 rounded-sm bg-white`}>
+      <div className={`flex items-center gap-2 mb-3 ${colorClass || 'text-foreground'}`}>
         <Icon className="h-4 w-4" />
         <h3 className="font-serif text-lg">{title}</h3>
-        {count !== undefined && (
-          <span className="ml-auto text-xs text-muted-foreground">{count}</span>
-        )}
       </div>
-      {items.length === 0 ? (
-        <p className="text-xs text-muted-foreground italic">No findings.</p>
-      ) : (
-        <ul className="space-y-3">
-          {items.map((item, i) => (
-            <li key={i} className="border-b border-border last:border-0 pb-3 last:pb-0 flex gap-3">
-              {numbered && (
-                <div className="flex-shrink-0 h-5 w-5 rounded-sm bg-black text-white text-[10px] font-bold flex items-center justify-center mt-0.5">
-                  {i + 1}
-                </div>
-              )}
-              <p className="text-sm text-foreground/85 leading-relaxed">{item}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="space-y-2">
+        {items.map((item, i) => (
+          <li key={i} className="text-sm text-foreground/80 leading-relaxed font-mono">• {item}</li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-function BenchmarksCard({ benchmarks }: { benchmarks: Benchmark[] }) {
-  if (!benchmarks.length) return null;
-  return (
-    <div className="card-polsia p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="h-4 w-4" />
-        <h3 className="font-serif text-lg">Industry benchmarks</h3>
+function ClaimFindingCard({ claim, index }: { claim: Claim, index: number }) {
+  const isTranscript = claim.source_type === 'agent_transcript';
+  const label = isTranscript ? 'Exchange' : 'Claim';
+
+  let formattedText = <p className="font-serif text-lg leading-snug">&ldquo;{claim.original_text}&rdquo;</p>;
+  if (isTranscript && claim.original_text.includes('User:') && claim.original_text.includes('Agent:')) {
+    const parts = claim.original_text.split('\n');
+    formattedText = (
+      <div className="space-y-2 mt-2 bg-neutral-50 p-3 border border-border rounded-sm font-mono text-sm">
+        {parts.map((p, i) => (
+          <div key={i} className={p.startsWith('Agent:') ? 'text-blue-900' : 'text-neutral-700'}>
+            <strong>{p.split(':')[0]}:</strong> {p.substring(p.indexOf(':') + 1).trim()}
+          </div>
+        ))}
       </div>
-      <div className="overflow-x-auto -mx-5">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="border-b border-border text-muted-foreground">
-              <th className="text-left font-normal px-5 py-2">Metric</th>
-              <th className="text-left font-normal px-3 py-2">This business</th>
-              <th className="text-left font-normal px-5 py-2">Industry average</th>
-            </tr>
-          </thead>
-          <tbody>
-            {benchmarks.map((b, i) => (
-              <tr key={i} className="border-b border-border last:border-0">
-                <td className="px-5 py-2.5 font-medium">{b.metric}</td>
-                <td className="px-3 py-2.5 text-foreground/80">
-                  {b.this_business || 'insufficient data'}
-                </td>
-                <td className="px-5 py-2.5 text-muted-foreground">{b.industry_avg}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    );
+  }
+
+  return (
+    <div className="border border-border rounded-sm p-5 bg-white">
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+              {label} #{index + 1}
+            </span>
+            <span className={`text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm border ${getRiskColor(claim.priority)}`}>
+              {claim.priority} priority
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-neutral-100 text-neutral-800">
+              {claim.claim_type.replace(/_/g, ' ')}
+            </span>
+          </div>
+          {formattedText}
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Visible Evidence</div>
+          <p className="text-sm font-mono text-foreground/80">{claim.visible_evidence || 'None visible'}</p>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-widest text-amber-700 font-bold mb-1">Support Gap / Evidence Needed</div>
+          <p className="text-sm font-mono text-foreground/80 text-amber-900 bg-amber-50 p-2 rounded-sm border border-amber-100">{claim.support_gap}{claim.evidence_needed ? ` — ${claim.evidence_needed}` : ''}</p>
+        </div>
+      </div>
+
+      {(claim.trust_gap || claim.positioning_risk) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+          {claim.trust_gap && (
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Trust Gap</div>
+              <p className="text-sm font-mono text-foreground/80">{claim.trust_gap}</p>
+            </div>
+          )}
+          {claim.positioning_risk && (
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Positioning Risk</div>
+              <p className="text-sm font-mono text-foreground/80">{claim.positioning_risk}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="mt-4 border-t border-border pt-4">
+        {claim.safer_framing ? (
+          <div className="bg-green-50 border border-green-200 rounded-sm p-3">
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-green-700 font-bold">
+                Safer Framing (Next step: {claim.recommended_next_step.replace(/_/g, ' ')})
+              </div>
+              <button className="text-[10px] font-mono uppercase text-green-700 hover:underline">
+                Regenerate
+              </button>
+            </div>
+            <p className="text-sm text-green-900 font-mono leading-relaxed">
+              &ldquo;{claim.safer_framing}&rdquo;
+            </p>
+          </div>
+        ) : (
+          <button className="w-full mt-2 bg-neutral-100 hover:bg-neutral-200 text-black text-xs font-mono uppercase tracking-wider py-2 rounded-sm transition-colors flex items-center justify-center gap-2">
+            <Wrench className="h-3 w-3" /> Generate Safer Framing
+          </button>
+        )}
       </div>
     </div>
   );
 }
+
+// ──────────────────────────────────────────────────────────────
+// Top-level View
+// ──────────────────────────────────────────────────────────────
 
 export function PublicAuditView({
   audit,
   createdAt,
   showCta = true,
-  onReset,
-  verified = false,
   publicId,
 }: {
-  audit: PublicAuditData;
+  audit: AuditResult;
   createdAt?: Date;
   showCta?: boolean;
-  onReset?: () => void;
-  verified?: boolean;
   publicId?: string;
 }) {
-  const slop = audit.slop_markers;
-  const showSlopBanner = slop?.detected && slop?.rebuild_recommended;
   return (
-    <div className="fade-up">
-      {/* Verification banner (only if verified) */}
-      {verified && publicId && (
-        <div className="mb-4 card-polsia p-3 flex items-center justify-between gap-3 border-l-4 border-l-green-600">
-          <div className="flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-700">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="M9 12l2 2 4-4"/>
-            </svg>
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-green-800">
-                Verified by AuditGPT
-              </div>
-              <div className="text-xs text-muted-foreground">
-                This site passed all verification criteria.
-              </div>
-            </div>
+    <div className="fade-up space-y-6">
+      <VerdictHeader audit={audit} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SectionList title="Report Card" icon={ListChecks} items={audit.report_card} />
+        <SectionList title="Support Gaps" icon={AlertOctagon} items={audit.support_gaps} colorClass="text-amber-700" />
+      </div>
+
+      {audit.claim_audit?.claims?.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 border-b border-border pb-2 mt-8">
+            <AlertTriangle className="h-5 w-5" />
+            <h2 className="font-serif text-2xl">
+              {audit.claim_audit.claims.some(c => c.source_type === 'agent_transcript') 
+                ? 'Agent Guardrail Review' 
+                : 'Claim Support Review'}
+            </h2>
           </div>
-          <a
-            href={`/verified/${publicId}`}
-            className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground"
-          >
-            Details →
-          </a>
-        </div>
-      )}
-
-      {/* Slop detection banner */}
-      {showSlopBanner && (
-        <div className="mb-6 card-polsia p-5 border-l-4 border-l-black bg-muted/30">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-            <div className="flex-shrink-0 h-10 w-10 rounded-sm bg-black text-white text-sm font-bold flex items-center justify-center font-mono">
-              {slop?.probability ?? 0}%
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
-                AI-SLOP DETECTION
-              </div>
-              <h3 className="font-serif text-xl mb-1">AI-generated slop markers detected</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                {slop?.signals?.length || 0} signal(s) found. Probability this site was AI-generated: {slop?.probability ?? 0}%.
-              </p>
-              {slop?.signals && slop.signals.length > 0 && (
-                <ul className="text-xs text-foreground/80 space-y-1 ml-4 list-disc">
-                  {slop.signals.map((s, i) => (
-                    <li key={i}>{s}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Verdict header */}
-      <div className="mb-6">
-        <VerdictHeader audit={audit} />
-      </div>
-
-      {/* Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-        <SectionCard
-          icon={ListChecks}
-          title="Report card"
-          count={audit.report_card.length}
-          items={audit.report_card}
-        />
-        <SectionCard
-          icon={AlertTriangle}
-          title="Red flags"
-          count={audit.red_flags.length}
-          items={audit.red_flags}
-        />
-        <SectionCard
-          icon={Lightbulb}
-          title="Assumptions to test"
-          count={audit.assumptions_to_test.length}
-          items={audit.assumptions_to_test}
-        />
-      </div>
-
-      {/* Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-        <SectionCard
-          icon={Wrench}
-          title="Website fixes"
-          count={audit.website_fixes.length}
-          items={audit.website_fixes}
-        />
-        <SectionCard
-          icon={Users}
-          title="Services to hire"
-          count={audit.services_to_hire.length}
-          items={audit.services_to_hire}
-        />
-        <SectionCard
-          icon={ListChecks}
-          title="Action plan"
-          count={audit.action_plan.length}
-          items={audit.action_plan}
-          numbered
-        />
-      </div>
-
-      {/* Benchmarks */}
-      <BenchmarksCard benchmarks={audit.industry_benchmarks_table} />
-
-      {/* Footer note + optional CTA */}
-      {showCta && (
-        <div className="mt-8 card-polsia p-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-          <Logo variant="full" height={32} />
-        </div>
-          <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-            Paste your website. Get a fact-backed audit in 30 seconds. No fluff, no hallucinations.
+          <p className="text-sm text-muted-foreground font-mono">
+            Total {audit.claim_audit.claims.some(c => c.source_type === 'agent_transcript') ? 'Exchanges' : 'Claims'}: {audit.claim_audit.summary.total_claims} | High/Critical Priority: {audit.claim_audit.summary.high_priority_count + audit.claim_audit.summary.critical_priority_count}
           </p>
-          <a
-            href="/"
-            className="btn-cta"
-            style={{ width: 'auto', padding: '0.875rem 2rem', display: 'inline-flex' }}
-          >
-            <RefreshCw className="h-4 w-4" /> AUDIT MY BUSINESS
-          </a>
+          <div className="space-y-4">
+            {audit.claim_audit.claims.map((claim, i) => (
+              <ClaimFindingCard key={claim.id || i} claim={claim} index={i} />
+            ))}
+          </div>
         </div>
       )}
 
-      <div className="mt-6 pt-6 border-t border-border text-xs text-muted-foreground text-center">
-        {createdAt && (
-          <span>
-            Audit generated {createdAt.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}.{' '}
-          </span>
-        )}
-        Every sentence should contain a verifiable fact. Cross-reference critical findings with your own data before acting.
+      {audit.industry_benchmarks_table?.length > 0 && (
+        <div className="border border-border bg-white p-5 rounded-sm overflow-x-auto">
+          <h3 className="font-serif text-lg mb-4 flex items-center gap-2"><TrendingUp className="h-4 w-4"/> Industry Benchmarks</h3>
+          <table className="w-full text-left text-sm font-mono">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground uppercase tracking-wider text-[10px]">
+                <th className="py-2">Metric</th>
+                <th className="py-2">This Business</th>
+                <th className="py-2">Industry Average</th>
+              </tr>
+            </thead>
+            <tbody>
+              {audit.industry_benchmarks_table.map((row, i) => (
+                <tr key={i} className="border-b border-border/50 last:border-0">
+                  <td className="py-3 font-bold">{row.metric}</td>
+                  <td className="py-3 text-red-600">{row.this_business}</td>
+                  <td className="py-3 text-green-700">{row.industry_avg}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <SectionList title="Action Plan" icon={ListChecks} items={audit.action_plan} />
+        <SectionList title="Assumptions to Test" icon={BookOpen} items={audit.assumptions_to_test} />
       </div>
+
+      <SectionList title="Recommended Next Steps" icon={TrendingUp} items={audit.recommended_next_steps} />
+
+      {audit.disclaimer && (
+        <p className="text-[11px] text-muted-foreground font-mono leading-relaxed border-t border-border pt-4">
+          {audit.disclaimer}
+        </p>
+      )}
+
+      {showCta && (
+        <div className="border border-border bg-white p-6 text-center rounded-sm mt-12">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Logo variant="full" height={32} />
+          </div>
+          <div className="flex justify-center mb-3">
+            <WedgeStrip />
+          </div>
+          <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto font-mono">
+            Find the claims your website cannot yet prove — before a prospect, investor, or client does.
+          </p>
+          <a href="/snapshot" className="btn-cta" style={{ width: 'auto', padding: '0.875rem 2rem', display: 'inline-flex' }}>
+            RUN YOUR OWN AUDIT <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

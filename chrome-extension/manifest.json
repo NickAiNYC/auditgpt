@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "AuditGPT - Claim Support Review",
+  "version": "1.0.0",
+  "description": "One-click instant claim support review. Find evidence gaps and get safer positioning recommendations.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

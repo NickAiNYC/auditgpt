@@ -42,7 +42,7 @@ export async function GET() {
     }
 
     const stripe = new Stripe(accessToken, {
-      apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+      apiVersion: '2025-01-27.acacia' as any,
     });
 
     const subscriptions = await stripe.subscriptions.list({ status: 'active', limit: 100 });

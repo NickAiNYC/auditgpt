@@ -9,7 +9,7 @@ function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error('STRIPE_SECRET_KEY env var is not set');
   return new Stripe(key, {
-    apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+    apiVersion: '2025-01-27.acacia' as any,
   });
 }
 
@@ -43,30 +43,73 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
         const plan = session.metadata?.plan;
-        if (userId && plan && session.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(
-            session.subscription as string
-          );
-          const priceId = subscription.items.data[0]?.price?.id || '';
-          await db.subscription.create({
-            data: {
-              userId,
-              stripeCustomerId: session.customer as string,
-              stripePriceId: priceId,
-              stripeSubscriptionId: subscription.id,
-              status: subscription.status,
-              plan,
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-            },
-          });
+        if (userId && plan) {
+          if (session.mode === 'payment') {
+            // One-time purchase — mark as paid in metadata
+            await db.integration.upsert({
+              where: { userId_provider: { userId, provider: 'one_time_audit' } },
+              create: {
+                userId,
+                provider: 'one_time_audit',
+                status: 'paid',
+                metadata: JSON.stringify({
+                  plan,
+                  stripeSessionId: session.id,
+                  paidAt: new Date().toISOString(),
+                }),
+              },
+              update: {
+                status: 'paid',
+                metadata: JSON.stringify({
+                  plan,
+                  stripeSessionId: session.id,
+                  paidAt: new Date().toISOString(),
+                }),
+              },
+            });
+            if (session.metadata?.websiteUrl) {
+              const { persistAudit } = await import('@/lib/audit-persistence');
+              const { fallbackAuditResult } = await import('@/lib/audit-pipeline');
+              await persistAudit({
+                auditType: plan === 'full' ? 'full' : 'starter',
+                path: 'paid_intake',
+                companyName: session.metadata.companyName || null,
+                websiteUrl: session.metadata.websiteUrl,
+                industry: session.metadata.industry || null,
+                focusNotes: 'Paid audit checkout completed; audit intake pending.',
+                auditJson: fallbackAuditResult({
+                  companyName: session.metadata.companyName || 'Paid audit',
+                  websiteUrl: session.metadata.websiteUrl,
+                  reason: 'Stripe checkout completed before audit intake was submitted.',
+                }),
+                userId,
+              });
+            }
+          } else if (session.subscription) {
+            const subscription = await stripe.subscriptions.retrieve(
+              session.subscription as string
+            );
+            const priceId = subscription.items.data[0]?.price?.id || '';
+            await db.subscription.create({
+              data: {
+                userId,
+                stripeCustomerId: session.customer as string,
+                stripePriceId: priceId,
+                stripeSubscriptionId: subscription.id,
+                status: subscription.status,
+                plan,
+                currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+              },
+            });
+          }
         }
         break;
       }
       case 'invoice.paid': {
         const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.subscription) {
+        if ((invoice as any).subscription) {
           const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
+            (invoice as any).subscription as string
           );
           const existing = await db.subscription.findUnique({
             where: { stripeSubscriptionId: subscription.id },
@@ -76,7 +119,7 @@ export async function POST(req: NextRequest) {
               where: { id: existing.id },
               data: {
                 status: subscription.status,
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+                currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
               },
             });
           }
@@ -93,7 +136,7 @@ export async function POST(req: NextRequest) {
             where: { id: existing.id },
             data: {
               status: 'canceled',
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+              currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
             },
           });
         }

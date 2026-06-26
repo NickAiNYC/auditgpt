@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     }
 
     const stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+      apiVersion: '2025-01-27.acacia' as any,
     });
 
     const tokenResponse = await stripe.oauth.token({

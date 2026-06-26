@@ -1,20 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import {
-  ArrowLeft,
-  Check,
-  Loader2,
-  Crown,
-  Zap,
-} from 'lucide-react';
+import { ArrowLeft, Check, Loader2 } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import { WedgeStrip } from '@/components/wedge';
 
-interface Plan {
-  id: 'pro' | 'agent';
+// Stripe Price IDs — must be statically referenced so Next.js can
+// inline NEXT_PUBLIC_* values at build time. Dynamic process.env[key]
+// lookups do NOT work in client bundles.
+const STRIPE_PRICE_IDS = {
+  starter: process.env.NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID || '',
+  guardrail: process.env.NEXT_PUBLIC_STRIPE_GUARDRAIL_PRICE_ID || '',
+  full: process.env.NEXT_PUBLIC_STRIPE_FULL_PRICE_ID || '',
+  agency: process.env.NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID || '',
+} as const;
+
+interface OneTimePlan {
+  id: 'snapshot' | 'starter' | 'guardrail' | 'full';
+  name: string;
+  price: string;
+  cadence: string;
+  description: string;
+  features: string[];
+  cta: string;
+  highlight?: boolean;
+  href?: string;
+  priceId?: string;
+}
+
+interface RecurringPlan {
+  id: 'agency';
   name: string;
   price: string;
   cadence: string;
@@ -25,79 +42,137 @@ interface Plan {
   priceId: string;
 }
 
-const PLANS: Plan[] = [
+const ONE_TIME_PLANS: OneTimePlan[] = [
   {
-    id: 'pro',
-    name: 'Pro',
-    price: '$49',
-    cadence: '/month',
-    description: 'Full audit suite + rebuild kit + execution agent.',
+    id: 'snapshot',
+    name: 'Free Claim Snapshot',
+    price: '$0',
+    cadence: '',
+    description: 'Best for checking one page before a launch, campaign, or rewrite.',
     features: [
-      'Full fact-backed audit (any URL)',
-      'Landing page rebuild from slop',
-      '12-week strategy generator',
-      'Execution agent (chat with audit context)',
-      'Competitor teardowns',
-      'Save audits to your account',
-      'Shareable public audit URLs',
+      'One claim/proof gap',
+      'One evidence issue',
+      'One safer rewrite or fix',
+      'One recommended next step',
     ],
-    cta: 'Subscribe to Pro',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || 'price_pro_placeholder',
+    cta: 'Run Free Snapshot',
+    href: '/snapshot',
   },
   {
-    id: 'agent',
-    name: 'Agent',
+    id: 'starter',
+    name: 'Single-Page Starter Audit',
     price: '$99',
-    cadence: '/month',
-    description: 'Everything in Pro + autonomous custom agents that run weekly.',
+    cadence: 'one-time',
+    description: 'Best for one homepage, landing page, or sales page.',
     features: [
-      'Everything in Pro',
-      'Up to 3 custom autonomous agents',
-      'Weekly ad copy agent (3 variants/week)',
-      'Weekly SEO blog brief agent',
-      'Agent run history + dashboard',
-      'Priority email support',
-      'Early access to new agent types',
+      '5–7 findings from one primary URL',
+      'Claim and proof review',
+      'Evidence gap labels',
+      'Safer framing recommendations',
+      'AI/search readability notes where relevant',
+      'Demand leakage notes where relevant',
+      '7-day fix list',
+      'AuditGPT Report Review link',
     ],
-    cta: 'Subscribe to Agent',
+    cta: 'Run Starter Audit',
     highlight: true,
-    priceId: process.env.NEXT_PUBLIC_STRIPE_AGENT_PRICE_ID || 'price_agent_placeholder',
+    priceId: STRIPE_PRICE_IDS.starter,
+  },
+  {
+    id: 'guardrail',
+    name: 'Agent Guardrail Audit',
+    price: '$199',
+    cadence: 'one-time',
+    description: 'Test your chatbot or AI agent transcript for unsupported claims, unsafe promises, and missing escalations.',
+    features: [
+      'Transcript parsing',
+      'Forbidden promise detection',
+      'Support gap analysis',
+      'Missing escalation flagging',
+      'Policy drift check',
+      'Safer rewrite engine',
+    ],
+    cta: 'Run a Guardrail Audit',
+    priceId: STRIPE_PRICE_IDS.guardrail,
+  },
+  {
+    id: 'full',
+    name: 'Five-Surface Visibility & Trust Audit',
+    price: '$299',
+    cadence: 'one-time',
+    description: 'Best before a launch, fundraise, category bet, or major campaign.',
+    features: [
+      'Review of up to five buyer-facing surfaces',
+      'Claim and evidence review',
+      'AI/search readability review',
+      'Reputation and proof surface review',
+      'Demand leakage review',
+      'Safer framing recommendations',
+      '30-day action plan',
+      'During founder-led launch, this audit is manually reviewed across up to five URLs.',
+    ],
+    cta: 'Run Full Audit',
+    priceId: STRIPE_PRICE_IDS.full,
   },
 ];
 
+const RECURRING_PLAN: RecurringPlan = {
+  id: 'agency',
+  name: 'Agency Audit System',
+  price: '$799',
+  cadence: '/month',
+  description: 'Best for agencies that want client-ready claim intelligence and trust review reports.',
+  features: [
+    '25 audits per month',
+    'White-label-ready reports',
+    'Public and private report links',
+    'Client discovery support',
+    'Claim, proof, visibility, and demand-gap review structure',
+  ],
+  cta: 'Start Agency Review',
+  priceId: STRIPE_PRICE_IDS.agency,
+};
+
 export default function PricingPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [checkingOut, setCheckingOut] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [stripeConfigured] = useState<boolean>(() => !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-  useEffect(() => {
-    // If user has a session and tries to subscribe, we still let them — the API checks auth.
-  }, [status, router]);
-
-  const handleSubscribe = async (plan: Plan) => {
+  const handleCheckout = async (planId: string, mode: 'payment' | 'subscription', priceId?: string) => {
     setError(null);
-    if (status !== 'authenticated') {
-      router.push('/login?callbackUrl=/pricing');
+
+    if (planId === 'snapshot') {
+      router.push('/snapshot');
       return;
     }
-    setCheckingOut(plan.id);
+
+    if (status !== 'authenticated') {
+      router.push(`/login?callbackUrl=/pricing`);
+      return;
+    }
+
+    if (!priceId || !priceId.startsWith('price_')) {
+      setError(
+        'Stripe Price ID not configured. Set NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID, NEXT_PUBLIC_STRIPE_FULL_PRICE_ID, or NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID and redeploy.',
+      );
+      return;
+    }
+
+    setCheckingOut(planId);
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId: plan.priceId, plan: plan.id }),
+        body: JSON.stringify({ priceId, plan: planId, mode }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Checkout failed');
-      }
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (e: any) {
-      setError(e.message || 'Checkout failed. Make sure STRIPE_SECRET_KEY is set.');
+      if (!res.ok) throw new Error(data.error || 'Checkout failed');
+      // eslint-disable-next-line react-hooks/immutability
+      if (data.url) window.location.href = data.url;
+    } catch (e: unknown) {
+      const err = e as { message?: string };
+      setError(err.message || 'Checkout failed.');
       setCheckingOut(null);
     }
   };
@@ -109,14 +184,17 @@ export default function PricingPage() {
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
           </a>
-          <a href="/" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+          <a
+            href="/"
+            className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+          >
             <ArrowLeft className="h-3 w-3" /> Back to main
           </a>
         </div>
       </header>
 
       <main className="flex-1 px-4 sm:px-6 py-12 sm:py-20">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="h-1.5 w-1.5 rounded-full bg-black" />
@@ -125,66 +203,67 @@ export default function PricingPage() {
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl mb-4 leading-tight">
-              Pay only when you&apos;re ready to rebuild.
+              Start free. Pay only when the gap is clear.
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The free audit is yours forever. The rebuild, strategy, and agent are gated.
-              Cancel anytime.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-5">
+              The free snapshot is yours forever. Starter and Full are one-time. Agencies get a monthly system.
             </p>
+            <WedgeStrip className="justify-center" />
           </div>
 
-          {!stripeConfigured && (
+          {(!STRIPE_PRICE_IDS.starter || !STRIPE_PRICE_IDS.guardrail || !STRIPE_PRICE_IDS.full || !STRIPE_PRICE_IDS.agency) && (
             <div className="card-polsia p-4 mb-8 border-l-4 border-l-amber-500 bg-amber-50">
               <p className="text-sm text-amber-900">
-                <strong>Stripe not configured.</strong> Set <code className="font-mono text-xs">STRIPE_SECRET_KEY</code>,{' '}
-                <code className="font-mono text-xs">STRIPE_WEBHOOK_SECRET</code>, and{' '}
-                <code className="font-mono text-xs">NEXT_PUBLIC_STRIPE_PRO_PRICE_ID</code> /
-                <code className="font-mono text-xs">NEXT_PUBLIC_STRIPE_AGENT_PRICE_ID</code> env vars to enable live checkout.
+                <strong>Stripe SKUs not fully configured.</strong> Missing:{' '}
+                {[
+                  !STRIPE_PRICE_IDS.starter && 'NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID',
+                  !STRIPE_PRICE_IDS.guardrail && 'NEXT_PUBLIC_STRIPE_GUARDRAIL_PRICE_ID',
+                  !STRIPE_PRICE_IDS.full && 'NEXT_PUBLIC_STRIPE_FULL_PRICE_ID',
+                  !STRIPE_PRICE_IDS.agency && 'NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID',
+                ]
+                  .filter(Boolean)
+                  .join(', ')}
+                . Create the matching products in Stripe Dashboard and set these env vars before going live.
               </p>
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-            {PLANS.map((plan) => {
-              const Icon = plan.id === 'agent' ? Crown : Zap;
-              return (
-                <div
-                  key={plan.id}
-                  className={`card-polsia p-8 relative ${
-                    plan.highlight ? 'border-2 border-black' : ''
-                  }`}
-                >
-                  {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-sm">
-                      Most popular
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-sm bg-black text-white flex items-center justify-center">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h2 className="font-serif text-2xl">{plan.name}</h2>
-                      <p className="text-xs text-muted-foreground">{plan.description}</p>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {ONE_TIME_PLANS.map((plan) => (
+              <div
+                key={plan.id}
+                className={`card-polsia p-7 relative ${
+                  plan.highlight ? 'border-2 border-black' : ''
+                }`}
+              >
+                {plan.highlight && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-sm">
+                    Most popular
                   </div>
-
-                  <div className="flex items-baseline gap-1 mb-6">
-                    <span className="font-serif text-5xl">{plan.price}</span>
+                )}
+                <h2 className="font-serif text-xl mb-1">{plan.name}</h2>
+                <p className="text-xs text-muted-foreground mb-4">{plan.description}</p>
+                <div className="flex items-baseline gap-1 mb-5">
+                  <span className="font-serif text-4xl">{plan.price}</span>
+                  {plan.cadence && (
                     <span className="text-sm text-muted-foreground">{plan.cadence}</span>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-green-600" />
-                        <span className="text-foreground/85">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-
+                  )}
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {plan.features.map((f, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-green-600" />
+                      <span className="text-foreground/85">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                {plan.id === 'snapshot' ? (
+                  <a href="/snapshot" className="btn-polsia">
+                    {plan.cta}
+                  </a>
+                ) : (
                   <button
-                    onClick={() => handleSubscribe(plan)}
+                    onClick={() => handleCheckout(plan.id, 'payment', plan.priceId)}
                     disabled={checkingOut === plan.id}
                     className="btn-polsia"
                   >
@@ -196,9 +275,45 @@ export default function PricingPage() {
                       <>{plan.cta}</>
                     )}
                   </button>
-                </div>
-              );
-            })}
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Agency */}
+          <div className="card-polsia p-8 mb-10 border border-border flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="flex-1 min-w-0">
+              <h2 className="font-serif text-2xl mb-1">{RECURRING_PLAN.name}</h2>
+              <p className="text-sm text-muted-foreground mb-3">{RECURRING_PLAN.description}</p>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-foreground/70">
+                {RECURRING_PLAN.features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-1">
+                    <Check className="h-3 w-3 text-green-600" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex-shrink-0 flex flex-col items-center gap-2">
+              <span className="font-serif text-4xl">
+                {RECURRING_PLAN.price}
+                <span className="text-sm text-muted-foreground">{RECURRING_PLAN.cadence}</span>
+              </span>
+              <button
+                onClick={() => handleCheckout('agency', 'subscription', RECURRING_PLAN.priceId)}
+                disabled={checkingOut === 'agency'}
+                className="btn-polsia"
+                style={{ width: 'auto', padding: '0.6rem 1.25rem', fontSize: '0.75rem' }}
+              >
+                {checkingOut === 'agency' ? (
+                  <>
+                    <Loader2 className="h-3 w-3 mr-1 animate-spin inline" /> PROCESSING...
+                  </>
+                ) : (
+                  <>{RECURRING_PLAN.cta}</>
+                )}
+              </button>
+            </div>
           </div>
 
           {error && (
@@ -207,53 +322,16 @@ export default function PricingPage() {
             </div>
           )}
 
-          {/* Free tier reminder */}
-          <div className="card-polsia p-6 text-center">
-            <h3 className="font-serif text-lg mb-2">Free forever</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              The one-pager audit is always free. Run unlimited audits on any URL, share them publicly, and embed them anywhere.
-            </p>
-            <a href="/" className="btn-cta" style={{ width: 'auto', padding: '0.75rem 1.5rem', display: 'inline-flex' }}>
-              RUN A FREE AUDIT
-            </a>
-          </div>
-
-          {/* FAQ */}
-          <div className="mt-16">
-            <h3 className="font-serif text-2xl text-center mb-8">Questions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              <div className="card-polsia p-5">
-                <h4 className="font-medium mb-2">Can I cancel anytime?</h4>
-                <p className="text-sm text-muted-foreground">
-                  Yes. Cancel from the Stripe customer portal. Your subscription stays active until the period end date.
-                </p>
-              </div>
-              <div className="card-polsia p-5">
-                <h4 className="font-medium mb-2">What happens to my audits if I cancel?</h4>
-                <p className="text-sm text-muted-foreground">
-                  They stay in your account. The public URLs keep working. You lose access to the rebuild, strategy, and agent tabs.
-                </p>
-              </div>
-              <div className="card-polsia p-5">
-                <h4 className="font-medium mb-2">Do you offer refunds?</h4>
-                <p className="text-sm text-muted-foreground">
-                  If you forgot to cancel and got charged, email us within 7 days for a full refund. No questions.
-                </p>
-              </div>
-              <div className="card-polsia p-5">
-                <h4 className="font-medium mb-2">Is the free audit really free?</h4>
-                <p className="text-sm text-muted-foreground">
-                  Yes. Unlimited. No signup. The free audit is the top-of-funnel — we want it shared everywhere.
-                </p>
-              </div>
-            </div>
+          {/* Disclaimer */}
+          <div className="text-center text-xs text-muted-foreground max-w-2xl mx-auto">
+            Disclaimer: AuditGPT does not provide legal, clinical, regulatory, ranking, revenue, or compliance advice. It identifies visible gaps in claims, evidence, AI/search readability, and demand paths based on the surfaces reviewed.
           </div>
         </div>
       </main>
 
       <footer className="mt-auto border-t border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-muted-foreground">
-          AuditGPT · The truth engine for AI businesses.
+          AuditGPT by Scrutexity · Find what is unsupported, invisible, risky, or leaking.
         </div>
       </footer>
     </div>

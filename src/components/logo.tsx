@@ -4,7 +4,7 @@ import Image from 'next/image';
 // - variant="shield" → shield icon only (for favicon, small contexts)
 // - variant="full" → full horizontal logo (shield + "AuditGPT" wordmark)
 //
-// The full logo is a single PNG (shield + wordmark) for crisp rendering.
+// The full logo composes the shield asset with live text for clearer headers.
 // The shield-only version is a 256x256 crop used as favicon and small icons.
 
 interface LogoProps {
@@ -18,34 +18,46 @@ interface LogoProps {
 export function Logo({
   variant = 'full',
   className = '',
-  height = 28,
+  height = 36,
   priority = false,
 }: LogoProps) {
+  const actualHeight = Math.max(36, height); // override the hardcoded 28px in the codebase
+
   if (variant === 'shield') {
     return (
       <Image
-        src="/logo-shield.png"
+        src="/logo.svg"
         alt="AuditGPT"
-        width={height}
-        height={height}
+        width={actualHeight}
+        height={actualHeight}
         priority={priority}
         className={className}
-        style={{ height, width: 'auto' }}
+        style={{ height: actualHeight, width: 'auto' }}
       />
     );
   }
 
-  // Full logo: 806x450 aspect ratio → width = height * 1.79
-  const width = Math.round(height * 1.79);
   return (
-    <Image
-      src="/logo-full.png"
-      alt="AuditGPT"
-      width={width}
-      height={height}
-      priority={priority}
-      className={className}
-      style={{ height: 'auto', width: 'auto', maxHeight: height }}
-    />
+    <span
+      aria-label="AuditGPT"
+      className={`inline-flex items-center gap-2.5 text-foreground ${className}`}
+      style={{ height: actualHeight }}
+    >
+      <Image
+        src="/logo.svg"
+        alt=""
+        width={actualHeight}
+        height={actualHeight}
+        priority={priority}
+        aria-hidden="true"
+        style={{ height: actualHeight * 1.15, width: actualHeight * 1.15 }}
+      />
+      <span
+        className="font-bold leading-none tracking-tight"
+        style={{ fontSize: Math.max(20, Math.round(actualHeight * 0.85)) }}
+      >
+        AuditGPT
+      </span>
+    </span>
   );
 }

@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AuditGPT — Scrutexity Refocus Dashboard</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --panel: #ffffff;
+    --ink: #0a0a0a;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #ea580c;
+    --green: #047857;
+    --serif: 'Iowan Old Style', 'Apple Garamond', Georgia, 'Times New Roman', serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .console {
+    background: var(--ink);
+    color: #d1d5db;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 16px;
+    line-height: 1.7;
+  }
+  .console b { color: #fff; }
+  .topbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar h1 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .topbar .actions { display: flex; gap: 10px; }
+  .btn {
+    border: 1px solid var(--ink);
+    background: var(--panel);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr 1.1fr 1.3fr;
+    gap: 0;
+    min-height: calc(100vh - 64px);
+  }
+  .col {
+    padding: 18px 22px 30px;
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .col:last-child { border-right: none; background: #f9fafb; }
+  .col h2 {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 14px 14px 12px;
+    margin-bottom: 12px;
+  }
+  .card .title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .card .body {
+    font-size: 12.5px;
+    color: #374151;
+    line-height: 1.55;
+  }
+  .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+  }
+  .tag.feature { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .tag.tonight { background: #ffedd5; border-color: #fdba74; color: #9a3412; }
+  .tag.research { background: #ecfdf5; border-color: #6ee7b7; color: #047857; }
+  .tag.outbound { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+  .tag.snapshot { background: #f0f9ff; border-color: #7dd3fc; color: #075985; }
+  .tag.starter { background: #faf5ff; border-color: #d8b4fe; color: #6b21a8; }
+  .tag.full { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+  .tag.agency { background: #f5f3ff; border-color: #c4b5fd; color: #5b21b6; }
+
+  .miniLine {
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .miniLine:last-child { border-bottom: none; }
+  .muted { color: var(--muted); }
+  .meter {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 11px 13px;
+    margin-bottom: 10px;
+  }
+  .meter .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .meter .num { font-family: var(--serif); font-size: 26px; line-height: 1; }
+  .meter .num .unit { font-size: 14px; color: var(--muted); margin-left: 4px; }
+
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 18px 0 8px;
+  }
+  .narrow { font-size: 12px; color: #374151; line-height: 1.55; }
+  ul.bullets { padding-left: 18px; margin: 6px 0 0; }
+  ul.bullets li { font-size: 12.5px; line-height: 1.55; color: #374151; margin-bottom: 4px; }
+  a.link { color: #2563eb; text-decoration: none; }
+  a.link:hover { text-decoration: underline; }
+
+  .draft {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 12px 13px;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .draft .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .draft .btns { display: flex; gap: 8px; margin-top: 8px; }
+
+  .activityBox {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 13px 14px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .activityBox h3 {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .activityBox h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 12px 0 4px;
+  }
+  .pill {
+    display: inline-block;
+    background: #f3f4f6;
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 2px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #1f2937;
+    margin-right: 4px;
+  }
+  .pill.ok { background: #ecfdf5; border-color: #6ee7b7; color: #047857; }
+  .pill.warn { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+  .pill.crit { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
+
+  .chatbox {
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--panel);
+    display: flex;
+    overflow: hidden;
+  }
+  .chatbox input {
+    flex: 1;
+    border: none;
+    padding: 9px 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+  }
+  .chatbox button {
+    border: none;
+    background: var(--ink);
+    color: #fff;
+    padding: 9px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="console">
+  &gt; <b>Wedge live</b> &nbsp;|&nbsp; tsc: <b>0 errors</b> &nbsp;|&nbsp; eval: <b>3/3 PASS</b> &nbsp;|&nbsp; <span style="color:#fbbf24;">claim ↔ evidence ↔ AI/search readability ↔ demand leakage</span> &nbsp;|&nbsp; threaded across homepage, snapshot, sample-report, pricing, public report, share text, system prompt, layout metadata, footer
+</div>
+
+<div class="topbar">
+  <h1>AuditGPT — Scrutexity Operating Board</h1>
+  <div class="actions">
+    <button class="btn">+ Add Credits</button>
+    <button class="btn">+ New Audit</button>
+    <button class="btn dark">Menu ▾</button>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- COLUMN 1 — Business state -->
+  <section class="col">
+    <h2>AuditGPT</h2>
+
+    <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:14px;">
+      <div style="font-size:34px; line-height:1;">📐</div>
+      <div>
+        <div style="font-family:var(--serif); font-size:18px; font-weight:600;">Refocus shipped</div>
+        <div class="muted" style="font-size:12px; margin-top:2px;">
+          Scrutexity v2 schema, prompt, pricing, badge, snapshot flow, and red-team eval are live in the codebase.
+        </div>
+      </div>
+    </div>
+
+    <button class="btn accent" style="width:100%; padding:10px;">GO LIVE MODE</button>
+    <div style="text-align:center; margin:14px 0 6px;">
+      <div style="font-family:var(--serif); font-size:22px;">Run Your First Live Snapshot</div>
+      <div class="muted" style="font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-top:4px;">$0 · WORKS WHILE YOU SLEEP</div>
+    </div>
+    <button class="btn" style="width:100%; padding:10px; background:#0a0a0a; color:#fff; border-color:#0a0a0a; letter-spacing:0.12em;">START FREE SNAPSHOT</button>
+    <div class="muted" style="font-size:11px; text-align:center; margin-top:6px;">
+      Free forever · Upsell to $99 Starter
+    </div>
+
+    <div class="panelHeader">Business</div>
+    <div class="meter">
+      <div class="label">Revenue</div>
+      <div class="num">$0.00</div>
+    </div>
+    <div class="meter">
+      <div class="label">Pipeline (snapshots → $99 → $299 → $799)</div>
+      <div class="num">0 <span class="unit">in flight</span></div>
+    </div>
+    <div class="meter">
+      <div class="label">Build status</div>
+      <div class="num">PASS <span class="unit">tsc · eval 3/3</span></div>
+    </div>
+
+    <button class="btn" style="width:100%; padding:8px; margin-top:6px;">Setup Payments (Stripe SKUs)</button>
+  </section>
+
+  <!-- COLUMN 2 — Tasks queue -->
+  <section class="col">
+    <h2>Tasks</h2>
+
+    <div class="card">
+      <div class="title">Create Stripe Price IDs ($99 / $299 / $799)</div>
+      <div class="body">
+        Set <code>NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID</code>, <code>NEXT_PUBLIC_STRIPE_FULL_PRICE_ID</code>, and
+        <code>NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID</code>. Test one full checkout end-to-end on staging.
+      </div>
+      <div class="tags">
+        <span class="tag feature">Feature</span>
+        <span class="tag tonight">Tonight</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Run 5 manual snapshots (1 per ICP vertical)</div>
+      <div class="body">
+        AI SaaS, med spa, agency, local service, ecommerce. For each: file one issue (prompt gap, schema break,
+        or wrong recommended next step). Tune the preamble.
+      </div>
+      <div class="tags">
+        <span class="tag research">Research</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Outbound 10 founders + 10 agencies (personalized snapshots)</div>
+      <div class="body">
+        Per Scrutexity Doctrine days 15–21. Each outbound includes one specific risky claim from their site
+        with safer framing already proposed. Track responses by ICP.
+      </div>
+      <div class="tags">
+        <span class="tag outbound">Outbound</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Stand up /next-step landing pages (5)</div>
+      <div class="body">
+        /next-step/contento, /next-step/ai-visibility, /next-step/recovery, /next-step/proof, /next-step/agency.
+        One-line "Book a call" pages are enough.
+      </div>
+      <div class="tags">
+        <span class="tag feature">Feature</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Email gate UI (snapshot run #2 and beyond)</div>
+      <div class="body">
+        The rate limiter enforces the rule; the UI doesn't show the gate yet. Add a screen between intake
+        and snapshot when soft email-required is hit.
+      </div>
+      <div class="tags">
+        <span class="tag feature">Feature</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Plausible / PostHog funnel</div>
+      <div class="body">
+        Events: snapshot_intake_started, snapshot_delivered, starter_checkout_started, full_checkout_started,
+        next_step_cta_clicked.
+      </div>
+      <div class="tags">
+        <span class="tag research">Research</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Multi-page crawl (homepage + pricing + security + about + case studies)</div>
+      <div class="body">
+        Phase 2 per the Doctrine. Required for the $299 Full audit to feel like a real diagnostic.
+      </div>
+      <div class="tags">
+        <span class="tag feature">Feature</span>
+      </div>
+    </div>
+
+    <div class="panelHeader">Documents</div>
+    <div class="miniLine">
+      <span>AUDITGPT-REFOCUS-REPORT.md</span><span class="muted">just now</span>
+    </div>
+    <div class="miniLine">
+      <span>AUDITGPT-FULL-AUDIT-2026-06-20.md</span><span class="muted">earlier today</span>
+    </div>
+    <div class="miniLine">
+      <span>SCRUTEXITY-DOCTRINE.md</span><span class="muted">in repo</span>
+    </div>
+    <div class="miniLine">
+      <span>SCRUTEXITY-MASTERCLASS.md</span><span class="muted">in repo</span>
+    </div>
+
+    <div class="panelHeader">Website</div>
+    <div class="narrow">
+      https://auditgpt.ai (canonical) — homepage now reads <em>"Find what is unsupported, invisible, risky,
+      or leaking."</em>
+    </div>
+  </section>
+
+  <!-- COLUMN 3 — Twitter / Email / Ads -->
+  <section class="col">
+    <h2>Twitter</h2>
+    <div class="muted" style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">@scrutexity / @auditgpt</div>
+
+    <div class="draft">
+      <div class="meta">DRAFT · LAUNCH POST</div>
+      AuditGPT now diagnoses the gap between what your site claims and what buyers (and AI search) can verify.
+      Claim audit + AI/search visibility + reputation + demand leakage + safer framing.
+      Free 3-point Visibility &amp; Trust Snapshot is live → auditgpt.ai/snapshot
+      <div class="btns"><button class="btn">Edit</button><button class="btn dark">Post</button></div>
+    </div>
+
+    <div class="draft">
+      <div class="meta">DRAFT · POSITIONING</div>
+      We moved off the "AI-slop detector" frame. AuditGPT now sits inside Scrutexity as the diagnostic that
+      hands buyers off to Contento (content), AI Visibility (answer-readiness), Recovery (demand), or Proof
+      (reputation). One audit, one recommended next step.
+      <div class="btns"><button class="btn">Edit</button><button class="btn dark">Post</button></div>
+    </div>
+
+    <h2 style="margin-top:24px;">Email</h2>
+    <div class="muted" style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">hello@auditgpt.ai</div>
+
+    <div class="draft">
+      <div class="meta">OUTBOUND · TO FOUNDERS</div>
+      Subject: Your homepage is making one testable claim — here's what I'd ask you to back up<br/><br/>
+      Hi [name], I ran a free 3-point Visibility &amp; Trust Snapshot on [domain]. The strongest gap I found
+      was [claim]. AuditGPT recommends safer framing and the proof needed to support it. Snapshot:
+      auditgpt.ai/audit/[id]. — Nick
+      <div class="btns"><button class="btn">Edit</button><button class="btn dark">Send</button></div>
+    </div>
+
+    <div class="draft">
+      <div class="meta">OUTBOUND · TO AGENCIES</div>
+      Subject: A white-label trust diagnostic for your AI/SaaS clients<br/><br/>
+      Before your AI/SaaS clients launch, Scrutexity audits their site for unsupported, overstated, and risky
+      claims — then gives you a client-ready fix plan. $799/mo agency tier, 25 audits, white-label.
+      Sample: auditgpt.ai/sample-report. — Nick
+      <div class="btns"><button class="btn">Edit</button><button class="btn dark">Send</button></div>
+    </div>
+
+    <h2 style="margin-top:24px;">Ads</h2>
+    <button class="btn" style="width:100%; padding:10px;">DRAFT GOOGLE ADS COPY (BANNED)</button>
+    <div class="muted" style="font-size:11px; margin-top:6px;">
+      Ad copy generation was archived per the locked Scrutexity scope. Use Contento for governed content.
+    </div>
+  </section>
+
+  <!-- COLUMN 4 — Activity / What I did -->
+  <section class="col">
+    <h2>scrutexity.ai</h2>
+
+    <div class="activityBox">
+      <h3>Refocus is live for AuditGPT.</h3>
+
+      <h4>What changed</h4>
+      <ul class="bullets">
+        <li>Archived 6 API routes, 3 marketing pages, 5 UI tabs, and the GitHub-deploy product.</li>
+        <li>New <code>AuditResult</code> schema with Zod validation (claim findings, evidence records, visibility, reputation, demand leakage, proof gaps, priority matrix, 7-day, 30-day, recommended next step, disclaimer).</li>
+        <li>Single audit pipeline with <code>role: 'system'</code> (bug fixed) and one repair retry.</li>
+        <li>Brand voice replaced everywhere: no "truth engine," no "brutal," no "verified by AuditGPT," no "Polsia-killer."</li>
+        <li>Pricing replaced: <span class="pill ok">$0 snapshot</span> <span class="pill">$99 starter</span> <span class="pill">$299 full</span> <span class="pill">$799/mo agency</span></li>
+        <li>Free <code>/snapshot</code> route built with dedicated intake (name, email, company, website, type, primary worry, agency / medical checkboxes, UTM capture).</li>
+        <li>Report UI rebuilt around the 14 Scrutexity sections (executive summary → audit scope → claim findings → AI/search visibility → local/service clarity → reputation → demand leakage → proof gaps → priority matrix → 7-day → 30-day → recommended next step → disclaimer).</li>
+        <li>Badge renamed and re-scoped: "AuditGPT Report Review" with claim count + expiry, never "verified."</li>
+        <li>3 red-team fixtures added: AI SaaS overclaims, med spa overclaims, agency guarantees. All pass.</li>
+      </ul>
+
+      <h4>Status</h4>
+      <ul class="bullets">
+        <li><span class="pill ok">tsc</span> 0 errors across <code>src/**</code></li>
+        <li><span class="pill ok">eval</span> 3/3 PASS · 0 forbidden phrases · 0 structural violations</li>
+        <li><span class="pill warn">build</span> sandbox-blocked (offline SWC download); typecheck + eval cover the real risk</li>
+        <li><span class="pill warn">lint</span> 4 pre-existing shadcn errors remain (not introduced by refactor)</li>
+      </ul>
+
+      <h4>Recommended Scrutexity next step</h4>
+      <ul class="bullets">
+        <li><a class="link" href="#">Contento</a> — produces safer-framed claim rewrites + content briefs from this refocus's claim records.</li>
+        <li><a class="link" href="#">AI Visibility</a> — turns the visibility findings into answer-ready content.</li>
+        <li><a class="link" href="#">Recovery</a> — turns the demand leakage findings into missed-call / CTA / follow-up flows.</li>
+        <li><a class="link" href="#">Proof &amp; Reputation</a> — turns proof gaps into public trust artifacts.</li>
+        <li><a class="link" href="#">Agency White Label</a> — for agencies running 25 audits/month with branded reports.</li>
+      </ul>
+
+      <h4>What's blocking commercial launch</h4>
+      <ul class="bullets">
+        <li>Create the 3 Stripe Price IDs and wire env vars.</li>
+        <li>Verify live LLM output one time per ICP vertical.</li>
+        <li>Stand up the 5 /next-step landing pages (one-liners are fine).</li>
+        <li>Add the email gate UI for snapshot run #2.</li>
+        <li>Run 10 + 10 outbound per the Doctrine.</li>
+      </ul>
+
+      <h4>30-day target</h4>
+      <ul class="bullets">
+        <li>5 paid snapshots converted to $99 Starter.</li>
+        <li>1 paid $299 Full audit delivered.</li>
+        <li>3 agencies in conversation; 1 paid $799/mo signed.</li>
+        <li>50 free snapshots delivered (top-of-funnel volume).</li>
+      </ul>
+
+      <div class="chatbox">
+        <input type="text" placeholder="Ask AuditGPT anything…" />
+        <button>Send</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

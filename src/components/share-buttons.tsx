@@ -6,26 +6,31 @@ import { toast } from 'sonner';
 interface ShareButtonsProps {
   publicId: string;
   companyName: string;
-  grade: string;
-  score?: number | string | null;
+  claimsReviewed?: number;
 }
 
 // Native share buttons for X (Twitter) and LinkedIn.
-// Pre-fills copy with the audit verdict so founders can share their result
-// in one click. Includes a "Copy link" fallback.
-export function ShareButtons({ publicId, companyName, grade, score }: ShareButtonsProps) {
+// Pre-fills observational copy describing what the AuditGPT review covered.
+// Includes a "Copy link" fallback.
+export function ShareButtons({ publicId, companyName, claimsReviewed }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/audit/${publicId}` : '';
-  const scoreStr = score ? ` (${score}/100)` : '';
-  const shareText = `AuditGPT gave ${companyName} a ${grade}${scoreStr} grade. Brutal, fact-backed, zero hallucinations. See the full audit:`;
+  const scopeStr = claimsReviewed ? ` ${claimsReviewed} claims reviewed.` : '';
+  const shareText = `AuditGPT Visibility & Trust Review for ${companyName}.${scopeStr} Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage:`;
 
   const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
 
+  const logShare = () => {
+    // Fire-and-forget. Never block the share on the log.
+    fetch(`/api/snapshot-shared/${publicId}`, { method: 'POST' }).catch(() => {});
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
+      logShare();
       setCopied(true);
       toast.success('Link copied to clipboard');
       setTimeout(() => setCopied(false), 2000);
@@ -43,6 +48,7 @@ export function ShareButtons({ publicId, companyName, grade, score }: ShareButto
         href={xUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={logShare}
         className="inline-flex items-center gap-1.5 text-xs font-medium border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -54,6 +60,7 @@ export function ShareButtons({ publicId, companyName, grade, score }: ShareButto
         href={linkedInUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={logShare}
         className="inline-flex items-center gap-1.5 text-xs font-medium border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

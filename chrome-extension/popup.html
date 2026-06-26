@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        width: 300px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        padding: 16px;
+        margin: 0;
+        background: #fff;
+        color: #111;
+      }
+      h1 {
+        font-size: 16px;
+        margin: 0 0 8px 0;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      p {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 16px 0;
+        line-height: 1.4;
+      }
+      button {
+        width: 100%;
+        background: #111;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      button:hover {
+        background: #333;
+      }
+      .footer {
+        margin-top: 16px;
+        font-size: 10px;
+        text-align: center;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Claim Support Scanner</h1>
+    <p>Extract all testable claims from this page to scan for support gaps, evidence signals, and safer framing options.</p>
+    <button id="scanBtn">Run Free Claim Snapshot</button>
+    <div class="footer">AuditGPT Verified</div>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,113 +1,89 @@
 'use client';
 
-// Inline "Verified by AuditGPT" badge component for the audit dashboard.
-// If `verified` is true, shows the green shield badge.
-// If `verified` is false but `canVerify` is true, shows the "Verify now" button.
-// If neither, shows nothing.
+// ============================================================
+// AuditGPT Report Review Badge (Scrutexity v2)
+// ============================================================
+// Replaces the old "Verified by AuditGPT" trust badge.
+// Now: a scoped report-review chip that links to the public
+// report and (optionally) the badge SVG endpoint. The badge
+// states what was checked (claim count, supported, etc.).
+// It does NOT certify truth, ranking, or AI visibility.
+// ============================================================
 
 import { useState } from 'react';
-import { ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
+import { ScrollText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface VerificationBadgeProps {
+interface ReportReviewBadgeProps {
   publicId: string | null | undefined;
-  verified: boolean;
-  // Whether the current audit passes verification criteria (per the client-side check).
-  // The server is the source of truth — this is just for the button label.
-  canVerifyClient?: boolean;
+  available: boolean;
+  // Optional summary string shown inside the chip ("12 claims reviewed")
+  scopeLabel?: string;
 }
 
 export function VerificationBadge({
   publicId,
-  verified,
-  canVerifyClient,
-}: VerificationBadgeProps) {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isVerified, setIsVerified] = useState(verified);
+  available,
+  scopeLabel,
+}: ReportReviewBadgeProps) {
+  const [issuing, setIssuing] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(available);
 
   if (!publicId) return null;
 
-  const handleVerify = async () => {
-    if (!publicId || isVerifying) return;
-    setIsVerifying(true);
+  const handleIssue = async () => {
+    if (!publicId || issuing) return;
+    setIssuing(true);
     try {
       const res = await fetch(`/api/verify?publicId=${publicId}`, { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Verification failed');
-      }
-      if (data.verified) {
-        setIsVerified(true);
-        toast.success('Site verified — badge is now active');
-      } else {
-        toast.error(`Verification failed: ${data.reason}`);
-      }
-    } catch (e: any) {
-      toast.error(e.message || 'Verification failed');
+      if (!res.ok) throw new Error(data.error || 'Could not issue report review');
+      setIsAvailable(true);
+      toast.success('Report review issued.');
+    } catch (e: unknown) {
+      const err = e as { message?: string };
+      toast.error(err.message || 'Could not issue report review');
     } finally {
-      setIsVerifying(false);
+      setIssuing(false);
     }
   };
 
-  if (isVerified) {
+  if (isAvailable) {
     return (
       <a
         href={`/verified/${publicId}`}
-        className="verified-badge"
-        title="View verification page"
+        className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-foreground border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors"
+        title="View public report review"
       >
-        <ShieldCheck className="h-3.5 w-3.5" />
-        Verified by AuditGPT
+        <ScrollText className="h-3.5 w-3.5" />
+        AuditGPT Report Review{scopeLabel ? ` · ${scopeLabel}` : ''}
       </a>
     );
   }
 
   return (
     <button
-      onClick={handleVerify}
-      disabled={isVerifying}
+      onClick={handleIssue}
+      disabled={issuing}
       className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors disabled:opacity-50"
-      title={
-        canVerifyClient
-          ? 'Run verification check'
-          : 'Run verification check (likely to fail based on current grade)'
-      }
+      title="Publish a public report review for this audit"
     >
-      {isVerifying ? (
+      {issuing ? (
         <>
-          <Loader2 className="h-3 w-3 animate-spin" /> Verifying...
+          <Loader2 className="h-3 w-3 animate-spin" /> Issuing...
         </>
       ) : (
         <>
-          <ShieldCheck className="h-3 w-3" /> Verify
+          <ScrollText className="h-3 w-3" /> Issue report review
         </>
       )}
     </button>
   );
 }
 
-// Helper: client-side check of verification criteria (for button label hint).
-// Mirrors the server-side logic in lib/audit-persistence.ts evaluateVerification().
-export function canVerifyAudit(audit: {
-  grade_stamp?: string;
-  verdict?: string;
-  score?: number;
-  verdict_header?: string;
-  red_flags?: string[];
-  slop_markers?: { detected?: boolean };
-}): boolean {
-  const grade = (audit.grade_stamp || audit.verdict || 'F').toUpperCase();
-  const gradePasses = ['A+', 'A', 'A-', 'B+', 'B', 'B-'].includes(grade);
-  // Prefer dedicated score field; fall back to regex parse for back-compat.
-  let score: number;
-  if (typeof audit.score === 'number' && !isNaN(audit.score)) {
-    score = audit.score;
-  } else {
-    const scoreMatch = audit.verdict_header?.match(/\((\d{1,3})\/100\)/);
-    score = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
-  }
-  const scorePasses = score >= 70;
-  const noCriticalRedFlags = !audit.red_flags?.some((f) => /critical/i.test(f));
-  const noSlopMarkers = !audit.slop_markers?.detected;
-  return gradePasses && scorePasses && noCriticalRedFlags && noSlopMarkers;
+// Legacy helper kept so older imports compile. Now: always returns true
+// (any audit can have a report review issued; criteria are no longer
+// grade-based). New code should not call this.
+export function canVerifyAudit(_audit: unknown): boolean {
+  return true;
 }

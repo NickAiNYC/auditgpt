@@ -1,0 +1,35 @@
+import Link from 'next/link';
+
+export function Footer() {
+  return (
+    <footer className="mt-auto border-t border-border bg-background py-8 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-6 text-center">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-mono uppercase tracking-widest">
+          <Link
+            href="/sample-report"
+            className="text-foreground hover:opacity-70 underline underline-offset-4"
+          >
+            See a sample report →
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/snapshot"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Free Visibility &amp; Trust Snapshot
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/promises"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Promises &amp; Anti-Promises
+          </Link>
+        </div>
+        <div className="text-[10px] text-muted-foreground tracking-wider uppercase font-mono text-center">
+          AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage
+        </div>
+      </div>
+    </footer>
+  );
+}

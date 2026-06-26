@@ -5,14 +5,22 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
-    "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
+    "start": "NODE_ENV=production node .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
+    "db:deploy": "node scripts/pre-migrate-check.mjs && prisma migrate deploy",
     "eval": "tsx scripts/eval.ts",
-    "eval:json": "tsx scripts/eval.ts --json"
+    "eval:json": "tsx scripts/eval.ts --json",
+    "scan:claim-report": "tsx scripts/scan-claim-report-language.tsx",
+    "test:expiry": "tsx scripts/test-expiry-reaper.ts",
+    "test:ledger": "tsx scripts/test-ledger.ts",
+    "test:migration:genuine": "tsx scripts/test-migration-genuine.ts",
+    "test:migration:chain": "tsx scripts/test-full-migration-chain.ts",
+    "test:migration:all": "npm run test:migration:genuine && npm run test:migration:chain",
+    "cron:expire": "node scripts/run-expiry-cron.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
@@ -95,6 +103,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16.1.1",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   }

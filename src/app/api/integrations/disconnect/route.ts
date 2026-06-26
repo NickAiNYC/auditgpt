@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
           const clientId = process.env.STRIPE_CLIENT_ID;
           if (token && stripeSecretKey && clientId) {
             const stripe = new Stripe(stripeSecretKey, {
-              apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+              apiVersion: '2025-01-27.acacia' as any,
             });
             await stripe.oauth.deauthorize({
               client_id: clientId,

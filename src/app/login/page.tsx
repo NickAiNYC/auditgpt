@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Mail, Loader2, CheckCircle2 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const { data: session, status } = useSession();
@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isVerify = params.get('verify') === '1';
+  const oauthError = params.get('error');
 
   // If already logged in, send home
   useEffect(() => {
@@ -45,6 +46,63 @@ export default function LoginPage() {
   };
 
   return (
+    <>
+      {!isVerify && !sent && (
+        <>
+          <form onSubmit={submit} className="space-y-4">
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              autoFocus
+              required
+              className="input-polsia !text-base !rounded-sm !border-black"
+              style={{ height: 'auto' }}
+            />
+            <button
+              type="submit"
+              disabled={!email.trim() || sending}
+              className="btn-polsia"
+            >
+              {sending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin inline" /> SENDING...
+                </>
+              ) : (
+                <>SEND MAGIC LINK</>
+              )}
+            </button>
+            {(error || oauthError) && (
+              <p className="text-sm text-red-600 text-center">
+                {error || 'Sign-in provider is not configured for this environment.'}
+              </p>
+            )}
+          </form>
+
+          <p className="mt-5 text-center text-xs text-muted-foreground">
+            OAuth buttons appear automatically when Google or GitHub credentials are configured.
+          </p>
+        </>
+      )}
+
+      {(isVerify || sent) && (
+        <div className="card-polsia p-6 text-center">
+          <CheckCircle2 className="h-8 w-8 mx-auto mb-3 text-green-600" />
+          <p className="text-sm text-foreground/85 mb-2">
+            Magic link sent to <strong>{email || 'your email'}</strong>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            If you don&apos;t see it in 30 seconds, check your spam folder.
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function LoginPage() {
+  return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="border-b border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -64,55 +122,16 @@ export default function LoginPage() {
               <Mail className="h-5 w-5" />
             </div>
             <h1 className="font-serif text-3xl mb-2">
-              {isVerify || sent ? 'Check your email' : 'Sign in to AuditGPT'}
+              Sign in to AuditGPT
             </h1>
             <p className="text-sm text-muted-foreground">
-              {isVerify || sent
-                ? 'We sent a magic link. Click it to sign in. The link expires in 10 minutes.'
-                : 'Magic link only — no passwords. Enter your email and we will send a sign-in link.'}
+              Magic link only — no passwords. Enter your email and we will send a sign-in link.
             </p>
           </div>
 
-          {!isVerify && !sent && (
-            <form onSubmit={submit} className="space-y-4">
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                autoFocus
-                required
-                className="input-polsia !text-base !rounded-sm !border-black"
-                style={{ height: 'auto' }}
-              />
-              <button
-                type="submit"
-                disabled={!email.trim() || sending}
-                className="btn-polsia"
-              >
-                {sending ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin inline" /> SENDING...
-                  </>
-                ) : (
-                  <>SEND MAGIC LINK</>
-                )}
-              </button>
-              {error && <p className="text-sm text-red-600 text-center">{error}</p>}
-            </form>
-          )}
-
-          {(isVerify || sent) && (
-            <div className="card-polsia p-6 text-center">
-              <CheckCircle2 className="h-8 w-8 mx-auto mb-3 text-green-600" />
-              <p className="text-sm text-foreground/85 mb-2">
-                Magic link sent to <strong>{email || 'your email'}</strong>
-              </p>
-              <p className="text-xs text-muted-foreground">
-                If you don&apos;t see it in 30 seconds, check your spam folder.
-              </p>
-            </div>
-          )}
+          <Suspense fallback={<div className="text-center text-sm text-muted-foreground py-8">Loading...</div>}>
+            <LoginForm />
+          </Suspense>
 
           <p className="mt-8 text-center text-xs text-muted-foreground">
             By signing in you agree to receive occasional product emails. No spam.

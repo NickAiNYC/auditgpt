@@ -6,20 +6,20 @@ import Stripe from 'stripe';
 
 export const runtime = 'nodejs';
 
-// Lazily instantiate Stripe so the route doesn't crash on boot if the env var is missing.
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) {
-    throw new Error('STRIPE_SECRET_KEY env var is not set');
+    throw new Error('Stripe checkout is not configured. Set STRIPE_SECRET_KEY before accepting paid audits.');
   }
   return new Stripe(key, {
-    apiVersion: '2025-01-27' as Stripe.LatestApiVersion,
+    apiVersion: '2025-01-27.acacia' as any,
   });
 }
 
 interface CheckoutBody {
   priceId: string;
-  plan: 'pro' | 'agent';
+  plan: string;      // 'pro' | 'agent' | 'one-time'
+  mode?: string;     // 'subscription' | 'payment' — defaults to subscription
 }
 
 export async function POST(req: NextRequest) {
@@ -34,8 +34,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'priceId and plan are required' }, { status: 400 });
     }
 
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: 'Stripe checkout is not configured in this environment.' },
+        { status: 503 },
+      );
+    }
+
     const stripe = getStripe();
     const user = session.user;
+    const isSubscription = body.mode !== 'payment';
 
     // Look up or create the Stripe customer
     let customerId: string | undefined;
@@ -55,22 +63,31 @@ export async function POST(req: NextRequest) {
     }
 
     const appUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-    const checkoutSession = await stripe.checkout.sessions.create({
+
+    const checkoutParams: Stripe.Checkout.SessionCreateParams = {
       customer: customerId,
       line_items: [{ price: body.priceId, quantity: 1 }],
-      mode: 'subscription',
-      success_url: `${appUrl}/?session_id={CHECKOUT_SESSION_ID}&upgraded=1`,
+      mode: isSubscription ? 'subscription' : 'payment',
+      success_url: `${appUrl}/?session_id={CHECKOUT_SESSION_ID}&checkout=success&plan=${encodeURIComponent(body.plan)}`,
       cancel_url: `${appUrl}/pricing?canceled=1`,
       metadata: { userId: user.id, plan: body.plan },
-      subscription_data: { metadata: { userId: user.id, plan: body.plan } },
-    });
+    };
+
+    // For subscriptions, attach subscription_data metadata
+    if (isSubscription) {
+      checkoutParams.subscription_data = {
+        metadata: { userId: user.id, plan: body.plan },
+      };
+    }
+
+    const checkoutSession = await stripe.checkout.sessions.create(checkoutParams);
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err: any) {
     console.error('Checkout error:', err);
     return NextResponse.json(
       { error: err?.message || 'Checkout failed' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,0 +1,56 @@
+name: AuditGPT Pre-Deploy Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine deployment URL
+        id: url
+        run: |
+          # Use Vercel preview URL or fall back to the PR head repo URL
+          if [ -n "$VERCEL_URL" ]; then
+            echo "url=$VERCEL_URL" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://${{ github.head_ref }}--${{ github.event.repository.name }}.vercel.app" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run AuditGPT CI check
+        id: auditgpt
+        run: |
+          RESPONSE=$(curl -s -X POST "$AUDITGPT_API_URL/api/ci/check" \
+            -H "Authorization: Bearer $AUDITGPT_CI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "url": "${{ steps.url.outputs.url }}",
+              "threshold": {
+                "maxCriticalFindings": 0,
+                "maxHighFindings": 3,
+                "maxMediumFindings": 10,
+                "requireScoreAbove": 60
+              }
+            }')
+
+          echo "$RESPONSE" | jq -r '.summary'
+          PASS=$(echo "$RESPONSE" | jq -r '.pass')
+
+          # Annotate each failure
+          echo "$RESPONSE" | jq -c '.failures[]' | while read -r failure; do
+            SEVERITY=$(echo "$failure" | jq -r '.severity')
+            CLAIM=$(echo "$failure" | jq -r '.claim')
+            RULE=$(echo "$failure" | jq -r '.rule')
+            echo "::$SEVERITY file=README.md::[$RULE] $CLAIM"
+          done
+
+          if [ "$PASS" != "true" ]; then
+            echo "AuditGPT check failed. See annotations above."
+            exit 1
+          fi
+        env:
+          AUDITGPT_API_URL: ${{ secrets.AUDITGPT_API_URL || 'https://auditgpt.ai' }}
+          AUDITGPT_CI_API_KEY: ${{ secrets.AUDITGPT_CI_API_KEY }}
