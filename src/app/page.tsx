@@ -153,22 +153,70 @@ export default function Home() {
               The claim intelligence platform for high-risk, high-growth brands.
             </p>
             <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-8">
-              Scan your website, monitor unsupported claims, and see how AI engines describe your business before buyers, regulators, or competitors do.
+              AuditGPT scans public buyer-facing pages to find unsupported claims, evidence gaps, and AI Answer Reality risks before buyers repeat or distrust them.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-6">
-              <a href="#intake" className="btn-cta text-base px-8 py-4">
+              <a href="/ai-answer-reality" className="btn-cta text-base px-8 py-4">
                 Run an AI Answer Reality Scan <ArrowRight className="h-4 w-4 ml-2 inline" />
               </a>
-              <a href="/sample-report" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
+              <a href="/ai-answer-reality/sample" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
                 View Sample Claim Audit
               </a>
             </div>
             <p className="text-sm font-medium">
-              See your results in 60 seconds.
+              Your snapshot begins generating immediately.
             </p>
             <div className="mt-4 p-4 bg-stone-50 border border-stone-200 inline-block rounded-lg shadow-sm">
               <p className="text-xs text-stone-600 font-mono uppercase tracking-widest mb-1">Are you an agency?</p>
               <a href="/agency" className="text-sm font-medium text-stone-900 underline hover:text-stone-700">White-label our engine for your clients →</a>
+            </div>
+          </div>
+
+          {/* Choose Your Path */}
+          <div className="mb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+            <a href="#intake" onClick={() => { setIsMedical(true); setIsAgency(false); setCompanyType('Med spa / wellness'); }} className="block p-6 border border-border bg-white hover:bg-stone-50 transition-colors rounded-sm">
+              <div className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-2">Path 1</div>
+              <div className="font-medium">I'm a med spa / wellness brand</div>
+            </a>
+            <a href="/agency" className="block p-6 border border-border bg-white hover:bg-stone-50 transition-colors rounded-sm">
+              <div className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-2">Path 2</div>
+              <div className="font-medium">I'm an agency</div>
+            </a>
+            <a href="#intake" onClick={() => { setIsMedical(false); setIsAgency(false); setCompanyType('AI / SaaS'); }} className="block p-6 border border-border bg-white hover:bg-stone-50 transition-colors rounded-sm">
+              <div className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-2">Path 3</div>
+              <div className="font-medium">I'm a SaaS / AI startup</div>
+            </a>
+            <a href="#intake" onClick={() => { setIsMedical(false); setIsAgency(false); setCompanyType('Other'); }} className="block p-6 border border-border bg-white hover:bg-stone-50 transition-colors rounded-sm">
+              <div className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-2">Path 4</div>
+              <div className="font-medium">I'm evaluating a company / deal</div>
+            </a>
+          </div>
+
+          {/* What You Get Visual Cards */}
+          <div className="mb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="border border-border bg-white rounded-sm p-6 flex flex-col gap-4">
+              <div className="h-24 bg-stone-100 flex items-center justify-center rounded-sm text-3xl font-serif text-stone-400">82/100</div>
+              <div className="text-sm font-medium text-center">Claim Health Score</div>
+            </div>
+            <div className="border border-border bg-white rounded-sm p-6 flex flex-col gap-4">
+              <div className="h-24 bg-stone-100 flex flex-col items-center justify-center rounded-sm gap-2">
+                <div className="h-2 w-3/4 bg-red-200 rounded-full"></div>
+                <div className="h-2 w-1/2 bg-amber-200 rounded-full"></div>
+              </div>
+              <div className="text-sm font-medium text-center">Unsupported Claim Table</div>
+            </div>
+            <div className="border border-border bg-white rounded-sm p-6 flex flex-col gap-4">
+              <div className="h-24 bg-stone-100 flex items-center justify-center rounded-sm">
+                <ShieldCheck className="h-8 w-8 text-stone-400" />
+              </div>
+              <div className="text-sm font-medium text-center">AI Answer Reality Snapshot</div>
+            </div>
+            <div className="border border-border bg-white rounded-sm p-6 flex flex-col gap-4">
+              <div className="h-24 bg-stone-100 flex flex-col items-center justify-center rounded-sm gap-2 px-4">
+                <div className="h-2 w-full bg-stone-200 rounded-full"></div>
+                <div className="h-2 w-3/4 bg-green-200 rounded-full"></div>
+              </div>
+              <div className="text-sm font-medium text-center">Safer Rewrite Recommendations</div>
             </div>
           </div>
 
@@ -187,7 +235,7 @@ export default function Home() {
                 <div className="text-xs font-mono text-muted-foreground">scrutexity-interactive-sample.pdf</div>
               </div>
               <iframe 
-                src="/sample-report" 
+                src="/ai-answer-reality/sample" 
                 className="w-full h-full pt-[44px] border-none"
                 title="Interactive Sample Report"
               />
@@ -376,7 +424,7 @@ export default function Home() {
                 <div className="text-center">
                   <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-serif text-xl mx-auto mb-4">3</div>
                   <h3 className="font-serif text-lg mb-2">Get the Report</h3>
-                  <p className="text-sm text-muted-foreground">Within 60 seconds, see which claims are fully supported and which are dangerously naked.</p>
+                  <p className="text-sm text-muted-foreground">Your snapshot begins generating immediately, showing which claims are fully supported and which are dangerously naked.</p>
                 </div>
               </div>
             </section>
@@ -500,10 +548,12 @@ export default function Home() {
               <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">Scrutexity Next Step</div>
               <p className="text-foreground/90 mb-4">AuditGPT does not stop at diagnosis. Depending on what the report finds, Scrutexity can help with:</p>
               <ul className="list-disc pl-5 space-y-2 text-foreground/80">
-                <li><strong>Contento</strong> for safer, proof-aware content</li>
-                <li><strong>AI Visibility</strong> for clearer answer-ready pages</li>
-                <li><strong>Recovery</strong> for missed demand and follow-up gaps</li>
-                <li><strong>Proof & Reputation</strong> for trust assets, reviews, and case studies</li>
+                <li>Governed claim rewrites</li>
+                <li>AI Answer Reality monitoring</li>
+                <li>Verification and trust assets</li>
+                <li>Revenue leakage insights</li>
+                <li><strong>Agency white-label reports</strong> to protect your clients</li>
+                <li>Manual review</li>
               </ul>
             </section>
           </div>
@@ -520,7 +570,7 @@ export default function Home() {
               </p>
             </div>
             <a
-              href="/audit/self"
+              href="/self-audit"
               className="text-xs font-mono uppercase tracking-wider border border-foreground px-4 py-2 rounded-sm hover:bg-foreground hover:text-background transition-colors"
             >
               View self-review →

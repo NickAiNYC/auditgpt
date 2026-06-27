@@ -30,7 +30,49 @@ async function updateBranding(formData: FormData) {
 export default async function AgencyDashboard() {
   const userId = await getCurrentUserId();
   if (!userId) {
-    redirect('/login');
+    return (
+      <div className="min-h-screen bg-white flex flex-col font-sans">
+        <header className="border-b border-border bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+              <Logo variant="full" height={28} />
+            </Link>
+            <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              Agency Trust Partner
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-20 text-center">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-200 text-[10px] font-mono uppercase tracking-widest rounded-sm">
+              Agency White-Label
+            </span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-serif text-foreground mb-6 leading-tight">
+            Protect your clients' claims.<br />Prove your value.
+          </h1>
+          <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
+            AuditGPT for Agencies allows you to generate white-labeled Claim Drift Baselines for your prospects and clients. Win deals by showing them where their claims are naked, and retain them by actively governing their public proof.
+          </p>
+
+          <div className="bg-neutral-50 border border-border p-8 rounded-sm text-left mb-12">
+            <h2 className="font-serif text-2xl mb-4">Agency Trust Partner Program</h2>
+            <p className="text-lg mb-6">$999 / month</p>
+            <ul className="list-disc pl-5 space-y-2 text-foreground/80 mb-8">
+              <li>Up to 10 client domains under management</li>
+              <li>White-label Claim Drift Baselines</li>
+              <li>Monthly automated scans for all clients</li>
+              <li>Client-ready PDF exports with your logo</li>
+              <li>Quarterly Governed Growth Certificates</li>
+            </ul>
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link href="/login?callbackUrl=/agency">Sign in to Apply &rarr;</Link>
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   // Ensure Agency record exists

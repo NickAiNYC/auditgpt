@@ -7,8 +7,7 @@ import { ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
 import { Logo } from '@/components/logo';
 
 const STRIPE_PRICE_IDS = {
-  starter: process.env.NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID || '',
-  full: process.env.NEXT_PUBLIC_STRIPE_FULL_PRICE_ID || '',
+  monitor: process.env.NEXT_PUBLIC_STRIPE_MONITOR_PRICE_ID || '',
   agency: process.env.NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID || '',
 } as const;
 
@@ -26,35 +25,24 @@ interface Tier {
 
 const TIERS: Tier[] = [
   {
-    id: 'starter',
-    name: 'Single-Page Audit',
-    price: '$99',
-    cadence: 'One-time',
-    description: 'Targeted single-URL claim extraction and evidence check.',
-    priceId: STRIPE_PRICE_IDS.starter,
-    cta: 'Start',
+    id: 'monitor',
+    name: 'Scrutexity Monitor',
+    price: '$299',
+    cadence: '/month',
+    description: 'Monthly public claim scan, AI Answer Reality snapshot, and unsupported claim alerts.',
+    priceId: STRIPE_PRICE_IDS.monitor,
+    cta: 'Start Monitoring',
     highlight: false,
-    mode: 'payment',
-  },
-  {
-    id: 'full',
-    name: 'Multi-Surface Audit',
-    price: '$499',
-    cadence: 'One-time',
-    description: 'Correlated review across up to 5 buyer-facing surfaces.',
-    priceId: STRIPE_PRICE_IDS.full,
-    cta: 'Get the Audit',
-    highlight: false,
-    mode: 'payment',
+    mode: 'subscription',
   },
   {
     id: 'agency',
-    name: 'Agency / Volume',
-    price: '$799',
+    name: 'Agency Trust Partner',
+    price: '$999',
     cadence: '/month',
-    description: 'Monthly claim audits for agencies and high-volume teams.',
+    description: 'Up to 10 client domains, white-label baselines, and monthly scans.',
     priceId: STRIPE_PRICE_IDS.agency,
-    cta: 'Start Monthly',
+    cta: 'Partner Program',
     highlight: true,
     mode: 'subscription',
   },
@@ -62,20 +50,18 @@ const TIERS: Tier[] = [
 
 interface FeatureRow {
   name: string;
-  starter: string;
-  full: string;
+  monitor: string;
   agency: string;
 }
 
 const CAPABILITIES: FeatureRow[] = [
-  { name: 'Claim Extraction', starter: '[ Active ]', full: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Target Scope', starter: '1 primary URL', full: 'Up to 5 URLs', agency: '25 audits / mo' },
-  { name: 'Evidence Gap Detection', starter: '[ Active ]', full: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Safer Rewrite Engine', starter: '[ Active ]', full: '[ Active ]', agency: '[ Active ]' },
-  { name: 'AI Visibility Parsing', starter: '[ Active ]', full: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Cross-Surface Correlation', starter: '—', full: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Governance Handover', starter: '7-day fix list', full: '30-day risk matrix', agency: 'Client-ready reports' },
-  { name: 'White-Label Export', starter: '—', full: '—', agency: '[ Active ]' },
+  { name: 'Monthly Claim Scan', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Target Scope', monitor: '1 domain', agency: 'Up to 10 domains' },
+  { name: 'AI Answer Reality Snapshot', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Safer Rewrite Engine', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Public Verification Page', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'White-Label Baseline Export', monitor: '—', agency: '[ Active ]' },
+  { name: 'Governed Growth Certificate', monitor: '—', agency: 'Quarterly' },
 ];
 
 export default function PricingPage() {
@@ -159,7 +145,13 @@ export default function PricingPage() {
             </p>
           </div>
 
-          {(!STRIPE_PRICE_IDS.starter || !STRIPE_PRICE_IDS.full || !STRIPE_PRICE_IDS.agency) && (
+          {(!STRIPE_PRICE_IDS.monitor || !STRIPE_PRICE_IDS.agency) && process.env.NODE_ENV === 'production' && (
+            <div className="bg-white border border-white/10 p-4 mb-8 text-xs font-mono text-center">
+              <a href="/snapshot" className="text-accent hover:underline">Request a manual audit &rarr;</a>
+            </div>
+          )}
+
+          {(!STRIPE_PRICE_IDS.monitor || !STRIPE_PRICE_IDS.agency) && process.env.NODE_ENV !== 'production' && (
             <div className="bg-amber-50 border border-amber-200 p-4 mb-8 text-xs font-mono text-amber-900">
               <strong>WARNING: System nodes degraded.</strong> Missing environment variables for STRIPE_PRICE_IDS.
             </div>
@@ -172,7 +164,7 @@ export default function PricingPage() {
           )}
 
           {/* Technical Grid Matrix */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
             {TIERS.map((tier) => (
               <div
                 key={tier.id}
