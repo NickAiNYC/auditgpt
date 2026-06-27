@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Medical Spa Compliance & Demand Governance Audit in ${cityData.name}, ${cityData.state} | Scrutexity`,
-    description: `Stop demand leakage for your medical aesthetics practice in ${cityData.name}. Understand ${cityData.state} compliance risks and map the gap between your clinical claims and evidence.`,
+    title: `Claim Intelligence Audit for Medical Spas in ${cityData.name}, ${cityData.state} | AuditGPT`,
+    description: `Stop claim drift for your medical aesthetics practice in ${cityData.name}. Understand ${cityData.state} compliance risks and map the gap between your clinical claims and evidence.`,
   };
 }
 
@@ -56,7 +56,7 @@ export default function MedspaAuditCityPage({ params }: Props) {
         </span>
         
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight mb-6 font-serif" style={{ fontFamily: '"Instrument Serif", serif' }}>
-          Stop Demand Leakage for <br />
+          Stop Claim Drift for <br />
           <span className="text-stone-500">Medical Spas in {cityData.name}.</span>
         </h1>
         
@@ -75,7 +75,7 @@ export default function MedspaAuditCityPage({ params }: Props) {
           <div className="border border-stone-200 bg-white p-8 rounded-sm shadow-sm">
             <h2 className="text-sm font-mono uppercase tracking-widest text-stone-500 mb-4 border-b border-stone-100 pb-2">The Leakage Vector</h2>
             <p className="text-stone-600 leading-relaxed text-sm mb-4">
-              When patients search for advanced aesthetic treatments in {cityData.name}, they expect immediate clinical substantiation. If your funnel makes a claim that isn't instantly supported by an executing provider's bio or a clinical study, educated patients bounce.
+              When patients search for advanced aesthetic treatments in {cityData.name}, they expect immediate clinical substantiation. If your funnel makes a claim that isn't immediately supported by an executing provider's bio or a clinical study, educated patients bounce.
             </p>
             <p className="text-stone-600 leading-relaxed text-sm">
               Our Radar Pilot establishes a read-only parallel connection to your booking software to measure exactly how much revenue this disconnect is costing you locally.
@@ -97,15 +97,15 @@ export default function MedspaAuditCityPage({ params }: Props) {
           <h2 className="text-2xl font-medium mb-8 text-center">Frequently Asked Questions</h2>
           <div className="space-y-6">
             <div className="border-b border-stone-200 pb-6">
-              <h3 className="font-medium text-lg mb-2">Why are medical spas in {cityData.name} losing bookings to competitors?</h3>
+              <h3 className="font-medium text-lg mb-2">Why are medical spas in {cityData.name} losing visibility in AI search results?</h3>
               <p className="text-stone-600 text-sm leading-relaxed">
-                Many clinics in {cityData.name} lose high-intent traffic because their marketing makes claims (like "{cityData.topLocalClaim}") that aren't substantiated by clinical evidence on their website. Educated patients abandon the booking funnel when claims seem unsupported.
+                Many clinics in {cityData.name} are being omitted from AI-generated recommendations because their public-facing pages contain unsupported claims (like "{cityData.topLocalClaim}") that AI answer engines cannot verify. AuditGPT identifies which claims need stronger proof.
               </p>
             </div>
             <div className="border-b border-stone-200 pb-6">
-              <h3 className="font-medium text-lg mb-2">What is a demand governance audit for {cityData.name} aesthetics practices?</h3>
+              <h3 className="font-medium text-lg mb-2">What is a Claim Intelligence audit for {cityData.name} aesthetics practices?</h3>
               <p className="text-stone-600 text-sm leading-relaxed">
-                A demand governance audit securely maps the gap between your marketing claims and your actual clinical evidence. It helps {cityData.name} medspas identify exactly where patients drop off before booking a consultation.
+                A Claim Intelligence audit reviews your public buyer-facing pages to identify unsupported claims, evidence gaps, and AI Answer Reality risks before buyers, investors, or AI search systems repeat or distrust them.
               </p>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function MedspaAuditCityPage({ params }: Props) {
 
       <footer className="border-t border-stone-200 mt-auto bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-stone-500 font-mono">
-          System 01 // Demand Governance explicitly tailored for {cityData.name}, {cityData.state}
+          AuditGPT by Scrutexity — Claim Intelligence for {cityData.name}, {cityData.state}
         </div>
       </footer>
     </div>

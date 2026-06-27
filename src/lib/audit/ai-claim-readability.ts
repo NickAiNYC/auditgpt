@@ -28,7 +28,7 @@ export interface AIClaimReadabilityResult {
 
 // Business rationale: this prompt treats AI engines as claim readers and citation
 // filters, not as ranking systems. That keeps AuditGPT anchored in Claim
-// Intelligence while still addressing the 2026 AI visibility buying trigger.
+// Intelligence while still addressing the 2026 AI answer reality buying trigger.
 export function buildAIClaimReadabilityPrompt(
   input: AIClaimReadabilityInput,
 ): StructuredSimulationPrompt {
@@ -134,7 +134,7 @@ export async function generateSimulation(
       prompt,
     };
   } catch (error) {
-    console.warn('[AI Visibility Simulation] Deep mode failed, falling back to heuristic:', error instanceof Error ? error.message : String(error));
+    console.warn('[AI Answer Reality Simulation] Deep mode failed, falling back to heuristic:', error instanceof Error ? error.message : String(error));
     return simulateAIClaimReadability(input);
   }
 }
@@ -233,7 +233,7 @@ function buildCompetitorPreviews(competitorUrls?: string[]): CompetitorPreview[]
     trustSignalSummary:
       'Preview only: trust signal comparison will evaluate testimonials, source attribution, credentials, and proof placement.',
     aiVisibilitySummary:
-      'Preview only: AI visibility comparison will estimate which page is easier for answer engines to understand and cite.',
+      'Preview only: AI answer reality comparison will estimate which page is easier for answer engines to understand and cite.',
     availability: 'Preview',
   }));
 }

@@ -81,7 +81,7 @@ export function EnhancedSnapshotReport({
               <Logo variant="full" height={30} />
             )}
             <p className="mt-6 font-mono text-[10px] uppercase tracking-[.24em] text-[#b7bcae]">
-              AI Visibility + Claim Snapshot
+              AI Answer Reality + Claim Snapshot
             </p>
             <h1 className="mt-3 max-w-4xl font-serif text-4xl leading-[1.02] sm:text-6xl">
               Claim Intelligence Report
@@ -110,7 +110,7 @@ export function EnhancedSnapshotReport({
             </span>
           </div>
           <p className="mt-6 text-sm leading-relaxed text-stone-700">
-            Higher means more claim, proof, AI readability, or demand leakage risk.
+            Higher means more claim, proof, AI readability, or claim drift risk.
           </p>
         </div>
         <div className="p-8 sm:p-10">
@@ -154,7 +154,7 @@ export function EnhancedSnapshotReport({
 
       <SectionShell
         index="02"
-        title="AI Visibility Simulation"
+        title="AI Answer Reality Simulation"
         subtitle="A claim-readability view of how answer engines may describe, qualify, cite, or ignore the page."
         icon={Bot}
         dark
@@ -210,7 +210,7 @@ export function EnhancedSnapshotReport({
 
       <SectionShell
         index="05"
-        title="Demand Leakage"
+        title="Claim Drift"
         subtitle="The buyer should know what to trust, what proof supports it, and what to do next."
         icon={Gauge}
       >

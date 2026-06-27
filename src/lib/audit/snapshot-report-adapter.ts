@@ -269,7 +269,7 @@ function buildTechnicalTrustChecks(
       status: audit.recommended_next_steps.length ? 'Pass' : 'Concern',
       finding: audit.recommended_next_steps[0] || 'No clear recommended next step was present.',
       claimIntelligenceImpact:
-        'Clear next steps reduce demand leakage after a buyer has inspected the claim and proof.',
+        'Clear next steps reduce claim drift after a buyer has inspected the claim and proof.',
       recommendedFix:
         'Place one low-friction CTA after the strongest supported claim.',
     },
@@ -278,7 +278,7 @@ function buildTechnicalTrustChecks(
 
 function buildPrimaryRecommendation(overallRiskScore: number): string {
   if (overallRiskScore >= 70) {
-    return 'Rewrite high-risk claims and add visible proof before scaling AI visibility or paid acquisition.';
+    return 'Rewrite high-risk claims and add visible proof before scaling AI answer reality or paid acquisition.';
   }
 
   if (overallRiskScore >= 40) {
@@ -308,7 +308,7 @@ function buildScrutexityNextSteps(overallRiskScore: number): ScrutexityNextStep[
       service: 'Revenue Leakage Insights',
       whyItFits:
         'Use Revenue Leakage Insights only if AI systems or public summaries are already misdescribing the business.',
-      nextAction: 'Map and review any active demand recovery paths.',
+      nextAction: 'Map and review any active client retention paths.',
     },
     {
       service: 'Verification & Trust Assets',

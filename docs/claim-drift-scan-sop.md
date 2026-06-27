@@ -1,58 +1,109 @@
-# Claim Drift Scan SOP (Manual Fulfillment)
+# Claim Drift Scan SOP
 
-Every submitted lead must follow this exact 9-step procedure to ensure the diagnostic deliverable is repeatable, credible, and drives urgency.
+## Fulfillment Process
+1. Open submitted domain
+2. Review homepage + 3–5 high-intent pages
+3. Extract 10–25 claims
+4. Classify each claim: verified, weakly supported, unsupported, overstated, needs review
+5. Run 5 AI Answer Reality prompts manually
+6. Identify: unsupported claims, AI distortions, competitor displacement, missing proof blocks, safer rewrites
+7. Produce a one-page preliminary report
+8. Send follow-up email
+9. Log outcome
 
-## Objective
-Convert a submitted domain from the `/admin/leads` dashboard into a standardized Claim Drift Baseline report within 24 hours of submission.
+## The Market Validation Sprint (Week 4)
 
----
+### Operating Targets
+- 20 manual scans
+- 20 permission-based outbound messages
+- 5 replies
+- 3 calls booked
+- 1 paid Scrutexity Monitor closed
+- 1 winning `trigger_found` identified
 
-## 1. Open Submitted Domain
-- Pull the URL from the leads dashboard.
-- Load the homepage in an incognito window to avoid personalization bias.
+### Batch Execution Protocol
 
-## 2. Review High-Intent Pages
-- Scan the **Homepage** and identify 3–5 high-intent pages (e.g., Services, Pricing, "About Us", Case Studies/Before & Afters).
-- Look specifically for absolute language ("Best in...", "Guaranteed", "First to...", "Only clinic that...").
+**Batch 1 (6 prospects) — Hook A: AI competitor displacement**
+- Tag: `ai_competitor_displacement`
 
-## 3. Extract 10–25 Claims
-- Manually extract the specific assertions the brand is making. 
-- Copy the exact text of the claim.
+**Batch 2 (7 prospects) — Hook B: Unsupported / risky claims**
+- Tag: `unsupported_claims`
 
-## 4. Classify Each Claim
-For each extracted claim, assign one of the following statuses based on immediately visible evidence on the page:
-- **Verified:** The claim is immediately backed up by a citation, credential, data point, or disclaimer on the same page.
-- **Weakly Supported:** Evidence exists but is buried, hard to find, or relies on an unlinked third-party logo.
-- **Unsupported:** The claim is made as a fact with no visible evidence on the page.
-- **Overstated:** The claim uses absolute language ("guaranteed", "permanent", "always") that violates typical compliance or reality.
-- **Needs Review:** Ambiguous claims that require subject matter expertise or legal review to verify.
+**Batch 3 (7 prospects) — Hook C: AI claim distortion**
+- Tag: `ai_claim_distortion`
 
-## 5. Run 5 AI Answer Reality Prompts
-Open ChatGPT, Claude, and Perplexity. Run 5 intent-based prompts:
-1. `Best [business type] near [location]` (High Intent Search)
-2. `Is [Brand Name] good for [specific service]?` (Trust Verification)
-3. `Does [Brand Name] offer [specific service]?` (Capabilities Check)
-4. `What are the risks of using [Brand Name]?` (Risk/Safety Search)
-5. `[Brand Name] vs [Competitor Name]` (Displacement Check)
+### Output Deliverable Format (Keep it short!)
 
-## 6. Identify Key Signals
-Review the AI outputs and the claim classifications to isolate:
-- **Top 3 Unsupported Claims:** The most dangerous assertions on their site.
-- **AI Distortions:** Where AI invented or misunderstood their services.
-- **Competitor Displacement:** Where an AI engine recommended a competitor over them.
-- **Proof Gaps:** Where they make a good claim but lack the necessary trust badge/credential.
-- **Safer Rewrites:** How to fix the top 3 unsupported claims safely.
+```text
+Claim Drift Baseline
 
-## 7. Produce the Baseline Report
-- Open `docs/claim-drift-baseline-template.md`.
-- Fill in the blanks with the data from Steps 4 and 6.
-- Calculate the initial **Claim Health Score** (Percentage of Verified vs Total Claims).
+Domain:
+Business type:
+Hook used:
+Trigger found:
 
-## 8. Send Follow-Up Email
-- Copy the text from `docs/follow-up-email.md`.
-- Attach or link to the completed Baseline Report (can be sent as a PDF or Notion link for MVP).
-- Send to the provided lead email.
+1. Claim Health Baseline
+Score: __ / 100
+Summary:
 
-## 9. Log Outcome
-- Go back to `/admin/leads`.
-- Update the status from `new` to `sent` in the `data/leads.jsonl` file (for now, this requires manually editing the JSONL file or updating the API to support status changes).
+2. Top 3 Unsupported / Overstated Claims
+- Claim:
+  Issue:
+  Safer rewrite:
+
+- Claim:
+  Issue:
+  Safer rewrite:
+
+- Claim:
+  Issue:
+  Safer rewrite:
+
+3. AI Answer Reality Finding
+Prompt tested:
+Finding:
+Risk:
+
+4. Competitor Displacement Note
+Finding:
+Competitor surfaced:
+Why it matters:
+
+5. Proof Gaps
+- 
+- 
+- 
+
+6. Safer Rewrites
+- 
+- 
+- 
+
+7. Next 5 Fixes
+1.
+2.
+3.
+4.
+5.
+
+Recommended next step:
+Scrutexity Monitor — $299/month.
+```
+
+### Objection Handling & Upgrades
+- If they ask for monitoring: **Scrutexity Monitor is $299/month**. (Includes monthly scan, AI Answer Reality snapshot, unsupported claim alerts, safer rewrite recommendations, monthly summary).
+- For agencies: **Agency Trust Partner is $999/month**. (Up to 10 client domains, white-label baselines, PDFs, quarterly Governed Growth Certificates).
+
+### Decision Rules
+After 20 scans, judge by:
+- Reply rate
+- Call-booking rate
+- How strong the objection is
+- Whether they ask to see the baseline
+- Whether they ask, "Can you monitor this?"
+
+If **AI competitor displacement** gets the most replies → Make *AI Answer Reality* the homepage wedge.
+If **AI claim distortion** gets the most replies → Make *treatment/service misrepresentation* the wedge.
+If **unsupported claims** gets the most replies → Make *Claim Health Score* the wedge.
+If **proof gaps** gets the most replies → Make *Evidence Pack* the entry offer.
+If **agencies** reply faster than clinics → Pivot the first sales motion to *Agency Trust Partner*.

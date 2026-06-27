@@ -150,12 +150,12 @@ This is the product spine. Every other feature is a view on the Claim Record.
 **B. Claim Library (the moat)**
 - Stores every Claim Record over time
 - Where customers return
-- More important than Contento
+- More important than Claim Rewrites
 
-**C. Fixes (the Contento layer)**
+**C. Fixes (the Claim Rewrites layer)**
 - Not "AI content" — sell as "evidence-backed claim fixes"
 - Outputs: safer hero copy, proof blocks, FAQ answers, case study outlines, security page sections, comparison page corrections, claim-safe LinkedIn posts
-- Contento is a claim repair engine, not a content engine
+- Claim Rewrites is a claim repair engine, not a content engine
 
 **D. Monitor (subscription hook)**
 - New unsupported claims, changed claims, expired evidence, removed proof, risk score changes, badge status changes
@@ -360,7 +360,7 @@ Prompts are copyable. A persistent claim history is harder to copy. A badge netw
 | 9-12 | Build audit ingestion: crawl → extract claims → classify → score → recommendations |
 | 13-15 | Build report generation: private report, public report, PDF, share URL |
 | 16-18 | Build badge v1: static badge with dynamic status, links to public report |
-| 19-21 | Manual Contento: proof block rewrites, safer claims, FAQ, case study outlines |
+| 19-21 | Manual Claim Rewrites: proof block rewrites, safer claims, FAQ, case study outlines |
 | 22-25 | Audit 30 AI startups (pick a niche) |
 | 26-28 | Publish "State of AI Startup Claims" report — the launch asset |
 | 29-30 | Sell: outbound to founders, agencies, VCs, fractional CMOs |

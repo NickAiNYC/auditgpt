@@ -18,7 +18,6 @@ export type ClaimCategory =
   | "reputation"
   | "ai_visibility"
   | "comparison"
-  | "recovery"
   | "general";
 
 export interface ClaimRecord {

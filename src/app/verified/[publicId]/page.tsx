@@ -103,7 +103,7 @@ export default async function VerifiedPage({ params }: PageProps) {
               <Row label="Unsupported" value={String(review.scope.unsupported)} />
             </ul>
             <p className="text-xs text-muted-foreground mt-4">
-              This review states what AuditGPT examined on the date of the audit. It does not certify truth, ranking, AI visibility,
+              This review states what AuditGPT examined on the date of the audit. It does not certify truth, ranking, AI answer reality,
               legal compliance, clinical safety, or revenue outcomes.
             </p>
           </div>

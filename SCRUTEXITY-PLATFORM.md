@@ -49,26 +49,26 @@ This is the product. The living claim graph of a business.
 | Module | Function |
 |--------|----------|
 | **AuditGPT by Scrutexity** | Find unsupported claims and proof gaps. Honest audits. No cheerleading. A real plan. |
-| **Contento by Scrutexity** | Turn verified claims into evidence-backed content. Not hallucinated marketing filler. |
+| **Claim Rewrites by Scrutexity** | Turn verified claims into evidence-backed content. Not hallucinated marketing filler. |
 | **Scrutexity Monitor** | Track claim drift, unsupported updates, expired proof, and reputation risk. |
 
 ---
 
 ## 3. The Medspa Question: Separate Vertical
 
-The medspa revenue recovery wedge and the claim intelligence platform are two different companies:
+The medspa revenue Retention wedge and the claim intelligence platform are two different companies:
 
 - Different buyers (medspa owners vs. AI founders/agencies)
 - Different sales motion (industry-specific pitch vs. horizontal SaaS)
 - Different proof assets (Boulevard/Mangomint integrations vs. public audit reports)
-- Different language (revenue recovery vs. claim verification)
+- Different language (revenue Retention vs. claim verification)
 
 **Recommendation:** Keep them separate. Scrutexity becomes the claim intelligence parent. The medspa business either:
 
 - **Option A:** Stays as a separate vertical product under Scrutexity later, after the claim platform proves demand.
 - **Option B:** Operates independently with its own brand and GTM.
 
-Do not merge them. A platform that simultaneously sells "missed demand recovery for premium med spas" and "claim intelligence for AI businesses" will confuse the market and dilute both.
+Do not merge them. A platform that simultaneously sells "missed demand Retention for premium med spas" and "claim intelligence for AI businesses" will confuse the market and dilute both.
 
 ---
 
@@ -98,7 +98,7 @@ The real buyer for $799+ is not "enterprise." It's:
 |------|--------|
 | 1-3 | Create scrutexity.ai — one page, one thesis, three modules. No dashboard. No unified auth. Just the public-facing story. |
 | 4-7 | Rebrand AuditGPT: "AuditGPT by Scrutexity" in header, emails, badges. Add "claim library" language to audit outputs. |
-| 8-14 | Manual Contento: After each audit, manually generate 3-5 "verified content briefs." Do not build a content platform yet. Prove demand first. |
+| 8-14 | Manual Claim Rewrites: After each audit, manually generate 3-5 "verified content briefs." Do not build a content platform yet. Prove demand first. |
 | 15-21 | Build the public report/badge loop. Badge links to public claim audit page. Badge status updates on re-audit. |
 | 22-30 | Audit 30-50 AI startup sites. Publish "State of AI Startup Claims" report. Sell Pro as: "You saw the gaps. Now keep your claims clean." |
 
@@ -139,7 +139,7 @@ The hierarchy is now disciplined:
 ```
 Scrutexity — the claim intelligence parent platform.
 ├── AuditGPT  — the audit wedge, the front door.
-├── Contento  — the fix layer, evidence-backed content.
+├── Claim Rewrites  — the fix layer, evidence-backed content.
 └── Monitor   — continuous claim drift surveillance.
 
 Medspa — a separate vertical or separate company.

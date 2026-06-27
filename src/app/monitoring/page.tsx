@@ -46,7 +46,7 @@ export default async function MonitoringDashboard() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-serif text-stone-900">Claim Monitoring</h1>
-            <p className="mt-2 text-stone-500">Ongoing drift detection and AI visibility tracking.</p>
+            <p className="mt-2 text-stone-500">Ongoing drift detection and AI answer reality tracking.</p>
           </div>
           <Button asChild className="bg-stone-900 text-white hover:bg-stone-800">
             <Link href="/snapshot">Add Site</Link>

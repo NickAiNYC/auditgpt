@@ -481,7 +481,7 @@ export default function Home() {
                     <li>Evidence gaps</li>
                     <li>Safer framing recommendations</li>
                     <li>AI/search readability notes where relevant</li>
-                    <li>Demand leakage notes where relevant</li>
+                    <li>Claim drift notes where relevant</li>
                     <li>7-day fix list</li>
                     <li>AuditGPT Report Review link</li>
                   </ul>
@@ -497,7 +497,7 @@ export default function Home() {
                     <li>Claim and evidence review</li>
                     <li>AI/search readability review</li>
                     <li>Reputation and proof surface review</li>
-                    <li>Demand leakage review</li>
+                    <li>Claim drift tracking</li>
                     <li>30-day action plan</li>
                   </ul>
                   <p className="text-xs italic text-muted-foreground">

@@ -10,7 +10,7 @@ export const runtime = 'nodejs';
 // POST /api/verify?publicId=xxx
 // Issues an AuditGPT Report Review for an audit. The review is *scope-based*:
 // it states what AuditGPT checked. It does NOT certify truth, ranking,
-// AI visibility, or compliance. Always succeeds for an existing audit.
+// AI answer reality, or compliance. Always succeeds for an existing audit.
 export async function POST(req: NextRequest) {
   const { rateLimitOrReject, cleanupExpiredBuckets } = await import('@/lib/rate-limit');
   cleanupExpiredBuckets();

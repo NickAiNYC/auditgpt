@@ -118,7 +118,7 @@ function buildKeyFindings(
 
 function buildPrimaryRecommendation(riskScore: number, claims: ClaimFinding[]): string {
   if (riskScore >= 70) {
-    return 'Prioritize rewriting unsupported or overstated claims before scaling paid traffic, fundraising outreach, or AI visibility work.';
+    return 'Prioritize rewriting unsupported or overstated claims before scaling paid traffic, fundraising outreach, or AI answer reality work.';
   }
 
   if (claims.length === 0) {

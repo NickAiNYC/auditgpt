@@ -56,7 +56,7 @@ export default function LegalPage() {
 
       <footer className="border-t border-border bg-white mt-auto">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage</span>
+          <span>AuditGPT by Scrutexity · Claim Intelligence for businesses where trust matters.</span>
           <a href="/" className="underline hover:text-foreground">auditgpt.ai</a>
         </div>
       </footer>

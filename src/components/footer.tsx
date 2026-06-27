@@ -48,7 +48,7 @@ export function Footer() {
           </Link>
         </div>
         <div className="mt-10 md:mt-0 flex flex-col items-center md:items-end text-xs text-muted-foreground">
-          <p>AuditGPT · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage</p>
+          <p>AuditGPT · Claim Intelligence Platform</p>
           <a href="https://scrutexity.com" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 underline hover:opacity-80 transition-opacity">
             Parent company: Scrutexity →
           </a>

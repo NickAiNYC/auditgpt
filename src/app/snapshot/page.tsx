@@ -104,7 +104,7 @@ export default function SnapshotPage() {
           
           <div className="text-stone-500 mb-10 font-light text-sm sm:text-base max-w-lg mx-auto">
             {loading 
-              ? 'Analyzing claims, cross-referencing evidence, and evaluating AI visibility risk.'
+              ? 'Analyzing claims, cross-referencing evidence, and evaluating AI answer reality risk.'
               : step === 1 
                 ? (
                   <>

@@ -38,7 +38,7 @@ These are the "designed to help deliver his message" pieces — demo-able in a s
 - **Claim Scorecard** — visual grid of claims by status (verified/weak/unsupported/overstated).
 - **Positioning Map** — 2x2 of where they sit vs. competitors.
 - **The Leak Map** — funnel visual showing where demand drops.
-- **Before/After messaging blocks** — their risky claim → the safer, sharper rewrite (Contento).
+- **Before/After messaging blocks** — their risky claim → the safer, sharper rewrite (Claim Rewrites).
 - **30/60/90 Growth Roadmap** — one-page visual plan.
 
 ---

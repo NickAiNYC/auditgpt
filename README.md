@@ -19,8 +19,8 @@ Primary users include AI/SaaS founders, agencies, AI-built businesses, and trust
 
 - Scrutexity is the parent company and platform.
 - AuditGPT diagnoses claim and evidence gaps.
-- Contento turns approved findings into governed assets.
-- Recovery applies the system to missed-consult workflows in selected verticals.
+- Claim Rewrites turns approved findings into governed assets.
+- Retention applies the system to missed-consult workflows in selected verticals.
 
 ## Safety boundary
 

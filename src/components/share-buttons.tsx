@@ -17,7 +17,7 @@ export function ShareButtons({ publicId, companyName, claimsReviewed }: ShareBut
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/audit/${publicId}` : '';
   const scopeStr = claimsReviewed ? ` ${claimsReviewed} claims reviewed.` : '';
-  const shareText = `AuditGPT Visibility & Trust Review for ${companyName}.${scopeStr} Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage:`;
+  const shareText = `AuditGPT Visibility & Trust Review for ${companyName}.${scopeStr} Claim Intelligence:`;
 
   const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;

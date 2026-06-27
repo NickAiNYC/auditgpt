@@ -81,7 +81,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
     inputType: 'website',
   });
 
-  // Calculate AI Visibility Delta (deep mode always on for $799 monitoring users)
+  // Calculate AI Answer Reality Delta (deep mode always on for $799 monitoring users)
   try {
     const claimFindings = newAuditJson.claim_audit.claims.map((c: Claim) => ({
       id: c.id,
@@ -104,7 +104,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
     (newAuditJson as any).aiVisibilitySimulation = simulationResult.simulations;
     (newAuditJson as any).entityUnderstandingGaps = simulationResult.entityUnderstandingGaps;
   } catch (simErr) {
-    console.warn('[Claim Monitoring] Failed to run AI Visibility simulation during scan', simErr);
+    console.warn('[Claim Monitoring] Failed to run AI Answer Reality simulation during scan', simErr);
   }
 
   // 4. Calculate Delta
@@ -159,7 +159,7 @@ function calculateDelta(prev: AuditResult | null, curr: AuditResult): MonitorDel
       resolvedClaimsCount: 0,
       riskScoreDelta: curr.claim_audit.summary.claim_support_score, // Initial score
       newEvidenceGaps: curr.claim_audit.summary.unsupported_count,
-      aiVisibilityDelta: 'Baseline AI Visibility established.',
+      aiVisibilityDelta: 'Baseline AI Answer Reality established.',
       newClaims: curr.claim_audit.claims.map((claim) => ({
         claim: claim.normalized_claim || claim.original_text,
         status: claim.claim_status,

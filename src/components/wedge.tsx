@@ -3,7 +3,7 @@
 // ============================================================
 // The AuditGPT Wedge
 // ============================================================
-// Single visual artifact: claim ↔ evidence ↔ AI/search readability ↔ demand leakage.
+// Single visual artifact: Claim Intelligence
 // This is the brand spine. It appears on the homepage, snapshot intake,
 // sample report, pricing, and the public report footer.
 //
@@ -30,13 +30,13 @@ export const WEDGE_PILLARS = [
   },
   {
     key: 'leakage',
-    label: 'Demand leakage',
+    label: 'Claim drift',
     sub: 'What demand you lose',
   },
 ] as const;
 
 export const WEDGE_INLINE_TEXT =
-  'claim ↔ evidence ↔ AI/search readability ↔ demand leakage';
+  'Claim Intelligence';
 
 export const WEDGE_HEADLINE =
   'The gap nobody else audits.';

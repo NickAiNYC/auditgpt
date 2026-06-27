@@ -3,7 +3,7 @@
 **Date:** 2026-06-20
 **Repo:** `/Users/nick/Desktop/auditgpt`
 **Refocus owner:** Claude (principal SaaS refactoring engineer)
-**One-line outcome:** AuditGPT is now structurally the Scrutexity diagnostic — claim audit, AI/search visibility, reputation surface, demand leakage, proof gaps, safer framing, 7-day fix list, 30-day plan, and recommended Scrutexity next step. Off-strategy surfaces are archived. Pricing, brand voice, prompt architecture, output schema, and badge logic are aligned. Red-team eval passes 3/3.
+**One-line outcome:** AuditGPT is now structurally the Scrutexity diagnostic — claim audit, AI/search visibility, reputation surface, Claim drift, proof gaps, safer framing, 7-day fix list, 30-day plan, and recommended Scrutexity next step. Off-strategy surfaces are archived. Pricing, brand voice, prompt architecture, output schema, and badge logic are aligned. Red-team eval passes 3/3.
 
 ---
 
@@ -31,7 +31,7 @@
 ### 2. Files changed
 
 Created:
-- `src/lib/audit-schema.ts` — full Zod-validated `AuditResult` schema (claim findings, evidence records, visibility, reputation, demand leakage, proof gaps, priority matrix, 7-day, 30-day, recommended next step, disclaimer).
+- `src/lib/audit-schema.ts` — full Zod-validated `AuditResult` schema (claim findings, evidence records, visibility, reputation, Claim drift, proof gaps, priority matrix, 7-day, 30-day, recommended next step, disclaimer).
 - `src/app/snapshot/page.tsx` — free 3-point Visibility & Trust Snapshot intake.
 
 Rewrote:
@@ -51,7 +51,7 @@ Rewrote:
 - `src/app/api/rescan/route.ts` — calls new pipeline signature.
 - `src/app/api/webhooks/stripe/route.ts` — Stripe SDK compat shims (pre-existing typing drift).
 - `src/app/api/checkout/route.ts`, `create-portal-session/route.ts`, `integrations/disconnect/route.ts`, `integrations/stripe/*/route.ts` — same Stripe shim.
-- `src/components/public-audit-view.tsx` — 14-section Scrutexity report UI (executive summary → audit scope → claim findings → AI/search visibility → local/service clarity → reputation → demand leakage → proof gaps → priority matrix → 7-day → 30-day → recommended next step → disclaimer).
+- `src/components/public-audit-view.tsx` — 14-section Scrutexity report UI (executive summary → audit scope → claim findings → AI/search visibility → local/service clarity → reputation → Claim drift → proof gaps → priority matrix → 7-day → 30-day → recommended next step → disclaimer).
 - `src/components/verification-badge.tsx` — "Issue report review" / "AuditGPT Report Review" chip.
 - `src/components/share-buttons.tsx` — observational share copy.
 - `src/components/footer.tsx` — Scrutexity language.
@@ -126,7 +126,7 @@ Each `claimFinding` includes id, sourcePage, claimText, claimType, status, sever
 
 ### 9. Snapshot flow added
 
-`/snapshot` route with dedicated intake (name, email, company, website, company type, primary worry, optional phone, agency checkbox, medical/wellness checkbox, UTM source capture). Posts `auditType: 'snapshot'`. Lands on `/audit/[publicId]` with the snapshot-shaped report (1 claim / 1 visibility / 1 demand leakage finding + the first fix + recommended next step).
+`/snapshot` route with dedicated intake (name, email, company, website, company type, primary worry, optional phone, agency checkbox, medical/wellness checkbox, UTM source capture). Posts `auditType: 'snapshot'`. Lands on `/audit/[publicId]` with the snapshot-shaped report (1 claim / 1 visibility / 1 Claim drift finding + the first fix + recommended next step).
 
 ### 10. Report UI updated
 
@@ -144,8 +144,8 @@ Each `claimFinding` includes id, sourcePage, claimText, claimType, status, sever
 ### 12. Red-team fixtures added
 
 Three golden fixtures in `src/lib/eval/fixtures.ts`:
-1. **AI SaaS overclaims** — autonomous-agents, SOC 2-ready, guaranteed productivity. Expected: status `overstated` / `needs_evidence` / `unsupported`, safer rewrites present, recommended next step Contento.
-2. **Med spa overclaims** — risk-free Botox, permanent results, best in city, FDA-approved clinic, clinically proven. Expected: no clinical/legal conclusions, conservative safer framing, recommended next step Contento.
+1. **AI SaaS overclaims** — autonomous-agents, SOC 2-ready, guaranteed productivity. Expected: status `overstated` / `needs_evidence` / `unsupported`, safer rewrites present, recommended next step Claim Rewrites.
+2. **Med spa overclaims** — risk-free Botox, permanent results, best in city, FDA-approved clinic, clinically proven. Expected: no clinical/legal conclusions, conservative safer framing, recommended next step Claim Rewrites.
 3. **Agency guarantees** — first-page rankings, ChatGPT placement, 10x revenue. Expected: no ranking/AI guarantees, safer rewrites grounded in case-study language.
 
 Eval contract enforces: schema validity, forbidden phrases not generated, disclaimer present, evidence-or-gap per claim, recommended next step present, structural invariants.
@@ -180,7 +180,7 @@ Eval contract enforces: schema validity, forbidden phrases not generated, discla
 | $99 Starter delivery | 2/10 | **7/10** |
 | $299 Full delivery | 2/10 | **6/10** (1-page scrape still; multi-page needed) |
 | $799 Agency | 0/10 | **2/10** (pricing in place; dashboard not yet) |
-| Retainer upsell (Contento / AI Visibility / Recovery / Proof) | 0/10 | **6/10** (structured `recommendedNextStep` field; landing pages not yet) |
+| Retainer upsell (Claim Rewrites / AI Answer Reality / Retention / Proof) | 0/10 | **6/10** (structured `recommendedNextStep` field; landing pages not yet) |
 | No-guarantee safety language | 2/10 | **8/10** (forbidden-phrase enforcement + observational language) |
 | Acquisition-readiness | 3/10 | **5/10** (clean claim-record schema + red-team eval; needs traction + normalized DB) |
 
@@ -190,7 +190,7 @@ Eval contract enforces: schema validity, forbidden phrases not generated, discla
 2. **Verify live LLM output** end-to-end on staging with one real URL each in AI SaaS, med spa, and agency verticals. Confirm Zod accepts the response or that the repair pass recovers it.
 3. **Add the email-verification gate** screen between snapshot intake and snapshot generation (today's `audit-usage.ts` enforces rate limits but the UI does not yet show the gate).
 4. **Run 5 manual snapshots** (1 AI SaaS, 1 med spa, 1 agency, 1 local service, 1 ecommerce). For each, file one issue: prompt didn't catch X / output formatting broke Y / recommended next step wrong Z. Tune.
-5. **Stand up `/next-step/contento` `/next-step/ai-visibility` `/next-step/recovery` `/next-step/proof` `/next-step/agency`** landing pages. Even one-line "Coming soon — book a call" is enough for the recommended-next-step CTA to land somewhere.
+5. **Stand up `/next-step/Claim Rewrites` `/next-step/ai-visibility` `/next-step/Retention` `/next-step/proof` `/next-step/agency`** landing pages. Even one-line "Coming soon — book a call" is enough for the recommended-next-step CTA to land somewhere.
 6. **Wire Plausible (or PostHog)** with these events: `snapshot_intake_started`, `snapshot_intake_submitted`, `snapshot_delivered`, `starter_checkout_started`, `full_checkout_started`, `next_step_cta_clicked`.
 7. **Stripe webhook smoke test** on staging. Confirm `checkout.session.completed` for one-time payments creates the expected Audit linkage (today's webhook expects subscription mode).
 8. **Multi-page crawl (Phase 2).** Add the homepage + pricing + security + about + case studies SOP from the Doctrine.
@@ -241,7 +241,7 @@ Skip for now: enterprise procurement, regulated healthcare networks, large pharm
 | Sitebulb | trial | $13.5–$26/mo | $52/mo |
 | Ahrefs | very limited | $99–$199/mo | $399+ |
 | Semrush | trial | $139.95/mo | $499.95 Guru |
-| Profound (AI visibility) | demo only | $999/mo+ enterprise quote | enterprise |
+| Profound (AI Answer Reality) | demo only | $999/mo+ enterprise quote | enterprise |
 | Otterly.ai | small free tier | $29/mo entry | $199 team |
 | Birdeye | quote | from ~$299/mo per location | quote |
 | Yext | quote | from ~$200/mo per location | enterprise |
@@ -267,7 +267,7 @@ Skip for now: enterprise procurement, regulated healthcare networks, large pharm
 4. **Publish 5 real audits** (with owner permission) as case studies. Each becomes a SEO + LinkedIn artifact.
 5. **Launch on Indie Hackers + Product Hunt** under "Visibility & Trust Snapshot." Do not lead with the audit infrastructure — lead with the artifact.
 6. **Find one agency to co-brand the Agency tier** at a 30% lifetime discount in exchange for written commitment. The case study is worth more than the discount.
-7. **Pin a "Recommended next step → Contento" CTA** at the bottom of every snapshot report. Even if Contento is a "book a call" today, the funnel is proved.
+7. **Pin a "Recommended next step → Claim Rewrites" CTA** at the bottom of every snapshot report. Even if Claim Rewrites is a "book a call" today, the funnel is proved.
 
 ---
 

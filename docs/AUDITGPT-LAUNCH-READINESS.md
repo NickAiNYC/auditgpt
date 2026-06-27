@@ -38,7 +38,7 @@ Neither of these are launch-blocking for the **first 30-prospect sprint** becaus
 | Layout metadata | Yes — site description leads with the pillars | None |
 | System prompt | Yes — "Map THE WEDGE" + numbered 4-pillar block + anti-generic rules | None |
 
-**Pillar consistency:** "Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage" used verbatim across every surface. Sub-text on each pillar is identical wherever it appears (defined once in `WEDGE_PILLARS`).
+**Pillar consistency:** "Claim ↔ Evidence ↔ AI/search readability ↔ Claim drift" used verbatim across every surface. Sub-text on each pillar is identical wherever it appears (defined once in `WEDGE_PILLARS`).
 
 **Contrast strip:** "Not SEO. Not AI-visibility tracker. Not reputation management. Not CRO." appears verbatim on the homepage and inside `WedgeCard`.
 
@@ -59,7 +59,7 @@ What I *did* verify on every code path:
 |---|---|
 | Scrape → prompt → Zod validation → render | Code path clean; tsc 0 errors |
 | Repair retry on schema failure | Code path clean; logic verified |
-| Snapshot budget (1 claim + 1 visibility + 1 demand leakage) | Prompt enforces; schema permits |
+| Snapshot budget (1 claim + 1 visibility + 1 Claim drift) | Prompt enforces; schema permits |
 | Starter budget (5–7 findings + 7-day list) | Prompt enforces; schema permits |
 | Full budget (every section + 30-day plan) | Prompt enforces; schema permits |
 
@@ -67,13 +67,13 @@ What I *did* verify on every code path:
 
 | Fixture | Dominant pillar | Recommended next step | Routing correct? | Wedge mapping clarity | Buyer usefulness | Safety | Paid value |
 |---|---|---|---|---|---|---|---|
-| AI SaaS overclaims | Claim ↔ Evidence | Contento | ✅ Yes | 9/10 | 8/10 | 10/10 | 8/10 |
-| Med spa overclaims | Claim ↔ Evidence | Contento | ✅ Yes | 9/10 | 9/10 | 10/10 | 9/10 |
-| Agency guarantees | Claim ↔ Evidence | Contento | ✅ Yes | 9/10 | 8/10 | 10/10 | 8/10 |
-| Real-world SaaS demand leakage | Demand leakage | Recovery | ✅ Yes | 9/10 | 9/10 | 10/10 | 9/10 |
-| Real-world local AI readability | AI/search readability | AI Visibility | ✅ Yes | 9/10 | 9/10 | 10/10 | 8/10 |
+| AI SaaS overclaims | Claim ↔ Evidence | Claim Rewrites | ✅ Yes | 9/10 | 8/10 | 10/10 | 8/10 |
+| Med spa overclaims | Claim ↔ Evidence | Claim Rewrites | ✅ Yes | 9/10 | 9/10 | 10/10 | 9/10 |
+| Agency guarantees | Claim ↔ Evidence | Claim Rewrites | ✅ Yes | 9/10 | 8/10 | 10/10 | 8/10 |
+| Real-world SaaS Claim drift | Claim drift | Retention | ✅ Yes | 9/10 | 9/10 | 10/10 | 9/10 |
+| Real-world local AI readability | AI/search readability | AI Answer Reality | ✅ Yes | 9/10 | 9/10 | 10/10 | 8/10 |
 
-The two new real-world fixtures explicitly test the *non-claim* pillars: demand leakage (Recovery routing) and AI/search readability (AI Visibility routing). They prove the audit can route correctly when the dominant gap is *not* a claim problem. This is critical for avoiding "everything routes to Contento" drift.
+The two new real-world fixtures explicitly test the *non-claim* pillars: Claim drift (Retention routing) and AI/search readability (AI Answer Reality routing). They prove the audit can route correctly when the dominant gap is *not* a claim problem. This is critical for avoiding "everything routes to Claim Rewrites" drift.
 
 ### Would each report sell?
 
@@ -82,7 +82,7 @@ The two new real-world fixtures explicitly test the *non-claim* pillars: demand 
 | AI SaaS overclaims | Yes (3-point version) | Yes (full version with 7-day list) | Marginal (needs multi-page crawl) |
 | Med spa overclaims | Yes | Yes | Yes — claim density is high |
 | Agency guarantees | Yes | Yes | Marginal |
-| Real-world SaaS demand leakage | Yes | Yes (if 5–7 findings) | Marginal (needs more pages) |
+| Real-world SaaS Claim drift | Yes | Yes (if 5–7 findings) | Marginal (needs more pages) |
 | Real-world local AI readability | Yes | Yes | Yes — local clarity + reputation + demand gaps stack |
 
 **What would make $299 reports feel more valuable:** Multi-page crawl. The single-URL scrape is enough for $99 but feels thin at $299. This is *not* a launch blocker — Full Audit buyers in the first 30 days are an exception case, and Nick (founder) can manually add 2–3 more pages to the audit input before delivery. Multi-page is the Phase 2 build.
@@ -114,10 +114,10 @@ I added an `ANTI-GENERIC RULES` section to `SCRUTEXITY_PREAMBLE` listing exactly
 
 | Dominant gap | Routes to | Verified? |
 |---|---|---|
-| Unsupported claims, safer framing, proof-aware content, missing FAQ/service-page detail | Contento | ✅ 3/3 claim-heavy fixtures route here |
-| Service/entity/FAQ/answer-readiness | AI Visibility | ✅ Real-world local fixture routes here |
-| CTA, contact, booking, follow-up, dormant leads | Recovery | ✅ Real-world SaaS fixture routes here |
-| Reviews, testimonials, case studies, proof pages | Proof & Reputation | ⚠ Not exercised in current fixtures — add Phase 2 |
+| Unsupported claims, safer framing, proof-aware content, missing FAQ/service-page detail | Claim Rewrites | ✅ 3/3 claim-heavy fixtures route here |
+| Service/entity/FAQ/answer-readiness | AI Answer Reality | ✅ Real-world local fixture routes here |
+| CTA, contact, booking, follow-up, dormant leads | Retention | ✅ Real-world SaaS fixture routes here |
+| Reviews, testimonials, case studies, proof pages | Verification & Trust Assets | ⚠ Not exercised in current fixtures — add Phase 2 |
 | Agency client | Agency White Label | ⚠ Not exercised in current fixtures — add Phase 2 |
 | Confidence too low | Manual Review | ⚠ Not exercised in current fixtures — add Phase 2 |
 
@@ -206,7 +206,7 @@ Three of the six routes are covered by red-team fixtures. The other three are co
 - ✅ "AuditGPT Report Review" — confirmed
 - ✅ "Verified by AuditGPT" — fully removed from active product surfaces
 - ✅ Claim count + expiry surfaced on badge SVG
-- ✅ Disclaimer-style language ("This review states what AuditGPT examined on the date of the audit. It does not certify truth, ranking, AI visibility, legal compliance, clinical safety, or revenue outcomes.")
+- ✅ Disclaimer-style language ("This review states what AuditGPT examined on the date of the audit. It does not certify truth, ranking, AI Answer Reality, legal compliance, clinical safety, or revenue outcomes.")
 
 ### Behavior
 - ✅ Three SVG variants: active review, expired review, missing report
@@ -227,7 +227,7 @@ Active source scanned (excluding `legacy/`):
 
 | Phrase | Found in active product copy? | Action |
 |---|---|---|
-| "truth engine" | Yes — `src/app/legal/page.tsx:59` | **Fixed.** Footer now reads "AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage" |
+| "truth engine" | Yes — `src/app/legal/page.tsx:59` | **Fixed.** Footer now reads "AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Claim drift" |
 | "Polsia" | Only as CSS class tokens (`card-polsia`, `btn-polsia`) and devnotes in archived/comments | No action — internal-only |
 | "brutal" | Not found in active source | None |
 | "deadpan" | Not found | None |
@@ -251,8 +251,8 @@ Remaining risks: None. The contract eval will block any future regression that i
 | `src/lib/audit-context.ts` | Added "FOUR PILLARS" numbered block at the top of `SCRUTEXITY_PREAMBLE` mapping each finding type to a pillar | Wedge spine in the prompt itself |
 | `src/lib/audit-context.ts` | Added "ANTI-GENERIC RULES" section forbidding generic SEO/CRO advice | Prevents drift into generic-audit territory |
 | `src/lib/eval/contract.ts` | Added `GENERIC_DRIFT_PATTERNS` regex list + structural check | Enforces anti-generic rules at CI gate |
-| `src/lib/eval/fixtures.ts` | Added `real-world-saas-demand-leakage` fixture | Tests Recovery routing + demand-leakage pillar |
-| `src/lib/eval/fixtures.ts` | Added `real-world-local-ai-readability` fixture | Tests AI Visibility routing + readability pillar |
+| `src/lib/eval/fixtures.ts` | Added `real-world-saas-demand-leakage` fixture | Tests Retention routing + demand-leakage pillar |
+| `src/lib/eval/fixtures.ts` | Added `real-world-local-ai-readability` fixture | Tests AI Answer Reality routing + readability pillar |
 | `src/app/legal/page.tsx` | Replaced "Truth Engine" footer line with wedge framing | Last user-facing legacy copy |
 | `.env.example` | Replaced old Pro/Agent/OneTime Stripe SKUs with Starter/Full/Agency | Aligns env doc with live pricing |
 | `.env.example` | Documented active `Z_AI_API_KEY` + optional Anthropic/OpenAI fallback envs | Honest provider documentation |
@@ -297,7 +297,7 @@ Summary: { audits: 5, schemaViolations: 0, forbiddenPhraseViolations: 0, structu
 | $99 Starter | **8/10** | Live LLM run + Stripe Price ID + first paying customer signal |
 | $299 Full | **6/10** | Multi-page crawl (Phase 2) makes this feel worth $299 unattended; founder-delivered version is 8/10 |
 | $799 Agency | **4/10** | Agency dashboard is not built yet; founder-delivered white-label is 7/10 |
-| Retainer upsell (Contento / AI Visibility / Recovery / Proof) | **7/10** | The `/next-step/*` landing pages are not yet built; "book a call" placeholders are enough for the first 30 days |
+| Retainer upsell (Claim Rewrites / AI Answer Reality / Retention / Proof) | **7/10** | The `/next-step/*` landing pages are not yet built; "book a call" placeholders are enough for the first 30 days |
 
 ---
 
@@ -309,7 +309,7 @@ Summary: { audits: 5, schemaViolations: 0, forbiddenPhraseViolations: 0, structu
 4. **Wire `checkout.session.completed` (one-time mode) to mark the related Audit row paid.** Required only when you stop founder-delivering. *2 hours.*
 5. **Add an "Upgrade to Starter Audit for this site" CTA on the snapshot report** itself (currently the upsell is only on the next-step card and on /pricing). *15 minutes.*
 6. **Run the 5-prospect-per-day sourcing routine** for one week to assemble the first 30-prospect list. *2.5 hours total.*
-7. **Add three more red-team fixtures** covering Proof & Reputation routing, Agency White Label routing, and Manual Review fallback. *45 minutes.*
+7. **Add three more red-team fixtures** covering Verification & Trust Assets routing, Agency White Label routing, and Manual Review fallback. *45 minutes.*
 8. **Connect a Plausible or PostHog snippet** to track snapshot_intake → snapshot_delivered → starter_checkout → full_checkout → next_step_click. *20 minutes.*
 9. **Drop a `Z_AI_API_KEY` rate-limit dashboard** somewhere visible (or just check it daily) so you don't blow the budget on day-one outreach. *5 minutes manual; or 30 minutes for a tiny route.*
 10. **Run 5 manual self-reviews on auditgpt.ai itself.** Use the Snapshot, Starter, and Full audit types. Publish whichever lands cleanest at `/audit/self`. *60 minutes.*
@@ -355,14 +355,14 @@ Summary: { audits: 5, schemaViolations: 0, forbiddenPhraseViolations: 0, structu
 ### What to watch
 - Reply rate per ICP (target ≥3/10).
 - Snapshot → $99 conversion rate (target ≥30% of "yes-to-snapshot").
-- Which finding type triggered each conversion (claim / visibility / demand leakage / reputation).
+- Which finding type triggered each conversion (claim / visibility / Claim drift / reputation).
 - Which message variant produces the strongest replies.
 
 ### When to pause and tune
 - If 0 replies after 15 DMs: rewrite the DM (probably too long or too sales-y).
 - If 5 replies but 0 snapshots delivered: snapshot URL is broken or the link feels untrustworthy.
 - If 5 snapshots delivered but 0 $99 conversions: snapshot output is too generic — return to prompt tuning.
-- If conversions are happening but the wrong route comes back (e.g., everything routes to Contento): tune `recommendedNextStep` routing in the prompt.
+- If conversions are happening but the wrong route comes back (e.g., everything routes to Claim Rewrites): tune `recommendedNextStep` routing in the prompt.
 
 ### When to pivot wedge
 - 21 days in, if AI/SaaS founders have produced 0 conversions but agency Batch 2 has produced 1 white-label conversation: pivot primary effort to agencies.

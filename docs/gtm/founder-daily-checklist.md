@@ -42,8 +42,8 @@ Print this. Stick it on the wall. Run it Mon–Fri for 30 days.
   - Make the paid offer (Starter $99 or Full $299) based on which gap dominates
   - Set `paid_offer_made = TRUE`, `paid_tier` = `starter` | `full` | `agency`
 - [ ] Pick the single strongest audit from today
-  - Create a Contento project folder named `Contento — [company] — [date]`
-  - Capture top 3 claim findings + 1 demand leakage finding
+  - Create a Claim Rewrites project folder named `Claim Rewrites — [company] — [date]`
+  - Capture top 3 claim findings + 1 Claim drift finding
   - Draft 1 safer rewrite + 1 FAQ block
 - [ ] Tag any conversion-worthy finding for the case-study pipeline
 
@@ -68,7 +68,7 @@ Print this. Stick it on the wall. Run it Mon–Fri for 30 days.
   - agency conversations
 - [ ] Identify the single best-performing message variant (highest reply rate)
 - [ ] Identify the single strongest objection
-- [ ] Identify which finding type triggered the most engagement (claim / visibility / demand leakage / reputation)
+- [ ] Identify which finding type triggered the most engagement (claim / visibility / Claim drift / reputation)
 - [ ] **Decision:**
   - **Continue current wedge** if ≥3/10 reply rate AND ≥1 paid this week
   - **Tune product** if snapshots are being delivered but recipients say findings feel generic, OR if recommended-next-step routing felt wrong 2+ times this week

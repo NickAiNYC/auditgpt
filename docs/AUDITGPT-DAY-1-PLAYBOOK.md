@@ -22,7 +22,7 @@ Open Stripe Dashboard → Products → Add product. Create three products:
 
 ### Product 2: Full Visibility & Trust Audit
 - **Name:** AuditGPT Five-Surface Visibility & Trust Audit
-- **Description:** Up to 5 buyer-facing surfaces reviewed. Claim, evidence, AI/search readability, reputation, demand leakage. 30-day plan.
+- **Description:** Up to 5 buyer-facing surfaces reviewed. Claim, evidence, AI/search readability, reputation, Claim drift. 30-day plan.
 - **Pricing model:** Standard pricing
 - **Price:** $299.00 USD
 - **Billing period:** **One-time**
@@ -80,7 +80,7 @@ Open `/snapshot` in a browser. For each of the 5 sites below, run a snapshot (no
 - Claim extraction quality
 - Evidence gap quality
 - AI/search readability quality
-- Demand leakage quality
+- Claim drift quality
 - Safer framing quality
 - Recommended next-step quality
 - Safety / no-guarantee compliance
@@ -105,7 +105,7 @@ If fewer than 3 say "yes," diagnose:
 |---|---|---|
 | Reports feel generic across all 5 | Prompt drift | Tighten anti-generic rules in `SCRUTEXITY_PREAMBLE`; tune for the failing vertical |
 | Reports cite wrong evidence | Scrape quality (single page misses real proof) | For $299, add manual review of 4 extra URLs; for $99, accept and disclose |
-| Recommended next step keeps routing to Contento | Routing logic too narrow | Tighten the routing rules in the system prompt |
+| Recommended next step keeps routing to Claim Rewrites | Routing logic too narrow | Tighten the routing rules in the system prompt |
 | LLM throws or returns invalid JSON | Provider/model issue | Switch `LLM_PROVIDER=openai` (or `anthropic`) + set API key; redeploy |
 | One vertical fails consistently | Vertical mismatch | Note it; consider adding a vertical-specific preamble in Week 2 |
 | Report is unsafe (guaranteed language slipped) | Forbidden phrase eval gap | Add the phrase to `FORBIDDEN_PHRASES` in `audit-context.ts`; re-run eval |
@@ -149,7 +149,7 @@ Why they qualify (1 sentence):
 Claim gap (verbatim quote + why it lacks proof):
 Evidence/proof gap (what proof would buyers expect):
 AI/search readability gap (a buyer question the page doesn't answer):
-Demand leakage gap (specific CTA / form / booking friction):
+Claim drift gap (specific CTA / form / booking friction):
 DM angle (one sentence framing):
 Personalized DM (final, ready to send):
 ```
@@ -231,7 +231,7 @@ When a reply comes in:
 
 ### Reply: "what is this?"
 
-> Short version: AuditGPT is not SEO, not an AI visibility tracker, not reputation management, and not CRO. It maps the gap between claim, evidence, AI/search readability, and demand leakage. Sample: auditgpt.ai/sample-report.
+> Short version: AuditGPT is not SEO, not an AI Answer Reality tracker, not reputation management, and not CRO. It maps the gap between claim, evidence, AI/search readability, and Claim drift. Sample: auditgpt.ai/sample-report.
 
 ### Reply: "how much?"
 
@@ -324,7 +324,7 @@ If a block takes longer, *cut scope, not quality*. Fewer prospects sourced is be
 | `AUDITGPT-DAY-1-PLAYBOOK.md` | This file — Day 1 execution |
 | `AUDITGPT-OPERATIONAL-LAUNCH.md` | Operational launch setup (Stripe + LLM verification procedures + remaining blockers) |
 | `AUDITGPT-LAUNCH-READINESS.md` | Pre-hardening readiness pass + scores |
-| `AUDITGPT-GTM-30-DAY-PLAN.md` | Full 30-day plan + ICP scoring + Contento dogfood loop |
+| `AUDITGPT-GTM-30-DAY-PLAN.md` | Full 30-day plan + ICP scoring + Claim Rewrites dogfood loop |
 | `AUDITGPT-REFOCUS-REPORT.md` | Build report from the refocus |
 | `AUDITGPT-FULL-AUDIT-2026-06-20.md` | Original audit of the prior product |
 | `AUDITGPT-DASHBOARD.html` | Operating dashboard (open in browser) |

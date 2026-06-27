@@ -86,7 +86,7 @@ Minimum MVP: Site, Page, AuditRun, ClaimRecord, EvidenceRecord, Recommendation, 
 
 | Don't Build | Why |
 |-------------|-----|
-| Contento dashboard | Premature |
+| Claim Rewrites dashboard | Premature |
 | Unified auth | Not needed yet |
 | SSO | Premature |
 | Public API | Premature |

@@ -137,7 +137,7 @@ If the founder wedge produces snapshots but no $99/$299 closes within 14 days, p
 
 ### Batch 1 — 10 AI/SaaS founders
 
-**Goal:** Test whether founders pay for a claim/proof/AI visibility snapshot.
+**Goal:** Test whether founders pay for a claim/proof/AI Answer Reality snapshot.
 
 For each prospect:
 - **Pre-outreach manual review (10 min/prospect):** Open homepage. Identify 1 claim that is overstated, weakly supported, or needs evidence. Identify 1 visibility gap (no clear "what does X do" answer, missing FAQ, no entity clarity). Identify 1 demand-leakage gap (high-friction CTA, no demo path, contact form only).
@@ -221,7 +221,7 @@ All messages observational. No scare tactics. No legal/compliance threats. No "G
 
 ### 4.6 Follow-up 2 (7 days later, still no reply)
 
-> Last one from me. If the wedge — claim ↔ evidence ↔ AI/search readability ↔ demand leakage — is interesting later, the free snapshot is at auditgpt.ai/snapshot. Cheers.
+> Last one from me. If the wedge — claim ↔ evidence ↔ AI/search readability ↔ Claim drift — is interesting later, the free snapshot is at auditgpt.ai/snapshot. Cheers.
 
 **27 words.**
 
@@ -233,13 +233,13 @@ All messages observational. No scare tactics. No legal/compliance threats. No "G
 
 ### 4.8 Reply after "what is this?"
 
-> Short version: AuditGPT is the diagnostic that sits between SEO, AI visibility, reputation, and CRO tools. It maps four things together — claim, evidence, AI/search readability, demand leakage — and shows the gap. Free 3-point snapshot, $99 starter audit, $299 full. Sample report at auditgpt.ai/sample-report.
+> Short version: AuditGPT is the diagnostic that sits between SEO, AI Answer Reality, reputation, and CRO tools. It maps four things together — claim, evidence, AI/search readability, Claim drift — and shows the gap. Free 3-point snapshot, $99 starter audit, $299 full. Sample report at auditgpt.ai/sample-report.
 
 **44 words.**
 
 ### 4.9 Reply after "how much?"
 
-> Free 3-point snapshot is $0 (the one I'd run for you). $99 Starter is 5–7 findings + 7-day fix list. $299 Full adds local/service clarity, reputation surface, demand leakage, proof gaps, and a 30-day plan. Agencies get a $799/mo tier for 25 audits + white-label. auditgpt.ai/pricing.
+> Free 3-point snapshot is $0 (the one I'd run for you). $99 Starter is 5–7 findings + 7-day fix list. $299 Full adds local/service clarity, reputation surface, Claim drift, proof gaps, and a 30-day plan. Agencies get a $799/mo tier for 25 audits + white-label. auditgpt.ai/pricing.
 
 **44 words.**
 
@@ -281,7 +281,7 @@ Priority Recommendation
    - rationale
 
 Recommended Scrutexity Next Step
-   - product (Contento / AI Visibility / Recovery / Proof & Reputation / Agency White Label)
+   - product (Claim Rewrites / AI Answer Reality / Retention / Verification & Trust Assets / Agency White Label)
    - rationale
    - CTA
 
@@ -310,7 +310,7 @@ Lead with the claim gap (where the legal risk lives). Always include the safer f
 ### $99 Starter Audit pitch
 
 **What they get:**
-- 5–7 findings across claim, AI/search readability, reputation, and demand leakage
+- 5–7 findings across claim, AI/search readability, reputation, and Claim drift
 - Safer framing recommendations
 - 7-day fix list
 - Recommended Scrutexity next step
@@ -332,7 +332,7 @@ Lead with the claim gap (where the legal risk lives). Always include the safer f
 - AI/search visibility findings
 - Local / service clarity findings
 - Reputation surface findings
-- Demand leakage findings
+- Claim drift findings
 - Proof gaps
 - Safer framing recommendations
 - 30-day prioritized action plan
@@ -345,7 +345,7 @@ Lead with the claim gap (where the legal risk lives). Always include the safer f
 - When the buyer asks "do you have a deeper version"
 
 **Script:**
-> If you're shipping into a category where buyers will pressure-test every claim — fundraise, launch, comp page — the Full Audit is the one. Claim audit, AI/search visibility, local/service clarity, reputation, demand leakage, proof gaps, 30-day plan. $299 one-time. Want me to run it?
+> If you're shipping into a category where buyers will pressure-test every claim — fundraise, launch, comp page — the Full Audit is the one. Claim audit, AI/search visibility, local/service clarity, reputation, Claim drift, proof gaps, 30-day plan. $299 one-time. Want me to run it?
 
 ### $799 Agency tier pitch
 
@@ -438,50 +438,50 @@ total_revenue_attributed
 
 ---
 
-## 8. Contento Internal Dogfood Loop
+## 8. Claim Rewrites Internal Dogfood Loop
 
-Every AuditGPT report should produce a Contento project. Even before Contento is a paid product, this proves the loop and generates marketing assets.
+Every AuditGPT report should produce a Claim Rewrites project. Even before Claim Rewrites is a paid product, this proves the loop and generates marketing assets.
 
 ### Workflow
 
 1. **Run AuditGPT** on a target site.
 2. **Select top findings.** Pull the 3 strongest claim findings and the 1 strongest demand-leakage finding.
-3. **Create a Contento project folder** (Notion or Google Drive) named `Contento — [company name] — [date]`.
+3. **Create a Claim Rewrites project folder** (Notion or Google Drive) named `Claim Rewrites — [company name] — [date]`.
 4. **Generate a governed brief** from the findings: approved claims, unsupported claims, forbidden claims, safer rewrites, FAQ opportunities, proof blocks.
-5. **Generate assets** (the part that becomes a paid Contento product later):
+5. **Generate assets** (the part that becomes a paid Claim Rewrites product later):
    - Safer hero rewrite
    - One FAQ block
    - One proof page outline
-6. **Use the assets in AuditGPT marketing.** Each Contento project becomes a case study showing what the next step actually delivers.
+6. **Use the assets in AuditGPT marketing.** Each Claim Rewrites project becomes a case study showing what the next step actually delivers.
 7. **Track which content converts** — log which assets generate the most snapshot upsells.
 
 ### Project templates to create now
 
 | Project name | Use case |
 |---|---|
-| `Contento — AuditGPT Launch Page` | Dogfood: our own homepage |
-| `Contento — Free Snapshot Outreach` | The DMs from §4 |
-| `Contento — Agency White-Label Pitch` | Sales asset for $799 tier |
-| `Contento — AI Visibility Education` | The "what is AI/search readability" explainer |
-| `Contento — Med Spa Claim-Risk Education` | The category-seed asset for the med spa vertical |
-| `Contento — Proof Gap Case Study` | First customer case study after a Full Audit |
+| `Claim Rewrites — AuditGPT Launch Page` | Dogfood: our own homepage |
+| `Claim Rewrites — Free Snapshot Outreach` | The DMs from §4 |
+| `Claim Rewrites — Agency White-Label Pitch` | Sales asset for $799 tier |
+| `Claim Rewrites — AI Answer Reality Education` | The "what is AI/search readability" explainer |
+| `Claim Rewrites — Med Spa Claim-Risk Education` | The category-seed asset for the med spa vertical |
+| `Claim Rewrites — Proof Gap Case Study` | First customer case study after a Full Audit |
 
 ---
 
 ## 9. Public Positioning Assets
 
-| # | Asset | Audience | Purpose | CTA | Proof needed | Contento project |
+| # | Asset | Audience | Purpose | CTA | Proof needed | Claim Rewrites project |
 |---|---|---|---|---|---|---|
-| 1 | Homepage hero (live) | All visitors | Wedge anchor; convert to snapshot | "Run a Starter Audit" | Sample report public | `Contento — AuditGPT Launch Page` |
-| 2 | LinkedIn launch post | Founders + agencies | First wedge announcement | "Reply for a free snapshot" | Sample report + 1 customer quote | `Contento — Launch Announcement` |
-| 3 | Founder DM offer | Founders | Cold outbound | "Want the snapshot?" | None | `Contento — Free Snapshot Outreach` |
-| 4 | Agency DM offer | Agency owners | Cold outbound | "Want to white-label?" | Sample report | `Contento — Agency White-Label Pitch` |
-| 5 | "What is a Visibility & Trust Snapshot?" article | Inbound | SEO + category education | "Run a snapshot" | 1 example finding | `Contento — Category Education` |
-| 6 | "Before AI builds your site, check what it cannot prove" article | AI/SaaS founders | Partner play to AI builders (Lovable, Bolt, v0) | "Run a snapshot" | 1 AI-built site audited | `Contento — AI Builder Partner` |
-| 7 | "Claim gaps vs SEO gaps" article | SEO-savvy buyers | Frame distinction | "Run a snapshot" | Side-by-side comparison | `Contento — Wedge Education` |
-| 8 | "The 30 most common unsupported AI startup claims" report outline | Founders + investors | Category-seed asset | Newsletter signup | 50+ audits in vertical | `Contento — AI Startup Benchmark` |
-| 9 | "Med spa claim gaps we keep seeing" report outline | Med spa agencies | Category-seed asset | Agency tier signup | 30+ audits in vertical | `Contento — Med Spa Benchmark` |
-| 10 | Agency one-pager (PDF) | Agencies | Sales asset for $799 tier | "Book a 15-min call" | 1 white-labeled sample | `Contento — Agency One-Pager` |
+| 1 | Homepage hero (live) | All visitors | Wedge anchor; convert to snapshot | "Run a Starter Audit" | Sample report public | `Claim Rewrites — AuditGPT Launch Page` |
+| 2 | LinkedIn launch post | Founders + agencies | First wedge announcement | "Reply for a free snapshot" | Sample report + 1 customer quote | `Claim Rewrites — Launch Announcement` |
+| 3 | Founder DM offer | Founders | Cold outbound | "Want the snapshot?" | None | `Claim Rewrites — Free Snapshot Outreach` |
+| 4 | Agency DM offer | Agency owners | Cold outbound | "Want to white-label?" | Sample report | `Claim Rewrites — Agency White-Label Pitch` |
+| 5 | "What is a Visibility & Trust Snapshot?" article | Inbound | SEO + category education | "Run a snapshot" | 1 example finding | `Claim Rewrites — Category Education` |
+| 6 | "Before AI builds your site, check what it cannot prove" article | AI/SaaS founders | Partner play to AI builders (Lovable, Bolt, v0) | "Run a snapshot" | 1 AI-built site audited | `Claim Rewrites — AI Builder Partner` |
+| 7 | "Claim gaps vs SEO gaps" article | SEO-savvy buyers | Frame distinction | "Run a snapshot" | Side-by-side comparison | `Claim Rewrites — Wedge Education` |
+| 8 | "The 30 most common unsupported AI startup claims" report outline | Founders + investors | Category-seed asset | Newsletter signup | 50+ audits in vertical | `Claim Rewrites — AI Startup Benchmark` |
+| 9 | "Med spa claim gaps we keep seeing" report outline | Med spa agencies | Category-seed asset | Agency tier signup | 30+ audits in vertical | `Claim Rewrites — Med Spa Benchmark` |
+| 10 | Agency one-pager (PDF) | Agencies | Sales asset for $799 tier | "Book a 15-min call" | 1 white-labeled sample | `Claim Rewrites — Agency One-Pager` |
 
 ---
 
@@ -561,7 +561,7 @@ Every AuditGPT report should produce a Contento project. Even before Contento is
 
 ### Afternoon (45 min)
 - [ ] Log every snapshot delivered + every reply into the tracker.
-- [ ] If you generated 2+ snapshots today, create 1 Contento project from the strongest one.
+- [ ] If you generated 2+ snapshots today, create 1 Claim Rewrites project from the strongest one.
 - [ ] Tag any conversion-worthy finding for the case-study pipeline.
 
 ### Evening (15 min)

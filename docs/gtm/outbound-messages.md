@@ -48,7 +48,7 @@ Replace `[brackets]` with prospect-specific content. Replace `[short quote]` wit
 
 ## 6. Follow-up 2 (7 days later, still no reply)
 
-> Last one from me. If the wedge — claim ↔ evidence ↔ AI/search readability ↔ demand leakage — is interesting later, the free snapshot is at auditgpt.ai/snapshot. Cheers.
+> Last one from me. If the wedge — claim ↔ evidence ↔ AI/search readability ↔ Claim drift — is interesting later, the free snapshot is at auditgpt.ai/snapshot. Cheers.
 
 *27 words.*
 
@@ -64,7 +64,7 @@ Replace `[brackets]` with prospect-specific content. Replace `[short quote]` wit
 
 ## 8. Reply after "what is this?"
 
-> Short version: AuditGPT is the diagnostic that sits between SEO, AI visibility, reputation, and CRO tools. It maps four things together — claim, evidence, AI/search readability, demand leakage — and shows the gap. Free 3-point snapshot, $99 starter audit, $299 full. Sample report at auditgpt.ai/sample-report.
+> Short version: AuditGPT is the diagnostic that sits between SEO, AI Answer Reality, reputation, and CRO tools. It maps four things together — claim, evidence, AI/search readability, Claim drift — and shows the gap. Free 3-point snapshot, $99 starter audit, $299 full. Sample report at auditgpt.ai/sample-report.
 
 *44 words.*
 
@@ -72,7 +72,7 @@ Replace `[brackets]` with prospect-specific content. Replace `[short quote]` wit
 
 ## 9. Reply after "how much?"
 
-> Free 3-point snapshot is $0 (the one I'd run for you). $99 Starter is 5–7 findings + 7-day fix list. $299 Full adds local/service clarity, reputation surface, demand leakage, proof gaps, and a 30-day plan. Agencies get a $799/mo tier for 25 audits + white-label. auditgpt.ai/pricing.
+> Free 3-point snapshot is $0 (the one I'd run for you). $99 Starter is 5–7 findings + 7-day fix list. $299 Full adds local/service clarity, reputation surface, Claim drift, proof gaps, and a 30-day plan. Agencies get a $799/mo tier for 25 audits + white-label. auditgpt.ai/pricing.
 
 *44 words.*
 

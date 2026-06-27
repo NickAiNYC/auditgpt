@@ -4,7 +4,7 @@
 **Repo audited:** `/Users/nick/Desktop/auditgpt` (the `/Users/nick/Claude/Projects/AuditGPT` folder is empty — code lives on Desktop)
 **Commit basis:** working tree as of 2026-06-20 ~08:46 local
 **Auditor frame:** principal SaaS architect + product auditor + prompt safety + B2B conversion + acquisition reviewer
-**Verdict in one line:** A real, shippable product exists — but it is the *wrong* product for the Scrutexity strategy. The brand inside the codebase is "Polsia-killer / truth engine for AI businesses," not "diagnostic front door for governed marketing and demand recovery."
+**Verdict in one line:** A real, shippable product exists — but it is the *wrong* product for the Scrutexity strategy. The brand inside the codebase is "Polsia-killer / truth engine for AI businesses," not "diagnostic front door for governed marketing and demand Retention."
 
 ---
 
@@ -18,7 +18,7 @@ The headline gap: the JSON the LLM returns (`verdict`, `grade_stamp`, `report_ca
 
 Pricing is also misaligned: live pricing is **$29 one-time / $49 Pro / $99 Agent**, not the **$0 / $99 / $299 / $799/month** ladder the Scrutexity AuditGPT business plan requires. There is no $99 starter, no $299 full report, no $799/mo agency tier, no free 3-point snapshot workflow.
 
-The product also contains explicit guarantee-style language and brand markers the locked positioning forbids: "brutal," "deadpan / forensic," "the truth engine," "AI-slop / rebuild this site," "Polsia-killer," banned-phrase lists like "delusion" and "founder probably believes." This is fine for a takedown product targeting Polsia. It is wrong for "Governed marketing and demand recovery for businesses where trust matters."
+The product also contains explicit guarantee-style language and brand markers the locked positioning forbids: "brutal," "deadpan / forensic," "the truth engine," "AI-slop / rebuild this site," "Polsia-killer," banned-phrase lists like "delusion" and "founder probably believes." This is fine for a takedown product targeting Polsia. It is wrong for "Governed marketing and demand Retention for businesses where trust matters."
 
 **Bottom line:** roughly 70% of the engineering is reusable; ~100% of the prompt, schema, report shape, pricing, and brand voice need to be replaced. AuditGPT is **not** ready to support paid AuditGPT audits as defined in the project spec. It *is* ready to support the older "Polsia-killer" thesis — but that thesis has been retired.
 
@@ -74,7 +74,7 @@ The framing across these surfaces is **due-diligence + anti-AI-slop**, not claim
 | AI/search visibility checks | **Missing** | No AEO/GEO logic; no entity-clarity checks; no FAQ presence check |
 | Local visibility / GBP checks | **Missing** | No Google Business Profile, no review platform, no NAP consistency |
 | Reputation surface review | **Missing** | No review platform scan, no testimonial structure checks |
-| Demand leakage / missed-call / contact-form review | **Missing** | No CTA inventory, no missed-call recovery logic |
+| Claim drift / missed-call / contact-form review | **Missing** | No CTA inventory, no missed-call Retention logic |
 | Medical/wellness guardrails (CPOM, HIPAA, BAA-ready language) | **Missing** | No specialty prompts; same LLM call regardless of industry |
 | AI-slop detector | Complete (but off-strategy) | Polsia subdomains, "powerful platform that empowers", missing core pages — solves wrong problem for the locked positioning |
 
@@ -92,7 +92,7 @@ The framing across these surfaces is **due-diligence + anti-AI-slop**, not claim
 | Export / PDF | **Stub** | "Export" button calls `window.print()` only |
 | Proof artifacts | **Missing** | No proof checklist, no claim-record exports |
 | Badge / verification | Complete | But verifies on grade ≥ B + score ≥ 70 + no slop, not on Scrutexity criteria |
-| Recommendations | **Partial** | `services_to_hire` is generic ("hire SEO consultant"), not "next step = Contento / AI Visibility / Recovery / Proof" |
+| Recommendations | **Partial** | `services_to_hire` is generic ("hire SEO consultant"), not "next step = Claim Rewrites / AI Answer Reality / Retention / Proof" |
 | 7-day fix list | **Missing** | |
 | 30-day action plan | **Partial** | `action_plan` field; not weighted, no proof gap separation |
 | Recommended Scrutexity next step | **Missing** | The crucial integration point — no field exists |
@@ -126,9 +126,9 @@ The framing across these surfaces is **due-diligence + anti-AI-slop**, not claim
 | GitHub OAuth + deploy-fix PR flow | Complete (and surprising) | Encrypted token storage, creates branch + PR with fix files. **Off-strategy** — pushes AuditGPT toward "code repair tool" not "trust diagnostic" |
 | CRM / lead capture | **Missing** | |
 | Analytics tracking | **Missing** | SELF-AUDIT.md flags this |
-| Contento handoff | **Missing** | No data path |
-| Recovery handoff | **Missing** | |
-| AI Visibility handoff | **Missing** | |
+| Claim Rewrites handoff | **Missing** | No data path |
+| Retention handoff | **Missing** | |
+| AI Answer Reality handoff | **Missing** | |
 | Proof / Verify handoff | **Partial** | The badge system is a primitive version, but it badges grade ≥ B audits, not Scrutexity Proof artifacts |
 | Agency dashboard / white-label | **Missing** | |
 
@@ -173,8 +173,8 @@ These are *real* engineering wins that the new product can keep:
 - `/polsia` redirect — vestigial.
 - Pricing page ($29 / $49 / $99) — wrong tiers.
 - "Verified by AuditGPT" badge granted for grade ≥ B — the badge claim ("Verified by AuditGPT") implies a stronger thing than the contract can actually guarantee. CONTRACT.md is intellectually honest about this, but the public-facing badge copy is not.
-- AgentTab / AgentsTab / RebuildTab / LandingPageTab / StrategyTab in `page.tsx` — all are "execution mode" features that compete with Contento / AI Visibility / Recovery as separate Scrutexity products. AuditGPT is supposed to *feed* those products, not duplicate them.
-- `/api/landing-page`, `/api/rebuild`, `/api/strategy` — same: these are Contento-class features built into AuditGPT.
+- AgentTab / AgentsTab / RebuildTab / LandingPageTab / StrategyTab in `page.tsx` — all are "execution mode" features that compete with Claim Rewrites / AI Answer Reality / Retention as separate Scrutexity products. AuditGPT is supposed to *feed* those products, not duplicate them.
+- `/api/landing-page`, `/api/rebuild`, `/api/strategy` — same: these are Claim Rewrites-class features built into AuditGPT.
 - `/api/agents/ad-copy/run` — ad copy generation does not belong in the audit product per the locked spec.
 
 ### Duplicate
@@ -195,10 +195,10 @@ These are *real* engineering wins that the new product can keep:
 
 - The Polsia-killer / AI-slop framing across `/`, `/slop`, `/compare`, `/polsia`.
 - The brand voice ("brutal," "deadpan / forensic," "the truth engine," "delusion," "founder probably believes").
-- `/api/landing-page` (Contento territory).
-- `/api/rebuild` (Contento territory).
+- `/api/landing-page` (Claim Rewrites territory).
+- `/api/rebuild` (Claim Rewrites territory).
 - `/api/strategy` (advisory work, not diagnostic).
-- `/api/agent` (Recovery / Contento territory).
+- `/api/agent` (Retention / Claim Rewrites territory).
 - `/api/agents/ad-copy/run` + `/api/agents/*` (out of scope entirely).
 - `/api/deploy/fix` + `github-deploy.ts` + `DeployFixPR` model (separate code-repair product, not AuditGPT).
 - `RebuildTab`, `LandingPageTab`, `StrategyTab`, `AgentTab`, `AgentsTab` in `src/app/page.tsx`.
@@ -224,16 +224,16 @@ Scoring against the locked Scrutexity AuditGPT spec, not the codebase's own goal
 | 5 | AI / search visibility review | **2/10** | Slop signals overlap a bit (empty meta, missing core pages) but no AEO/GEO, no entity, no FAQ, no buyer-question testing. |
 | 6 | Local / service clarity review | **1/10** | No GBP, no NAP, no local intent. Not implemented. |
 | 7 | Reputation surface review | **1/10** | No review platform scan, no testimonial structure check, no provider authority check. |
-| 8 | Missed-demand leakage review | **0/10** | Not implemented in any form. |
+| 8 | Missed-Claim drift review | **0/10** | Not implemented in any form. |
 | 9 | Medical / wellness guardrails | **0/10** | Same prompt regardless of industry; no CPOM, HIPAA, BAA, or clinical-advice guard. |
 | 10 | Agency white-label usefulness | **0/10** | No agency tier in pricing, no white-label settings, no client queue. |
 | 11 | Public / private report usefulness | **4/10** | Public `/audit/[publicId]` works; "private unlocked" tier missing. |
 | 12 | Sample report quality | **8/10** | `/sample-report` is the one well-aligned asset. Wins points for actually showing the new product. Loses points because it's frozen fixture data and unreachable from `/`. |
 | 13 | 7-day fix list | **0/10** | Not implemented. |
 | 14 | 30-day action plan | **3/10** | `action_plan` field exists but is generic 3–7 steps, not the prioritized matrix the spec asks for. |
-| 15 | Contento handoff readiness | **1/10** | No "next step" field, no claim → safer copy → content brief pipeline. |
-| 16 | AI Visibility handoff readiness | **1/10** | No visibility-gap → answer-readiness path. |
-| 17 | Recovery handoff readiness | **0/10** | No demand-leakage taxonomy at all. |
+| 15 | Claim Rewrites handoff readiness | **1/10** | No "next step" field, no claim → safer copy → content brief pipeline. |
+| 16 | AI Answer Reality handoff readiness | **1/10** | No visibility-gap → answer-readiness path. |
+| 17 | Retention handoff readiness | **0/10** | No demand-leakage taxonomy at all. |
 | 18 | Proof / Verify handoff readiness | **3/10** | Badge + verified page exist as primitives but verify the wrong criteria. |
 | 19 | No-guarantee safety language | **2/10** | Brand language ("truth engine," "verified") and prompt language ("brutal," "fact-backed") imply guarantees the product cannot make. CONTRACT.md is honest; product UI is not. |
 | 20 | Commercial readiness for $99/$299 | **2/10** | $99 starter and $299 full do not exist as SKUs. Sample report could justify $99 if intake + delivery existed. Cannot charge $299 today; nothing to deliver. |
@@ -295,7 +295,7 @@ Mapped against the Scrutexity-spec report sections:
 | 4. AI / Search Visibility Findings | **Missing** |
 | 5. Local / Service Clarity Findings | **Missing** |
 | 6. Reputation Surface Findings | **Missing** |
-| 7. Demand Leakage Findings | **Missing** |
+| 7. Claim drift Findings | **Missing** |
 | 8. Proof Gaps | **Missing** |
 | 9. Safer Framing Recommendations | **Missing in live, present in `/sample-report`** |
 | 10. Priority Matrix | **Missing** |
@@ -307,7 +307,7 @@ Mapped against the Scrutexity-spec report sections:
 **Can the live report support a paid audit?**
 
 - $99 starter: **No.** A buyer would receive a verdict letter, a few facts, a few red flags, and three to seven generic "action plan" items. Not a paid diagnostic. The `/sample-report` would justify $99 *if it could be generated for any URL*, but it cannot — it's a static fixture.
-- $299 full: **No.** Five whole findings categories (AI visibility, local clarity, reputation, demand leakage, proof gaps) and the recommended-next-step field do not exist.
+- $299 full: **No.** Five whole findings categories (AI Answer Reality, local clarity, reputation, Claim drift, proof gaps) and the recommended-next-step field do not exist.
 
 The report does not feel like a generic SEO score (it has more opinion), but it also does not feel like a Scrutexity claim audit. It feels like an indie due-diligence opinion column. That is a real product — just not the *intended* product.
 
@@ -439,7 +439,7 @@ Required, ranked by MVP urgency:
 | `ProofGap` (auditRunId, claimId?, required, type case-study/credential/data/audit/partner-logo) | Phase 2 | |
 | `SaferRewrite` (claimId, originalText, safeText, framingNote) | **MVP** | Can be folded into Recommendation |
 | `PriorityAction` (auditRunId, action, tier fix-now/add-proof/rewrite/create-content/improve-visibility/recover-demand/monitor) | **MVP** | Drives the 30-day plan |
-| `RecommendedNextStep` (auditRunId, scrutexityProduct Contento/AIVisibility/Recovery/Proof/AgencyWhiteLabel, rationale) | **MVP** | The crucial Scrutexity-handoff field |
+| `RecommendedNextStep` (auditRunId, scrutexityProduct Claim Rewrites/AIVisibility/Retention/Proof/AgencyWhiteLabel, rationale) | **MVP** | The crucial Scrutexity-handoff field |
 | `PublicReport` / `PrivateReport` (auditRunId, kind, unlockedAt, unlockedBy) | Phase 1 | Separate the public free preview from the paid private report |
 | `VerificationBadge` (auditRunId, criteria snapshot, issuedAt, expiresAt) | Phase 1 | Already partially exists |
 | `AuditEvent` (auditRunId, event, payload) | Phase 1 | Funnel analytics |
@@ -505,10 +505,10 @@ Required, ranked by MVP urgency:
 
 | Handoff | State | Required addition |
 |---|---|---|
-| → Contento | **Missing** | Need: `ClaimRecord` exports as content brief (approved claims, unsupported claims, safer rewrites, FAQ candidates, service-page recommendations). Schema-wise: a `RecommendedNextStep` row with `kind = contento` per qualifying gap. |
-| → AI Visibility | **Missing** | Need: visibility findings exported as answer-ready content opportunities, entity-clarity fixes, FAQ section recommendations, local/service clarity fixes. |
-| → Recovery | **Missing** | Need: demand-leakage findings exported as missed-inquiry risks, CTA / follow-up gaps, dormant-lead opportunities, no-show / consult-recovery recommendations. |
-| → Proof & Reputation | **Partial** | The badge + verified page are primitives. Need: public proof pages, trust blocks, case-study opportunities, badge / verification records that cite *what was checked*, not "Verified." |
+| → Claim Rewrites | **Missing** | Need: `ClaimRecord` exports as content brief (approved claims, unsupported claims, safer rewrites, FAQ candidates, service-page recommendations). Schema-wise: a `RecommendedNextStep` row with `kind = Claim Rewrites` per qualifying gap. |
+| → AI Answer Reality | **Missing** | Need: visibility findings exported as answer-ready content opportunities, entity-clarity fixes, FAQ section recommendations, local/service clarity fixes. |
+| → Retention | **Missing** | Need: demand-leakage findings exported as missed-inquiry risks, CTA / follow-up gaps, dormant-lead opportunities, no-show / consult-Retention recommendations. |
+| → Verification & Trust Assets | **Partial** | The badge + verified page are primitives. Need: public proof pages, trust blocks, case-study opportunities, badge / verification records that cite *what was checked*, not "Verified." |
 | → Agency White-Label | **Missing** | Need agency tier, agency `Integration`, client queue, brand-mark substitution. |
 
 Right now AuditGPT does not feed any of the four downstream Scrutexity products. The Scrutexity integration score is **1/10** (Proof primitives exist; nothing else does).
@@ -529,7 +529,7 @@ Right now AuditGPT does not feed any of the four downstream Scrutexity products.
 
 ### $299 Full Visibility & Trust Audit
 **State:** Cannot deliver.
-**Gap:** all five finding categories (claim, AI/search visibility, local/service clarity, reputation surface, demand leakage) + proof gaps + 30-day prioritized plan + safer framing + Scrutexity next step.
+**Gap:** all five finding categories (claim, AI/search visibility, local/service clarity, reputation surface, Claim drift) + proof gaps + 30-day prioritized plan + safer framing + Scrutexity next step.
 **Path to live:** 4–6 weeks of disciplined work. Possible to launch a manually-augmented version in 14 days if you accept a semi-manual SOP.
 
 ### $799/mo Agency Audit System
@@ -537,7 +537,7 @@ Right now AuditGPT does not feed any of the four downstream Scrutexity products.
 **Gap:** agency tier + white-label settings + client queue + 25 audits/month metering + PDF export + private/public links + report archive.
 **Path to live:** 30–60 days *after* the $99 / $299 SKUs are live.
 
-### Retainer upsell into Contento / AI Visibility / Recovery / Proof
+### Retainer upsell into Claim Rewrites / AI Answer Reality / Retention / Proof
 **State:** No structural handoff exists. The "services_to_hire" field is generic and not Scrutexity-anchored.
 **Path to live:** simplest possible version is a `RecommendedNextStep` field added to the audit output JSON and rendered as a single decision card at the bottom of every report. ~1–2 days once the JSON shape is right.
 
@@ -579,7 +579,7 @@ Expected output behavior:
 - Each is extracted as a `ClaimRecord` with claimType `AI-capability` / `security` / `compliance` / `guarantee` / `outcome`.
 - Status: "Fully autonomous AI agents" → `overstated`; "SOC 2-ready" → `weakly-supported`; "Guaranteed productivity gains" → `unsupported`; "Replaces your entire ops team" → `overstated`.
 - Recommendation: soften ("AI agents that escalate complex cases"); add proof (link SOC 2 report + issuing body + date); remove guarantee; soften "replaces ops team".
-- Recommended Scrutexity next step: Contento (rewrites + proof blocks).
+- Recommended Scrutexity next step: Claim Rewrites (rewrites + proof blocks).
 
 ### Med spa test
 
@@ -587,9 +587,9 @@ Input: "Risk-free Botox." / "Permanent results." / "Best med spa in Miami." / "F
 
 Expected:
 - Status: "Risk-free Botox" → `unsupported`; "Permanent results" → `overstated`; "Best med spa in Miami" → `unsupported`; "FDA-approved clinic" → `unsupported` (clinics are not FDA-approved; products are); "Clinically proven to make you look 10 years younger" → `unsupported`.
-- Safer framing: "Botox by board-certified providers — risks and recovery explained on consultation page"; "Long-lasting results with maintenance"; remove "best"; "We use FDA-approved products"; "Patients commonly report a refreshed appearance — see before/after gallery."
+- Safer framing: "Botox by board-certified providers — risks and Retention explained on consultation page"; "Long-lasting results with maintenance"; remove "best"; "We use FDA-approved products"; "Patients commonly report a refreshed appearance — see before/after gallery."
 - **No legal / clinical conclusions.** Output must say "we noted these statements" not "these violate FDA rules."
-- Recommended next step: Contento + AI Visibility (local).
+- Recommended next step: Claim Rewrites + AI Answer Reality (local).
 
 ### Agency test
 
@@ -602,7 +602,7 @@ Expected:
 - "10x revenue in 90 days" → `unsupported`, mark as outcome guarantee.
 - "Fully compliant marketing" → `weakly-supported`, requires scope.
 - Safer framing for each.
-- Recommended next step: Contento + Proof.
+- Recommended next step: Claim Rewrites + Proof.
 
 **Build these as `eval/fixtures.ts` cases.** Each fixture should assert the claim extraction, the status, the evidence-required flag, the safer framing presence, and the recommended next step. This becomes the regression harness.
 
@@ -642,7 +642,7 @@ Order matters.
 - Rewrite legal page with the no-guarantee disclaimer and the audit-scope statement.
 
 **Days 22–30 — distribution + retainer upsell.**
-- Build the Recommended Scrutexity Next Step decision card. Implement the routing logic (proof/content gaps → Contento; visibility gaps → AI Visibility; demand leakage → Recovery; missing public artifacts → Proof; agency client → White Label).
+- Build the Recommended Scrutexity Next Step decision card. Implement the routing logic (proof/content gaps → Claim Rewrites; visibility gaps → AI Answer Reality; Claim drift → Retention; missing public artifacts → Proof; agency client → White Label).
 - Build a simple agency landing at `/agency` and a single-tenant white-label flag on the audit.
 - Instrument funnel: landing → snapshot started → snapshot delivered → starter checkout → full checkout. Plausible or PostHog.
 - Outbound: 10 founders, 10 agencies, 5 fractional CMOs, 5 VC platform people with personalized snapshots. (Aligned with `SCRUTEXITY-DOCTRINE.md`.)
@@ -717,6 +717,6 @@ Order matters.
 
 ## Closing note
 
-You have built a real product. The problem is not engineering — it is identity. The repo wants to be a forensic anti-AI-slop bouncer; the locked Scrutexity strategy wants AuditGPT to be a quiet, governed diagnostic that hands buyers off to Contento, AI Visibility, Recovery, and Proof. The fastest path forward is the opposite of "build more." It is to delete (or archive) the off-strategy half of the codebase, rewrite the audit core around claim records, replace the brand voice, and ship the free snapshot + $99 starter in the next 14 days. The infrastructure you already have makes that possible. The product on top of it is the wrong product.
+You have built a real product. The problem is not engineering — it is identity. The repo wants to be a forensic anti-AI-slop bouncer; the locked Scrutexity strategy wants AuditGPT to be a quiet, governed diagnostic that hands buyers off to Claim Rewrites, AI Answer Reality, Retention, and Proof. The fastest path forward is the opposite of "build more." It is to delete (or archive) the off-strategy half of the codebase, rewrite the audit core around claim records, replace the brand voice, and ship the free snapshot + $99 starter in the next 14 days. The infrastructure you already have makes that possible. The product on top of it is the wrong product.
 
 Treat `/sample-report` as the spec. Make the live `/api/audit` produce reports that look like that — for any URL — and AuditGPT is commercially useful.

@@ -71,9 +71,9 @@ export default function AgencyPage() {
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
                 <ShieldCheck className="h-6 w-6 text-stone-400 mb-4" />
-                <h3 className="font-serif text-2xl mb-2 text-stone-900">Governed Growth Certificate</h3>
+                <h3 className="font-serif text-2xl mb-2 text-stone-900">Claim Verification Certificate</h3>
                 <p className="text-sm text-stone-600 leading-relaxed mb-4">
-                  Provide your clients with a quarterly Scrutexity Governed Growth Certificate, proving that their public claims have been independently verified against visible evidence.
+                  Provide your clients with a quarterly AuditGPT Claim Verification Certificate, proving that their public claims have been independently reviewed against visible evidence.
                 </p>
                 <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Quarterly Certification</div>
               </div>

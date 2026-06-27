@@ -14,7 +14,7 @@ const WILL_DO = [
   'Classify whether claims appear supported, weakly supported, overstated, unsupported, or needing evidence.',
   'Identify evidence and proof gaps.',
   'Identify AI/search readability gaps (whether the page clearly answers the buyer questions AI and search now ask).',
-  'Identify demand leakage points (weak CTAs, broken contact paths, missing follow-up, dormant lead opportunities).',
+  'Identify claim drift risks (overstated claims, missing proof).',
   'Recommend safer framing for claims that lack evidence.',
   'Recommend a Scrutexity next step (Governed claim rewrites, AI Answer Reality monitoring, Verification and trust assets, Revenue leakage insights, Agency white-label reporting, or Manual review).',
 ];
@@ -104,14 +104,14 @@ export default function PromisesPage() {
 
           <p className="text-xs text-muted-foreground text-center mt-6 leading-relaxed">
             AuditGPT outputs are based on public website review and provided context. They are not legal,
-            clinical, regulatory, compliance, ranking, revenue, or AI visibility guarantees.
+            clinical, regulatory, compliance, ranking, or revenue guarantees.
           </p>
         </div>
       </main>
 
       <footer className="mt-auto border-t border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-muted-foreground">
-          AuditGPT by Scrutexity · Claim ↔ Evidence ↔ AI/search readability ↔ Demand leakage
+          AuditGPT by Scrutexity · Claim Intelligence for businesses where trust matters.
         </div>
       </footer>
     </div>

@@ -84,7 +84,7 @@
 
 ---
 
-## 6. Local Trust & AI Visibility Audit
+## 6. Local Trust & AI Answer Reality Audit
 
 *Uses "may/likely." Does not overclaim what any search engine or AI system will do.*
 
@@ -92,7 +92,7 @@
 - **Review proof:** not surfaced on-site; reputation that may exist on third-party platforms is likely not visible where it converts.
 - **Service-page clarity:** pages read as a generic menu; entity/service specificity is thin.
 - **Local entity clarity:** name/address/category consistency across directories **[PLACEHOLDER — verify NAP consistency]**; inconsistency, if present, likely weakens local presence.
-- **FAQ quality:** **[PLACEHOLDER]** — likely missing structured answers to the questions patients actually ask (recovery, who performs treatment, what results look like).
+- **FAQ quality:** **[PLACEHOLDER]** — likely missing structured answers to the questions patients actually ask (Retention, who performs treatment, what results look like).
 - **Schema / structured data opportunity:** LocalBusiness/MedicalBusiness and FAQ structured data are likely absent; adding them *may* improve how the business is parsed by search and AI systems.
 - **How AI systems may summarize the business:** based on thin, generic public content, an AI answer engine *may* describe Aurelia in undifferentiated, menu-level terms ("a med-spa offering injectables and skin treatments") and *may* omit the practitioner entirely — because the public content gives it little specific to latch onto. Richer, specific public content *likely* improves the accuracy and distinctiveness of that summary. This is directional, not guaranteed.
 
@@ -142,7 +142,7 @@
 - Reduce booking-form fields to the minimum; state what happens after submit.
 - Reframe the consultation around the practitioner and what the patient will learn.
 
-**Week 3 — Local & AI visibility**
+**Week 3 — Local & AI Answer Reality**
 - Complete/clean the Google Business Profile: category, hours, photos, services, posts. **[PLACEHOLDER]**
 - Verify NAP consistency across major directories.
 - Add LocalBusiness/MedicalBusiness + FAQ structured data.
@@ -161,7 +161,7 @@
 *The audit stands alone. This is how the work continues if useful — not a pitch.*
 
 - **$99 Claim Support Review** — the focused claim-and-fix inventory (subset of §3). Entry point.
-- **$299 Evidence Pack** — done-for-you safer rewrites + the specific proof each claim needs, paste-ready (Contento).
+- **$299 Evidence Pack** — done-for-you safer rewrites + the specific proof each claim needs, paste-ready (Claim Rewrites).
 - **$499–$1,500 Founder's Audit** — *this deliverable*: full business, positioning, local-trust, visibility, booking, and growth audit with visual artifacts.
 - **$799/mo Ongoing Monitoring (later)** — periodic re-audit, claim-drift and review-recency tracking, quarterly refresh. Offered only after the first fixes prove out.
 
@@ -202,8 +202,8 @@
 | Tier | Price | Best for | Includes |
 |---|---|---|---|
 | **Claim Support Review** | **$99** one-time | Testing the quality | Full public-claim inventory, status per claim, safer framing, fix list |
-| **Founder's Audit** | **$499** (intro; → $750–$1,500 with proof) | Operators who want the full picture + plan | Everything in §1–§9: business, positioning, local trust, AI visibility, booking, visual artifacts, 30-day plan |
-| **Founder's Audit + Evidence Pack** | **$799** | Operators who want it done, not just diagnosed | Founder's Audit + done-for-you safer rewrites and proof checklist (Contento) |
+| **Founder's Audit** | **$499** (intro; → $750–$1,500 with proof) | Operators who want the full picture + plan | Everything in §1–§9: business, positioning, local trust, AI Answer Reality, booking, visual artifacts, 30-day plan |
+| **Founder's Audit + Evidence Pack** | **$799** | Operators who want it done, not just diagnosed | Founder's Audit + done-for-you safer rewrites and proof checklist (Claim Rewrites) |
 
 *Ongoing Monitoring ($799/mo) shown as "coming" — sold only after first fixes prove out.*
 

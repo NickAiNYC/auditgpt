@@ -7,7 +7,7 @@
 // Now: a scoped report-review chip that links to the public
 // report and (optionally) the badge SVG endpoint. The badge
 // states what was checked (claim count, supported, etc.).
-// It does NOT certify truth, ranking, or AI visibility.
+// It does NOT certify truth, ranking, or AI answer reality.
 // ============================================================
 
 import { useState } from 'react';

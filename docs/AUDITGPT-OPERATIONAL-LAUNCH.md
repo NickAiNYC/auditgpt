@@ -101,9 +101,9 @@ Six pages at `/next-step/*`:
 
 | Path | Headline | What it sells |
 |---|---|---|
-| `/next-step/contento` | "Governed content for the claims your site cannot yet prove." | Safer rewrites, proof pages, FAQ blocks, approved-claim libraries |
+| `/next-step/Claim Rewrites` | "Governed content for the claims your site cannot yet prove." | Safer rewrites, proof pages, FAQ blocks, approved-claim libraries |
 | `/next-step/ai-visibility` | "Make the page answer the buyer questions AI and search now ask." | Entity clarity, service-page coverage, FAQ structure, local clarity |
-| `/next-step/recovery` | "Stop the demand silently leaking out of your site." | Missed-call recovery, abandoned form follow-ups, booking paths, dormant-lead workflows |
+| `/next-step/Retention` | "Stop the demand silently leaking out of your site." | Missed-call Retention, abandoned form follow-ups, booking paths, dormant-lead workflows |
 | `/next-step/proof` | "Build the public proof your claims rely on." | Case studies, testimonials, proof pages, AuditGPT Report Review embed |
 | `/next-step/agency` | "Run AuditGPT for your clients under your brand." | $799/mo Agency Audit System tier description + CTA |
 | `/next-step/manual` | "Some sites need a human read before a confident next step." | Catches `Manual Review` routing when automated confidence is low |
@@ -157,7 +157,7 @@ Every message is observational. No scare tactics. No guarantees. Every message u
 `docs/gtm/founder-daily-checklist.md`:
 - Morning routine (45 min) — pick 3 prospects, review sites, send 3 DMs
 - Midday routine (30 min) — reply to inbound, generate snapshots
-- Afternoon routine (45 min) — log delivery, make paid offers, create one Contento project
+- Afternoon routine (45 min) — log delivery, make paid offers, create one Claim Rewrites project
 - Evening routine (15 min) — update tracker, post one public build note
 - Friday weekly review (60 min) — compute funnel, identify best-performing message, decide continue / tune / pivot
 - Hard rules (do not break)
@@ -193,7 +193,7 @@ The tsc and lint failures are **sandbox-only artifacts**, not code defects. Evid
 - `ls -la` on the affected files shows correct file sizes (836–4852 bytes)
 - Read tool returns full file contents correctly
 - Eval ran cleanly through the same code path
-- Other 2 next-step pages in the same directory (`ai-visibility`, `contento`) compile fine — only some files got cached as empty in the FUSE layer
+- Other 2 next-step pages in the same directory (`ai-visibility`, `Claim Rewrites`) compile fine — only some files got cached as empty in the FUSE layer
 
 On your local machine, `npx tsc --noEmit` and `npm run build` will run cleanly. If they don't, the first thing to check is that all six `src/app/next-step/*/page.tsx` files contain the import block:
 

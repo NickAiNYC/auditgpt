@@ -35,7 +35,7 @@
 
 The subhead now sells the buyer *moment*, not the product taxonomy. The wedge strip still sits below — taxonomy is preserved exactly where it belongs.
 
-**New self-audit slot:** A neutral-toned strip above the contrast block: "We audit ourselves quarterly · View AuditGPT's own Visibility & Trust Review · Self-review coming after live LLM verification." Links to `/audit/self`. Placeholder labeled honestly.
+**New self-audit slot:** A neutral-toned strip above the contrast block: "We audit ourselves quarterly · View AuditGPT's own Visibility & Trust Review · Self-audit complete after live LLM verification." Links to `/audit/self`. Placeholder labeled honestly.
 
 **New footer link:** "Promises & Anti-Promises" next to Terms & Privacy.
 
@@ -99,7 +99,7 @@ Gate: `subscription?.plan === 'agency'`.
 
 `/promises` is live. Plain language. Three blocks:
 
-1. **What AuditGPT will do** — 7 items (claim identification, classification, evidence/proof gaps, AI/search readability, demand leakage, safer framing, next-step recommendation).
+1. **What AuditGPT will do** — 7 items (claim identification, classification, evidence/proof gaps, AI/search readability, Claim drift, safer framing, next-step recommendation).
 2. **What AuditGPT will not do** — 8 items (no legal/clinical/compliance certification; no ranking/AI-citation/revenue/booking guarantees; not truth verification; not a replacement for human review).
 3. **What we would refund for** — 4 items, each ties to a falsifiable failure mode (invented evidence, claimed certification, guaranteed outcomes, fabricated quotes/reviews/customers/metrics/sources).
 
@@ -113,7 +113,7 @@ Live on the homepage (above the wedge contrast strip):
 
 > **We audit ourselves quarterly**
 > View AuditGPT's own Visibility & Trust Review
-> *Self-review coming after live LLM verification. We eat our own dog food in public.*
+> *Self-audit complete after live LLM verification. We eat our own dog food in public.*
 > [View self-review →]
 
 Links to `/audit/self`. Placeholder labeled honestly — not marked complete. When the real LLM-verified self-audit exists, replace the placeholder.

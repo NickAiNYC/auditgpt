@@ -107,11 +107,11 @@ export default function SelfAuditPage() {
                 {/* Claim 2 */}
                 <TableRow className="border-white/10 hover:bg-white/[0.02] transition-colors group">
                   <TableCell className="font-medium text-sm text-muted-foreground line-through decoration-red-500/50 align-top">
-                    "The diagnostic front door for governed marketing and demand recovery."
+                    "The diagnostic front door for governed claim remediation."
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground align-top">
                     <span className="text-red-500 block mb-1">Legacy Positioning</span>
-                    This is legacy branding. We are killing "demand recovery" as a category to focus entirely on Claim Intelligence.
+                    This is legacy branding. We are killing the old product categories to focus entirely on Claim Intelligence.
                   </TableCell>
                   <TableCell className="text-sm text-foreground align-top font-medium">
                     "The diagnostic engine that maps the gap between what you claim and what you can prove."
@@ -124,11 +124,11 @@ export default function SelfAuditPage() {
                 {/* Claim 3 */}
                 <TableRow className="border-white/10 hover:bg-white/[0.02] transition-colors group">
                   <TableCell className="font-medium text-sm text-muted-foreground line-through decoration-red-500/50 align-top">
-                    "See your results in 60 seconds."
+                    "Start your claim snapshot."
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground align-top">
                     <span className="text-red-500 block mb-1">Unverified Performance</span>
-                    We lack performance logs proving the extraction loop finishes in under 60 seconds consistently.
+                    We lack performance logs proving the extraction loop finishes reliably within a minute.
                   </TableCell>
                   <TableCell className="text-sm text-foreground align-top font-medium">
                     "Your audit will begin generating immediately."

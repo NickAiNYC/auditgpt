@@ -95,7 +95,7 @@ export default function SampleReportDashboard() {
           <TabsList className="grid w-full md:w-[600px] grid-cols-4 bg-stone-200/50 p-1 rounded-sm mb-8">
             <TabsTrigger value="summary" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Summary</TabsTrigger>
             <TabsTrigger value="claims" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Claims</TabsTrigger>
-            <TabsTrigger value="ai" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">AI Visibility</TabsTrigger>
+            <TabsTrigger value="ai" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">AI Answer Reality</TabsTrigger>
             <TabsTrigger value="leakage" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Leakage</TabsTrigger>
           </TabsList>
 
@@ -266,7 +266,7 @@ export default function SampleReportDashboard() {
             </Card>
           </TabsContent>
 
-          {/* TAB 3: AI VISIBILITY */}
+          {/* TAB 3: AI ANSWER REALITY */}
           <TabsContent value="ai" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
              <div className="mb-6">
                 <h2 className="text-xl font-medium">AI Engine Simulation</h2>
@@ -317,11 +317,11 @@ export default function SampleReportDashboard() {
              </div>
           </TabsContent>
 
-          {/* TAB 4: DEMAND LEAKAGE */}
+          {/* TAB 4: CLAIM DRIFT */}
           <TabsContent value="leakage" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
              <Card className="rounded-sm border-stone-200 shadow-sm">
                 <CardHeader className="bg-stone-50/50 border-b border-stone-100">
-                  <CardTitle>Demand Leakage Analysis</CardTitle>
+                  <CardTitle>Claim Drift Analysis</CardTitle>
                   <CardDescription>{data.demandLeakage.summary}</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
