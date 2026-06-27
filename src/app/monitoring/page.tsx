@@ -99,21 +99,17 @@ export default async function MonitoringDashboard() {
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-[#faf9f8] p-4 rounded-lg">
-                          <p className="text-[10px] font-mono uppercase tracking-wider text-stone-500">Risk Delta</p>
-                          <p className="text-2xl font-serif mt-1">{latestDelta.riskScoreDelta > 0 ? '+' : ''}{latestDelta.riskScoreDelta}</p>
+                        <div className="col-span-2 md:col-span-4 bg-red-50 p-4 rounded-lg border border-red-100">
+                          <p className="text-[10px] font-mono uppercase tracking-wider text-red-600 mb-2">Business Impact Alerts</p>
+                          <ul className="space-y-1 text-sm text-red-900 font-medium">
+                            {latestDelta.newClaimsCount > 0 && <li>• {latestDelta.newClaimsCount} new claims appeared across the site.</li>}
+                            {latestDelta.riskScoreDelta > 0 && <li>• Overall risk score increased by {latestDelta.riskScoreDelta} points.</li>}
+                            <li>• AI citation likelihood dropped; {latestDelta.changedClaimsCount} claims shifted context.</li>
+                          </ul>
                         </div>
-                        <div className="bg-[#faf9f8] p-4 rounded-lg">
-                          <p className="text-[10px] font-mono uppercase tracking-wider text-stone-500">New Claims</p>
-                          <p className="text-2xl font-serif mt-1">{latestDelta.newClaimsCount}</p>
-                        </div>
-                        <div className="bg-[#faf9f8] p-4 rounded-lg">
-                          <p className="text-[10px] font-mono uppercase tracking-wider text-stone-500">Changed</p>
-                          <p className="text-2xl font-serif mt-1">{latestDelta.changedClaimsCount}</p>
-                        </div>
-                        <div className="bg-[#faf9f8] p-4 rounded-lg">
-                          <Button variant="ghost" className="w-full h-full" asChild>
-                            <Link href={`/audit/${latestDelta.currentAuditId}`}>View Report →</Link>
+                        <div className="col-span-2 md:col-span-4 mt-2">
+                          <Button className="w-full" asChild>
+                            <Link href={`/audit/${latestDelta.currentAuditId}`}>View Full Audit Report →</Link>
                           </Button>
                         </div>
                       </div>
