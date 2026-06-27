@@ -147,95 +147,47 @@ export default function Home() {
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-6xl leading-tight mb-4">
-              Find the claims your website cannot prove.
+              AI made publishing cheap.<br/>Scrutexity makes growth governable.
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              AuditGPT shows which claims are supported, which proof is missing, and what your buyers, investors, and AI search systems actually see.
+              We detect unsupported claims, evidence gaps, demand leakage, and AI visibility issues across your entire digital footprint before they become a liability.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-6">
               <a href="#intake" className="btn-cta text-base px-8 py-4">
-                Get a 1-Page Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
+                Run Free Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
               </a>
               <a href="/sample-report" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
-                See what real claim governance looks like in action
+                View Interactive Sample Dashboard
               </a>
             </div>
             <p className="text-sm font-medium">
               See your results in 60 seconds.
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              Not SEO. Not reputation management. Not CRO. <strong>Claim Intelligence.</strong>
-            </p>
+            <div className="mt-4 p-4 bg-stone-50 border border-stone-200 inline-block rounded-lg shadow-sm">
+              <p className="text-xs text-stone-600 font-mono uppercase tracking-widest mb-1">Are you an agency?</p>
+              <a href="/agency" className="text-sm font-medium text-stone-900 underline hover:text-stone-700">White-label our engine for your clients →</a>
+            </div>
           </div>
 
-          {/* CSS-based Mini Report Preview */}
-          <div className="mb-20 max-w-3xl mx-auto">
+          {/* Interactive Sample Report Embed */}
+          <div className="mb-20 max-w-5xl mx-auto">
             <div className="text-[10px] font-mono uppercase tracking-widest text-center text-muted-foreground mb-4">
-              See what AuditGPT finds on your site
+              Explore a live Claim Intelligence Report
             </div>
-            
-            <div className="bg-white border border-border shadow-xl rounded-md overflow-hidden transform -rotate-1 hover:rotate-0 transition-transform duration-500">
-              <div className="bg-neutral-50 border-b border-border p-3 flex items-center gap-3">
+            <div className="bg-white border border-border shadow-xl rounded-md overflow-hidden h-[600px] w-full relative">
+              <div className="bg-neutral-50 border-b border-border p-3 flex items-center gap-3 absolute top-0 w-full z-10">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-400"></div>
                   <div className="w-3 h-3 rounded-full bg-amber-400"></div>
                   <div className="w-3 h-3 rounded-full bg-green-400"></div>
                 </div>
-                <div className="text-xs font-mono text-muted-foreground">auditgpt-report-snapshot.pdf</div>
+                <div className="text-xs font-mono text-muted-foreground">scrutexity-interactive-sample.pdf</div>
               </div>
-              <div className="p-6 sm:p-8 space-y-6">
-                
-                {/* Example Finding 1 */}
-                <div className="border border-border rounded-sm p-4 sm:p-5 relative overflow-hidden group">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-red-50 text-red-900 border border-red-200">
-                      Unsupported
-                    </span>
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-neutral-100 text-neutral-800">
-                      Performance Claim
-                    </span>
-                  </div>
-                  <p className="font-serif text-lg mb-4">&ldquo;The fastest AI agent on the market.&rdquo;</p>
-                  
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="bg-red-50/50 rounded-sm p-3 border border-red-100">
-                      <div className="text-[10px] uppercase tracking-widest text-red-800 mb-1 font-bold">Missing Evidence</div>
-                      <p className="text-xs text-red-900/80 leading-relaxed font-mono">No third-party benchmarks, speed tests, or comparison data linked on the page. AI search systems will ignore this claim.</p>
-                    </div>
-                    <div className="bg-green-50/50 rounded-sm p-3 border border-green-100">
-                      <div className="text-[10px] uppercase tracking-widest text-green-800 mb-1 font-bold">Safer Framing</div>
-                      <p className="text-xs text-green-900/80 leading-relaxed font-mono">&ldquo;Built for low-latency enterprise workflows (sub-200ms response time).&rdquo;</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Example Finding 2 */}
-                <div className="border border-border rounded-sm p-4 sm:p-5 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-amber-50 text-amber-900 border border-amber-200">
-                      Overstated
-                    </span>
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-neutral-100 text-neutral-800">
-                      Trust Claim
-                    </span>
-                  </div>
-                  <p className="font-serif text-lg mb-4">&ldquo;Trusted by over 10,000 businesses globally.&rdquo;</p>
-                  
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="bg-amber-50/50 rounded-sm p-3 border border-amber-100">
-                      <div className="text-[10px] uppercase tracking-widest text-amber-800 mb-1 font-bold">Missing Evidence</div>
-                      <p className="text-xs text-amber-900/80 leading-relaxed font-mono">The logo wall shows 4 companies. There are no case studies, G2 reviews, or user testimonials to support the 10,000+ volume claim.</p>
-                    </div>
-                    <div className="bg-green-50/50 rounded-sm p-3 border border-green-100">
-                      <div className="text-[10px] uppercase tracking-widest text-green-800 mb-1 font-bold">Safer Framing</div>
-                      <p className="text-xs text-green-900/80 leading-relaxed font-mono">&ldquo;Trusted by teams at [Logo 1] and [Logo 2].&rdquo; or add a link to a live customer counter.</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+              <iframe 
+                src="/sample-report" 
+                className="w-full h-full pt-[44px] border-none"
+                title="Interactive Sample Report"
+              />
             </div>
           </div>
 
