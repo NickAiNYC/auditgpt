@@ -24,6 +24,7 @@ model User {
   agentRuns     AgentRun[]
   integrations  Integration[]
   deployFixPRs  DeployFixPR[]
+  monitorSubscriptions MonitorSubscription[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -274,4 +275,34 @@ model Consequence {
   createdAt        DateTime @default(now())
 
   @@index([industry])
+}
+
+model MonitorSubscription {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url                 String
+  frequency           String   @default("monthly")
+  lastRun             DateTime?
+  status              String   @default("active")
+  notificationsEnabled Boolean  @default(true)
+  lastNotified        DateTime?
+  deltas              MonitorDeltaReport[]
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([userId, url])
+}
+
+model MonitorDeltaReport {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  subscription    MonitorSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  previousAuditId String
+  currentAuditId  String
+  riskScoreDelta  Int
+  newClaimsCount  Int
+  changedClaimsCount Int
+  deltaJson       String   // Stores detailed diff
+  createdAt       DateTime @default(now())
 }

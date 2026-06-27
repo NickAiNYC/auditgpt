@@ -168,7 +168,7 @@ export function EnhancedSnapshotReport({
         </div>
         {isFree && (
           <UpgradeCallout
-            title="Full AI simulation unlocks all four engines."
+            title="Unlock full AI simulation & competitor comparison — upgrade to paid"
             body="Upgrade for ChatGPT, Perplexity, Gemini, Google AIO, competitor URLs, and citation confidence notes."
             dark
           />
@@ -248,12 +248,14 @@ export function EnhancedSnapshotReport({
         </div>
         <div className="mt-8 flex flex-wrap gap-3 print:hidden">
           <Button asChild className="bg-stone-900 text-white hover:bg-stone-800">
-            <Link href="/next-step/ai-visibility">
-              Unlock full AI Visibility <ArrowUpRight className="h-4 w-4" />
+            <Link href="/monitoring">
+              Start Monthly Monitoring ($799/mo) <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/next-step/contento">Rewrite risky claims</Link>
+            <Link href="/next-step/ai-visibility">
+              Unlock full AI simulation & competitor comparison <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </Button>
           {publicId && (
             <Button asChild variant="ghost">
