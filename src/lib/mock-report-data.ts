@@ -6,12 +6,12 @@ export interface ReportData {
   industry: string;
   overallGovernanceScore: number; // 0-100
   generatedAt: string;
-  
+
   executiveSummary: {
     criticalRisks: number;
     demandLeakageEst: string;
     aiVisibilityScore: number;
-    keyTakeaway: string; 
+    keyTakeaway: string;
   };
 
   claimInventory: Array<{
@@ -38,104 +38,124 @@ export interface ReportData {
     providerBios: number;
     beforeAfterVerified: number;
   };
-  
+
   demandLeakage: {
     summary: string;
     issues: Array<{ area: string; impact: string; }>;
   };
 }
 
+// Illustrative sample. "Northwind AI" is a fictional company; all figures are illustrative
+// and not measured from a real audit. Used to demonstrate the AuditGPT report format.
 export const auraMockData: ReportData = {
-  clinicName: "Aura MedSpa & Wellness",
-  industry: "Medical Aesthetics",
-  overallGovernanceScore: 42,
+  clinicName: "Northwind AI",
+  industry: "AI Workflow Automation (SaaS)",
+  overallGovernanceScore: 58,
   generatedAt: new Date().toISOString().split('T')[0],
-  
+
   executiveSummary: {
     criticalRisks: 3,
-    demandLeakageEst: "$12k - $18k / month",
-    aiVisibilityScore: 28,
-    keyTakeaway: "Aura MedSpa is losing high-intent traffic because aggressive clinical claims lack visible substantiation, leading to poor AI citation indexing and high consultation abandonment."
+    demandLeakageEst: "High",
+    aiVisibilityScore: 34,
+    keyTakeaway: "Northwind AI communicates a clear product direction, but its strongest performance and customer-proof claims aren't backed by visible evidence. Buyers doing diligence — and the AI answer engines they rely on — can't verify them. Two high-priority claims need a defined benchmark and named customer proof before they carry weight."
   },
 
   claimInventory: [
     {
       id: "C-001",
-      originalClaim: "FDA-approved permanent fat loss without surgery or downtime.",
-      status: "Unsupported",
-      riskLevel: "Critical",
-      riskNote: "Combines an FDA clearance (not approval) with a guarantee of 'permanent' results without clinical caveats. High regulatory risk.",
-      saferFraming: "FDA-cleared non-surgical body contouring designed for long-lasting fat reduction.",
-      evidenceGap: "Missing links to clinical studies for the specific device; 'permanent' guarantee lacks scientific consensus without dietary maintenance caveats."
+      originalClaim: "10× faster than manual workflows.",
+      status: "Overstated",
+      riskLevel: "High",
+      riskNote: "A quantified speed multiple with no stated baseline reads as marketing, not measured performance.",
+      saferFraming: "Cut [task] from [X] minutes to [Y] in our defined benchmark.",
+      evidenceGap: "No benchmark, baseline, or methodology shown anywhere on the page."
     },
     {
       id: "C-002",
-      originalClaim: "The most experienced laser technicians in the tri-state area.",
-      status: "Overstated",
+      originalClaim: "Trusted by leading enterprises.",
+      status: "Unsupported",
       riskLevel: "High",
-      riskNote: "Superlative claim ('most experienced') is mathematically unprovable and triggers skepticism from educated buyers.",
-      saferFraming: "Our laser technicians bring over 15 years of combined clinical experience.",
-      evidenceGap: "No provider bios detailing actual years of experience, certifications, or total procedures performed."
+      riskNote: "A customer-proof claim with no named customer is interchangeable with every competitor and hard to verify.",
+      saferFraming: "Used by [Customer A] and [Customer B] — see their results.",
+      evidenceGap: "No customer names, logos, or case studies on the page."
     },
     {
       id: "C-003",
-      originalClaim: "Reverse 10 years of aging in a single 30-minute session.",
-      status: "Unsupported",
-      riskLevel: "Critical",
-      riskNote: "Specific, quantitative guarantee of a biological outcome ('10 years') from a single session. Unverifiable and highly non-compliant.",
-      saferFraming: "Noticeable reduction in fine lines and improved skin laxity in 30 minutes.",
-      evidenceGap: "Missing verified before/after galleries demonstrating this specific protocol's efficacy."
+      originalClaim: "Agents that auto-improve while you sleep.",
+      status: "Overstated",
+      riskLevel: "High",
+      riskNote: "A strong autonomy claim with no visible trace or example invites scrutiny from technical buyers.",
+      saferFraming: "Agents flag regressions and propose fixes your team reviews and approves.",
+      evidenceGap: "No example run, trace, or before/after showing the autonomy in action."
     },
     {
       id: "C-004",
-      originalClaim: "Medical-grade skincare lines proven to cure adult acne.",
+      originalClaim: "Enterprise-ready security.",
       status: "Weakly Supported",
       riskLevel: "Moderate",
-      riskNote: "Use of the word 'cure' for acne is a medical claim that violates FTC and FDA advertising guidelines for cosmetics.",
-      saferFraming: "Clinical-grade skincare routines designed to effectively manage and treat adult acne breakouts.",
-      evidenceGap: "Needs linking to specific ingredient efficacy studies and clear disclaimer that results vary."
+      riskNote: "Security posture is asserted without a page describing the actual controls, leaving buyer questions open.",
+      saferFraming: "Our security practices: SSO, encryption in transit and at rest, audit logs — full details on our security page.",
+      evidenceGap: "The phrase is visible, but no security page, controls, or certifications are linked."
+    },
+    {
+      id: "C-005",
+      originalClaim: "Set up in minutes.",
+      status: "Weakly Supported",
+      riskLevel: "Low",
+      riskNote: "An onboarding-speed claim with no quickstart or demo is plausible but unproven to a careful buyer.",
+      saferFraming: "Connect your stack and run your first workflow in under an hour — see the quickstart.",
+      evidenceGap: "No quickstart guide, demo, or onboarding walkthrough linked beside the claim."
+    },
+    {
+      id: "C-006",
+      originalClaim: "99.9% uptime, backed by a public status page.",
+      status: "Supported",
+      riskLevel: "Low",
+      riskNote: "Specific, checkable, and backed — this is what a well-supported claim looks like.",
+      saferFraming: "Already well-framed. Keep the public status page linked directly beside the number.",
+      evidenceGap: "None material — a public status page with historical uptime substantiates the figure."
     }
   ],
 
   aiVisibility: [
     {
       engine: 'ChatGPT',
-      simulatedDescription: "Aura MedSpa is a medical aesthetics clinic offering laser treatments and injectables. While their marketing highlights permanent fat loss and anti-aging, there is limited clinical data available on their site to verify these specific claims.",
-      citationLikelihood: 12,
-      strengths: ["Indexed service menu", "Clear location data"],
-      weaknesses: ["Missing structural schema", "Lack of provider authority signals"],
-      entityGaps: ["Medical Director identity", "Specific device brand names"]
+      simulatedDescription: "Northwind AI is a workflow-automation platform. Its site claims '10× faster' and 'trusted by leading enterprises,' but no benchmark or named customers are visible, so an answer engine can't confirm or repeat these specifics.",
+      citationLikelihood: 30,
+      strengths: ["Clear product category", "Indexed feature pages"],
+      weaknesses: ["Performance claim has no baseline", "Customer proof is generic"],
+      entityGaps: ["Benchmark methodology", "Named customers"]
     },
     {
       engine: 'Perplexity',
-      simulatedDescription: "Aura MedSpa provides non-surgical cosmetic treatments. However, reviews and independent sources do not substantiate their claims of 'reversing 10 years of aging' in 30 minutes.",
-      citationLikelihood: 25,
-      strengths: ["Presence in local directories"],
-      weaknesses: ["High dissonance between marketing copy and verified reviews"],
-      entityGaps: ["Clinical evidence citations", "Verified before/afters"]
+      simulatedDescription: "Northwind AI offers AI agents for workflow automation. Independent sources don't substantiate the '10× faster' or 'auto-improve while you sleep' autonomy claims, so they're unlikely to be cited as fact.",
+      citationLikelihood: 22,
+      strengths: ["Presence in software directories"],
+      weaknesses: ["Autonomy claim lacks a visible example", "No third-party validation found"],
+      entityGaps: ["Case studies", "Autonomy evidence / example run"]
     },
     {
-      engine: 'Google AIO',
-      simulatedDescription: "Located in the local metro area, Aura MedSpa offers various wellness treatments. For advanced laser procedures, patients should verify the specific FDA clearances as the clinic's claims of 'FDA-approved permanent fat loss' are broadly stated.",
-      citationLikelihood: 40,
-      strengths: ["Google Business Profile is active"],
-      weaknesses: ["AI is hallucinating caveats due to lack of on-site evidence"],
-      entityGaps: ["FAQ structured data", "Safety and contraindication disclosures"]
+      engine: 'Gemini',
+      simulatedDescription: "Northwind AI provides automation tooling. Security is described as 'enterprise-ready,' but no security page or controls are linked, so specifics can't be confirmed for a procurement review.",
+      citationLikelihood: 38,
+      strengths: ["Active docs and blog"],
+      weaknesses: ["'Enterprise-ready' asserted, not shown", "Thin structured data for key claims"],
+      entityGaps: ["Security page / controls", "Status / uptime page"]
     }
   ],
 
   proofDensity: {
-    clinicalCitations: 0,
-    providerBios: 1,
-    beforeAfterVerified: 4
+    clinicalCitations: 1,   // benchmarks / sources linked
+    providerBios: 0,        // named case studies
+    beforeAfterVerified: 2  // verifiable customer proof points
   },
-  
+
   demandLeakage: {
-    summary: "High-intent traffic is abandoning the booking funnel at the service page level due to a lack of clinical trust signals backing up aggressive marketing promises.",
+    summary: "High-intent buyers — and the AI engines they use to shortlist vendors — can't verify Northwind's strongest claims, so they discount them during evaluation. The cost shows up as stalled trials and diligence friction, not a tidy dollar figure.",
     issues: [
-      { area: "Service Pages", impact: "High bounce rate on 'Body Contouring' due to missing clinical studies for the 'permanent' claim." },
-      { area: "Provider Bios", impact: "Lack of medical director visibility reduces trust for high-ticket injectable procedures." },
-      { area: "Consultation Form", impact: "35% drop-off; prospects expect to see safety disclosures before submitting personal health data." }
+      { area: "Product / pricing page", impact: "'10× faster' with no benchmark — technical evaluators discount the number and ask for proof the page never surfaces." },
+      { area: "Customer proof", impact: "'Trusted by leading enterprises' with no named logos or case studies reads as filler during diligence." },
+      { area: "Security page", impact: "'Enterprise-ready security' with no linked controls stalls procurement and security review." }
     ]
   }
 };

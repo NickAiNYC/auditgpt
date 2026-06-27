@@ -184,35 +184,35 @@ function buildScrutexityNextSteps(input: {
   proofDensity: ProofDensitySummary;
   hasCompetitors: boolean;
 }): ScrutexityNextStep[] {
-  const hasRiskyClaims = input.claims.some(
+  const highRisk = input.claims.some(
     (claim) => claim.label === 'Unsupported' || claim.label === 'Overstated',
   );
 
   return [
     {
-      service: 'Contento',
-      whyItFits: hasRiskyClaims
-        ? 'Contento can rewrite risky claims into precise, evidence-aware page copy.'
-        : 'Contento can strengthen clear claims with sharper proof placement and buyer context.',
-      nextAction: 'Turn the snapshot findings into revised page sections and safer claim language.',
+      service: 'Governed Claim Rewrites',
+      whyItFits: highRisk
+        ? 'Safer claim rewrites will transform risky statements into precise, evidence-aware page copy.'
+        : 'Governed claim rewrites will strengthen clear claims with sharper proof placement and buyer context.',
+      nextAction: 'Review flagged claims and generate proof-backed alternatives.',
     },
     {
-      service: 'AI Visibility',
-      whyItFits: input.hasCompetitors
-        ? 'A deeper AI Visibility report can compare your claim readability against selected competitors.'
-        : 'A deeper AI Visibility report can show where AI systems understand, cite, or flatten the business.',
-      nextAction: 'Run full AI answer-engine simulations with competitor benchmarking.',
+      service: 'AI Answer Reality',
+      whyItFits: highRisk
+        ? 'A deeper AI Answer Reality report can compare your claim readability against selected competitors.'
+        : 'A deeper AI Answer Reality report can show where AI systems understand, cite, or flatten the business.',
+      nextAction: 'Run a targeted prompt check on ChatGPT and Perplexity.',
     },
     {
-      service: 'Proof & Reputation',
+      service: 'Verification & Trust Assets',
       whyItFits: input.proofDensity.missingSignals.length
-        ? 'The page needs stronger trust assets attached directly to its claims.'
+        ? 'Verification and trust assets will bridge the gap between your claims and your missing proof signals.'
         : 'Existing proof can be organized into stronger, more reusable trust assets.',
-      nextAction: 'Map testimonials, reviews, case studies, credentials, and source evidence to the claims they support.',
+      nextAction: 'Compile and link primary evidence to the core value propositions.',
     },
     {
-      service: 'Recovery',
-      whyItFits: 'Recovery is relevant if AI systems, reviews, or search summaries are already misrepresenting the business.',
+      service: 'Revenue Leakage Insights',
+      whyItFits: 'Revenue Leakage Insights are relevant if AI systems, reviews, or search summaries are already misrepresenting the business.',
       nextAction: 'Escalate only when there is visible misdescription, reputational damage, or recurring entity confusion.',
     },
   ];

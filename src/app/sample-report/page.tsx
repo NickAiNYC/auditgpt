@@ -51,13 +51,13 @@ export default function SampleReportDashboard() {
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex flex-col items-end mr-4">
-              <span className="text-[10px] font-mono uppercase text-stone-500 tracking-widest">Governance Score</span>
+              <span className="text-[10px] font-mono uppercase text-stone-500 tracking-widest">Claim Support Score</span>
               <div className="flex items-center gap-2">
                 <Progress value={data.overallGovernanceScore} className="w-24 h-2 bg-stone-200" indicatorColor="bg-amber-500" />
                 <span className="font-mono text-sm font-bold text-amber-600">{data.overallGovernanceScore}/100</span>
               </div>
             </div>
-            <a href="/deployment" className="bg-stone-900 text-stone-50 font-mono text-xs uppercase tracking-widest px-5 py-2.5 rounded-sm hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap">
+            <a href="/snapshot" className="bg-stone-900 text-stone-50 font-mono text-xs uppercase tracking-widest px-5 py-2.5 rounded-sm hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap">
               Run Free Snapshot
             </a>
           </div>
@@ -74,6 +74,23 @@ export default function SampleReportDashboard() {
           </p>
         </div>
 
+        {/* Verdict stamp + illustrative-sample banner */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-sm border border-stone-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center justify-center w-16 h-16 rounded-sm bg-amber-50 border border-amber-200 shrink-0">
+              <span className="text-2xl font-bold text-amber-600 leading-none">C</span>
+              <span className="text-[10px] font-mono text-amber-700 mt-0.5">{data.overallGovernanceScore}/100</span>
+            </div>
+            <div>
+              <div className="text-sm font-medium text-stone-900">Claim support: review recommended</div>
+              <div className="text-xs text-stone-500 mt-0.5">Two high-priority claims need visible proof before they carry weight.</div>
+            </div>
+          </div>
+          <div className="text-[10px] font-mono uppercase tracking-widest text-stone-500 bg-stone-100 border border-stone-200 rounded-sm px-3 py-2 text-center sm:text-right">
+            Illustrative sample · Northwind AI is fictional · figures illustrative
+          </div>
+        </div>
+
         <Tabs defaultValue="summary" className="w-full">
           <TabsList className="grid w-full md:w-[600px] grid-cols-4 bg-stone-200/50 p-1 rounded-sm mb-8">
             <TabsTrigger value="summary" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Summary</TabsTrigger>
@@ -88,24 +105,24 @@ export default function SampleReportDashboard() {
               <Card className="rounded-sm shadow-sm border-stone-200">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-mono uppercase text-stone-500 tracking-widest flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-red-500" /> Critical Risks
+                    <ShieldAlert className="w-4 h-4 text-red-500" /> High-Priority Gaps
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-light text-stone-900">{data.executiveSummary.criticalRisks}</div>
-                  <p className="text-sm text-stone-500 mt-1">Unsupported clinical claims detected</p>
+                  <p className="text-sm text-stone-500 mt-1">Overstated or unsupported claims</p>
                 </CardContent>
               </Card>
 
               <Card className="rounded-sm shadow-sm border-stone-200">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-mono uppercase text-stone-500 tracking-widest flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-orange-500" /> Est. Demand Leakage
+                    <Activity className="w-4 h-4 text-orange-500" /> Buyer-Trust Risk
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-light text-stone-900">{data.executiveSummary.demandLeakageEst}</div>
-                  <p className="text-sm text-stone-500 mt-1">Lost pipeline due to trust gaps</p>
+                  <p className="text-sm text-stone-500 mt-1">Buyers discount unprovable claims</p>
                 </CardContent>
               </Card>
 
@@ -144,16 +161,16 @@ export default function SampleReportDashboard() {
                  <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <div className="flex justify-between text-xs font-mono mb-1"><span>Critical Exposure</span><span className="text-red-600 font-bold">2 Claims</span></div>
-                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-red-500 w-1/2 h-full"></div></div>
+                        <div className="flex justify-between text-xs font-mono mb-1"><span>High Priority</span><span className="text-orange-600 font-bold">3 Claims</span></div>
+                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-orange-500 w-1/2 h-full"></div></div>
                       </div>
                       <div>
-                        <div className="flex justify-between text-xs font-mono mb-1"><span>High Dissonance</span><span className="text-orange-600 font-bold">1 Claim</span></div>
-                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-orange-500 w-1/4 h-full"></div></div>
+                        <div className="flex justify-between text-xs font-mono mb-1"><span>Moderate</span><span className="text-amber-600 font-bold">1 Claim</span></div>
+                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-amber-500 w-1/6 h-full"></div></div>
                       </div>
                       <div>
-                        <div className="flex justify-between text-xs font-mono mb-1"><span>Moderate Risk</span><span className="text-amber-600 font-bold">1 Claim</span></div>
-                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-amber-500 w-1/4 h-full"></div></div>
+                        <div className="flex justify-between text-xs font-mono mb-1"><span>Low / Supported</span><span className="text-green-600 font-bold">2 Claims</span></div>
+                        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden"><div className="bg-green-500 w-1/3 h-full"></div></div>
                       </div>
                     </div>
                  </CardContent>
@@ -165,15 +182,15 @@ export default function SampleReportDashboard() {
                  <CardContent>
                    <ul className="space-y-3">
                      <li className="flex justify-between items-center text-sm border-b border-stone-100 pb-2">
-                       <span className="text-stone-600">Clinical Citations Found</span>
+                       <span className="text-stone-600">Benchmarks / sources linked</span>
                        <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">{data.proofDensity.clinicalCitations}</Badge>
                      </li>
                      <li className="flex justify-between items-center text-sm border-b border-stone-100 pb-2">
-                       <span className="text-stone-600">Detailed Provider Bios</span>
+                       <span className="text-stone-600">Named case studies</span>
                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">{data.proofDensity.providerBios}</Badge>
                      </li>
                      <li className="flex justify-between items-center text-sm">
-                       <span className="text-stone-600">Verified Before/After Galleries</span>
+                       <span className="text-stone-600">Verifiable customer proof</span>
                        <Badge variant="outline" className="bg-stone-100 text-stone-700 border-stone-200">{data.proofDensity.beforeAfterVerified}</Badge>
                      </li>
                    </ul>
@@ -236,7 +253,7 @@ export default function SampleReportDashboard() {
                                 "{claim.saferFraming}"
                               </p>
                               <div className="mt-4 pt-4 border-t border-emerald-200/50 text-xs text-emerald-800/70">
-                                This framing removes absolute guarantees and focuses on clinical intent, drastically lowering regulatory exposure and preventing bounce-outs.
+                                This framing replaces an absolute claim with something specific and provable — easier for a buyer to trust, and for an AI engine to cite.
                               </div>
                             </div>
                           </div>
@@ -325,12 +342,12 @@ export default function SampleReportDashboard() {
                     </TableBody>
                   </Table>
                   <div className="mt-8 p-6 bg-stone-900 rounded-sm text-center">
-                     <h3 className="text-stone-100 font-medium text-lg mb-2">Stop the Leakage</h3>
+                     <h3 className="text-stone-100 font-medium text-lg mb-2">See where buyers lose trust</h3>
                      <p className="text-stone-400 text-sm mb-6 max-w-xl mx-auto">
-                       You are currently paying for clicks that abandon your site because your claims lack structural proof. Deploy Contento to align your marketing with verifiable governance.
+                       The same gaps that make a claim hard to verify are the gaps that make a buyer hesitate. Run a free snapshot on your own page to see which claims hold up.
                      </p>
-                     <a href="/deployment" className="inline-block bg-white text-stone-900 font-mono text-xs uppercase tracking-widest px-6 py-3 rounded-sm hover:bg-stone-100 transition-colors shadow-sm">
-                        Fix Your Pipeline
+                     <a href="/snapshot" className="inline-block bg-white text-stone-900 font-mono text-xs uppercase tracking-widest px-6 py-3 rounded-sm hover:bg-stone-100 transition-colors shadow-sm">
+                        Get a Free Snapshot
                      </a>
                   </div>
                 </CardContent>
@@ -361,7 +378,7 @@ export default function SampleReportDashboard() {
            </div>
 
            <div className="mt-12">
-             <a href="/deployment" className="inline-block bg-stone-900 text-stone-50 font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-md">
+             <a href="/snapshot" className="inline-block bg-stone-900 text-stone-50 font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-md">
                 Run Your Own Free Snapshot
              </a>
            </div>

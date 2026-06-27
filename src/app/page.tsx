@@ -142,22 +142,25 @@ export default function Home() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="h-1.5 w-1.5 rounded-full bg-black" />
-              <span className="text-xs uppercase tracking-widest text-muted-foreground">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
                 AuditGPT by Scrutexity
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-6xl leading-tight mb-4">
               AI made publishing cheap.<br/>Scrutexity makes growth governable.
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              We detect unsupported claims, evidence gaps, demand leakage, and AI visibility issues across your entire digital footprint before they become a liability.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-2 font-medium">
+              The claim intelligence platform for high-risk, high-growth brands.
+            </p>
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-8">
+              Scan your website, monitor unsupported claims, and see how AI engines describe your business before buyers, regulators, or competitors do.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm mb-6">
               <a href="#intake" className="btn-cta text-base px-8 py-4">
-                Run Free Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" />
+                Run an AI Answer Reality Scan <ArrowRight className="h-4 w-4 ml-2 inline" />
               </a>
               <a href="/sample-report" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
-                View Interactive Sample Dashboard
+                View Sample Claim Audit
               </a>
             </div>
             <p className="text-sm font-medium">

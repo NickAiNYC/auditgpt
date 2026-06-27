@@ -93,11 +93,8 @@ export function WedgeCard({ className = '' }: { className?: string }) {
           </React.Fragment>
         ))}
       </div>
-      <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
-        Not an SEO audit. Not an AI-visibility tracker. Not reputation management. Not CRO.
-        AuditGPT is the diagnostic that sits between all four — the only artifact mapping the
-        gap between what you say, what buyers can verify, what AI and search can understand,
-        and where demand silently leaks.
+      <p className="text-xs text-muted-foreground mt-4 leading-relaxed font-mono uppercase tracking-widest text-center">
+        Not SEO. Not reputation management. Not CRO. Claim Intelligence.
       </p>
     </div>
   );

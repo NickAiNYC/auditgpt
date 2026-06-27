@@ -285,33 +285,33 @@ function buildPrimaryRecommendation(overallRiskScore: number): string {
     return 'Strengthen proof placement and safer framing so the page is easier for buyers and AI systems to trust.';
   }
 
-  return 'Use the strongest supported claims as reusable proof assets across Contento, AI Visibility, and Proof workflows.';
+  return 'Use the strongest supported claims as reusable proof assets across Governed Claim Rewrites, AI Answer Reality, and Verification workflows.';
 }
 
 function buildScrutexityNextSteps(overallRiskScore: number): ScrutexityNextStep[] {
   return [
     {
-      service: 'Contento',
+      service: 'Governed Claim Rewrites',
       whyItFits:
         overallRiskScore >= 40
           ? 'The page needs safer claim language and tighter proof placement.'
-          : 'The page has claims that can be turned into stronger reusable content assets.',
+          : 'Clear claims can still benefit from sharper framing and better buyer context.',
       nextAction: 'Rewrite the highest-risk sections into proof-aware website copy.',
     },
     {
-      service: 'AI Visibility',
+      service: 'AI Answer Reality',
       whyItFits:
-        'The page needs answer-engine readability, entity clarity, and citation confidence review.',
-      nextAction: 'Run deeper AI simulations with competitor benchmarking and citation gap analysis.',
+        'A deeper simulation can check if AI search engines correctly understand the entity and its proof points.',
+      nextAction: 'Run a targeted prompt check on ChatGPT and Perplexity.',
     },
     {
-      service: 'Recovery',
+      service: 'Revenue Leakage Insights',
       whyItFits:
-        'Use Recovery only if AI systems or public summaries are already misdescribing the business.',
-      nextAction: 'Monitor and correct recurring entity confusion or unsupported external descriptions.',
+        'Use Revenue Leakage Insights only if AI systems or public summaries are already misdescribing the business.',
+      nextAction: 'Map and review any active demand recovery paths.',
     },
     {
-      service: 'Proof & Reputation',
+      service: 'Verification & Trust Assets',
       whyItFits:
         'The strongest claims need durable proof assets such as testimonials, reviews, credentials, and source-backed examples.',
       nextAction: 'Map proof assets to each important buyer-facing claim.',

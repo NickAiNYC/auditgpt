@@ -1,16 +1,12 @@
 import Image from 'next/image';
 
 // AuditGPT logo component.
-// - variant="shield" → shield icon only (for favicon, small contexts)
-// - variant="full" → full horizontal logo (shield + "AuditGPT" wordmark)
-//
-// The full logo composes the shield asset with live text for clearer headers.
-// The shield-only version is a 256x256 crop used as favicon and small icons.
+// - variant="shield" → shield icon only
+// - variant="full" → shield icon + "AuditGPT" wordmark
 
 interface LogoProps {
   variant?: 'shield' | 'full';
   className?: string;
-  // Height in pixels; width auto-scales to maintain aspect ratio.
   height?: number;
   priority?: boolean;
 }
@@ -18,55 +14,68 @@ interface LogoProps {
 export function Logo({
   variant = 'full',
   className = '',
-  height = 36,
+  height = 28,
   priority = false,
 }: LogoProps) {
-  const actualHeight = Math.max(36, height); 
-  const displayHeight = actualHeight * 1.1; 
+  // 33% larger
+  const iconSize = Math.max(20, Math.round(height * 1.33));
 
   if (variant === 'shield') {
     return (
       <Image
         src="/logo-shield.png"
         alt="AuditGPT"
-        width={displayHeight}
-        height={displayHeight}
+        width={iconSize}
+        height={iconSize}
         priority={priority}
-        className={`mix-blend-multiply dark:invert ${className}`}
-        style={{ 
-          height: displayHeight, 
-          width: 'auto',
-          filter: 'grayscale(100%) contrast(500%) brightness(120%)',
-          transform: 'scale(2.2)',
-          transformOrigin: 'left center'
+        className={className}
+        style={{
+          display: 'block',
+          flexShrink: 0,
+          height: iconSize,
+          width: iconSize,
+          objectFit: 'contain',
         }}
       />
     );
   }
 
-  // Render the full logo which contains both the shield and the text
   return (
     <span
-      aria-label="AuditGPT"
-      className={`inline-flex items-center text-foreground ${className}`}
-      style={{ height: actualHeight }}
+      className={className}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 6,
+        height,
+        flexShrink: 0,
+      }}
     >
       <Image
-        src="/logo-full.png"
-        alt="AuditGPT"
-        width={displayHeight * 4} 
-        height={displayHeight}
+        src="/logo-shield.png"
+        alt=""
+        width={iconSize}
+        height={iconSize}
         priority={priority}
-        className="mix-blend-multiply dark:invert"
-        style={{ 
-          height: displayHeight, 
-          width: 'auto',
+        style={{
+          display: 'block',
+          flexShrink: 0,
+          height: iconSize,
+          width: iconSize,
           objectFit: 'contain',
-          filter: 'grayscale(100%) contrast(500%) brightness(120%)',
-          transform: 'scale(2.2)',
-          transformOrigin: 'left center'
         }}
       />
+      <span
+        style={{
+          fontWeight: 600,
+          fontSize: Math.max(14, height * 0.65),
+          letterSpacing: '-0.01em',
+          color: 'inherit',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        AuditGPT
+      </span>
     </span>
   );
 }

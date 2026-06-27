@@ -85,7 +85,7 @@ export interface SaferFramingRecommendation {
 }
 
 export interface ScrutexityNextStep {
-  service: 'Contento' | 'AI Visibility' | 'Recovery' | 'Proof & Reputation';
+  service: 'Governed Claim Rewrites' | 'AI Answer Reality' | 'Revenue Leakage Insights' | 'Verification & Trust Assets';
   whyItFits: string;
   nextAction: string;
 }

@@ -7,36 +7,40 @@ import { JsonLd, ScrutexityOrganizationSchema, AuditGPTSoftwareSchema } from "@/
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://scrutexity.com"),
-  title: "AuditGPT — Find what is unsupported, invisible, risky, or leaking",
+  title: "AuditGPT — AI Answer Reality & Claim Intelligence",
   description:
-    "AuditGPT by Scrutexity. The diagnostic that maps the gap between claim, evidence, AI/search readability, and demand leakage. Free Visibility & Trust Snapshot.",
+    "AuditGPT by Scrutexity. The claim intelligence platform for high-risk, high-growth brands. Scan your website and see how AI engines describe your business.",
   keywords: [
-    "Visibility and Trust audit",
-    "claim audit",
+    "AI Answer Reality",
+    "claim intelligence",
     "AI search visibility audit",
-    "reputation surface audit",
-    "demand recovery audit",
+    "claim audit",
     "Scrutexity",
     "auditgpt",
   ],
   authors: [{ name: "AuditGPT by Scrutexity" }],
   icons: {
-    icon: [{ url: "/logo-shield.png", type: "image/png", sizes: "any" }],
-    apple: [{ url: "/logo-shield.png", type: "image/png", sizes: "180x180" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "AuditGPT — Find what is unsupported, invisible, risky, or leaking",
+    title: "AuditGPT — AI Answer Reality & Claim Intelligence",
     description:
-      "AuditGPT by Scrutexity. The diagnostic front door for governed marketing and demand recovery.",
+      "AuditGPT by Scrutexity. The claim intelligence platform for high-risk, high-growth brands.",
     type: "website",
     siteName: "AuditGPT",
     images: [{ url: "/logo-full.png", width: 1200, height: 285, alt: "AuditGPT" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AuditGPT — Visibility & Trust diagnostics",
+    title: "AuditGPT — AI Answer Reality & Claim Intelligence",
     description:
-      "Find what is unsupported, invisible, risky, or leaking. AuditGPT by Scrutexity.",
+      "Scan your website, monitor unsupported claims, and see how AI engines describe your business. AuditGPT by Scrutexity.",
     images: ["/logo-full.png"],
   },
 };
