@@ -190,6 +190,10 @@ model Audit {
   user              User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
   monitoredSiteId   String?
   monitoredSite     MonitoredSite?       @relation(fields: [monitoredSiteId], references: [id], onDelete: SetNull)
+  agencyId          String?
+  agency            Agency?              @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  clientId          String?
+  client            AgencyClient?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
   verified          Boolean              @default(false)
   verifiedAt        DateTime?
   agentConfigs      AgentConfig[]
@@ -305,4 +309,33 @@ model MonitorDeltaReport {
   changedClaimsCount Int
   deltaJson       String   // Stores detailed diff
   createdAt       DateTime @default(now())
+}
+
+model Agency {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName      String
+  logoUrl          String?
+  primaryColor     String?
+  poweredByEnabled Boolean  @default(true)
+  billingTier      String   @default("agency")
+  monthlyFee       Int?
+  clients          AgencyClient[]
+  audits           Audit[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model AgencyClient {
+  id        String   @id @default(cuid())
+  agencyId  String
+  agency    Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  name      String
+  url       String
+  audits    Audit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([agencyId, url])
 }

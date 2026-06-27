@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { runMonitorScan } from '@/lib/audit/claim-monitor';
 
+const monitoringDb = db as typeof db & {
+  monitorSubscription: any;
+};
+
 export async function GET(req: Request) {
   // Verify Vercel Cron Secret
   const authHeader = req.headers.get('authorization');
@@ -11,7 +15,7 @@ export async function GET(req: Request) {
 
   try {
     console.log('[Cron] Starting daily claim monitoring scan');
-    const activeSubscriptions = await db.monitorSubscription.findMany({
+    const activeSubscriptions = await monitoringDb.monitorSubscription.findMany({
       where: {
         status: 'active',
         // In a real system, we would filter by frequency and lastRun

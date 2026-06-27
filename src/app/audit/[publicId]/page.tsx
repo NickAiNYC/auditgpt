@@ -36,6 +36,20 @@ export default async function PublicAuditPage({ params }: PageProps) {
   const audit = await getPublicAudit(publicId);
   if (!audit) notFound();
 
+  let agencyBranding = undefined;
+  if (audit.agencyId) {
+    const { db } = await import('@/lib/db');
+    const agency = await db.agency.findUnique({ where: { id: audit.agencyId } });
+    if (agency) {
+      agencyBranding = {
+        logoUrl: agency.logoUrl,
+        primaryColor: agency.primaryColor,
+        poweredByEnabled: agency.poweredByEnabled,
+        companyName: agency.companyName,
+      };
+    }
+  }
+
   const review = computeReportReview(audit);
   const isSnapshot = audit.auditType === 'snapshot' || audit.path === 'snapshot';
   const enhancedSnapshot = isSnapshot
@@ -85,6 +99,7 @@ export default async function PublicAuditPage({ params }: PageProps) {
               report={enhancedSnapshot}
               mode="free"
               publicId={audit.publicId}
+              agencyBranding={agencyBranding}
             />
           ) : (
             <PublicAuditView

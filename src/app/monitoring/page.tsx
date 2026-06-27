@@ -8,13 +8,17 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
+const monitoringDb = db as typeof db & {
+  monitorSubscription: any;
+};
+
 export default async function MonitoringDashboard() {
   const userId = await getCurrentUserId();
   if (!userId) {
     redirect('/login');
   }
 
-  const subscriptions = await db.monitorSubscription.findMany({
+  const subscriptions = await monitoringDb.monitorSubscription.findMany({
     where: { userId },
     include: {
       deltas: {

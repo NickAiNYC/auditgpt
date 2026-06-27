@@ -3,6 +3,11 @@ import { db } from '@/lib/db';
 import { getCurrentUserId } from '@/lib/subscription';
 import { runMonitorScan } from '@/lib/audit/claim-monitor';
 
+const monitoringDb = db as typeof db & {
+  monitorSubscription: any;
+  monitorDeltaReport: any;
+};
+
 export async function POST(req: Request) {
   try {
     const userId = await getCurrentUserId();
@@ -18,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     // Verify ownership
-    const subscription = await db.monitorSubscription.findUnique({
+    const subscription = await monitoringDb.monitorSubscription.findUnique({
       where: { id: subscriptionId },
     });
 
@@ -28,7 +33,7 @@ export async function POST(req: Request) {
 
     const deltaReportId = await runMonitorScan(subscriptionId);
 
-    const deltaReport = await db.monitorDeltaReport.findUnique({
+    const deltaReport = await monitoringDb.monitorDeltaReport.findUnique({
       where: { id: deltaReportId }
     });
 

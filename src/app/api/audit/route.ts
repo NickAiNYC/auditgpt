@@ -95,6 +95,8 @@ export async function POST(req: NextRequest) {
     });
 
     const isFullMode = req.nextUrl.searchParams.get('mode') === 'full';
+    const agencyId = req.nextUrl.searchParams.get('agencyId') || undefined;
+    const clientId = req.nextUrl.searchParams.get('clientId') || undefined;
     try {
       const { generateSimulation } = await import('@/lib/audit/ai-claim-readability');
       const claimFindings = parsed.claim_audit.claims.map(c => ({
@@ -151,6 +153,8 @@ export async function POST(req: NextRequest) {
         transcript: input.transcript || null,
         auditJson: parsed,
         userId,
+        agencyId,
+        clientId,
       });
     } catch (persistErr) {
       console.error('Audit persistence failed (non-fatal):', persistErr);

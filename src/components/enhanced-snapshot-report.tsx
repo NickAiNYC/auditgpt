@@ -24,10 +24,18 @@ import type {
   EnhancedSnapshotReport,
 } from '@/lib/audit/snapshot-report-model';
 
+export interface AgencyBranding {
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  poweredByEnabled?: boolean | null;
+  companyName?: string | null;
+}
+
 interface EnhancedSnapshotReportProps {
   report: EnhancedSnapshotReport;
   mode?: 'free' | 'full';
   publicId?: string;
+  agencyBranding?: AgencyBranding | null;
 }
 
 const labelStyles: Record<ClaimFinding['label'], string> = {
@@ -47,6 +55,7 @@ export function EnhancedSnapshotReport({
   report,
   mode = 'free',
   publicId,
+  agencyBranding,
 }: EnhancedSnapshotReportProps) {
   const isFree = mode === 'free';
   const claims = isFree ? report.claimInventory.slice(0, 3) : report.claimInventory;
@@ -59,10 +68,18 @@ export function EnhancedSnapshotReport({
 
   return (
     <article className="mx-auto max-w-[1120px] overflow-hidden border border-stone-200 bg-[#f7f3e8] text-stone-900 shadow-sm print:border-black print:shadow-none">
-      <header className="border-b border-stone-300 bg-[#252923] px-6 py-7 text-[#f2eddf] sm:px-10">
+      <header 
+        className="border-b border-stone-300 bg-[#252923] px-6 py-7 text-[#f2eddf] sm:px-10"
+        style={agencyBranding?.primaryColor ? { backgroundColor: agencyBranding.primaryColor } : undefined}
+      >
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div>
-            <Logo variant="full" height={30} />
+            {agencyBranding?.logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={agencyBranding.logoUrl} alt={agencyBranding.companyName || "Agency Logo"} className="h-[30px] w-auto object-contain" />
+            ) : (
+              <Logo variant="full" height={30} />
+            )}
             <p className="mt-6 font-mono text-[10px] uppercase tracking-[.24em] text-[#b7bcae]">
               AI Visibility + Claim Snapshot
             </p>
@@ -247,7 +264,11 @@ export function EnhancedSnapshotReport({
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3 print:hidden">
-          <Button asChild className="bg-stone-900 text-white hover:bg-stone-800">
+          <Button 
+            asChild 
+            className="bg-stone-900 text-white hover:bg-stone-800"
+            style={agencyBranding?.primaryColor ? { backgroundColor: agencyBranding.primaryColor } : undefined}
+          >
             <Link href="/monitoring">
               Start Monthly Monitoring ($799/mo) <ArrowUpRight className="h-4 w-4" />
             </Link>
@@ -263,7 +284,14 @@ export function EnhancedSnapshotReport({
             </Button>
           )}
         </div>
+        </div>
       </SectionShell>
+
+      {(agencyBranding?.poweredByEnabled !== false) && (
+        <footer className="border-t border-stone-300 bg-[#f7f3e8] px-6 py-4 text-center font-mono text-[10px] uppercase tracking-[.24em] text-stone-500 sm:px-10">
+          Powered by Scrutexity
+        </footer>
+      )}
     </article>
   );
 }

@@ -4,6 +4,11 @@ import { persistAudit } from '../audit-persistence';
 import type { AuditResult, Claim } from '../audit-schema';
 import { generateSimulation } from './ai-claim-readability';
 
+const monitoringDb = db as typeof db & {
+  monitorSubscription: any;
+  monitorDeltaReport: any;
+};
+
 export interface MonitorDeltaResult {
   newClaimsCount: number;
   changedClaimsCount: number;
@@ -11,6 +16,9 @@ export interface MonitorDeltaResult {
   riskScoreDelta: number;
   newEvidenceGaps: number;
   aiVisibilityDelta: string; // Brief summary of visibility shift
+  newClaims: Array<{ claim: string; status: string; priority: string }>;
+  changedClaims: Array<{ claim: string; from: string; to: string }>;
+  resolvedClaims: Array<{ claim: string; previousStatus: string }>;
 }
 
 /**
@@ -20,7 +28,7 @@ export interface MonitorDeltaResult {
  */
 export async function runMonitorScan(subscriptionId: string): Promise<string> {
   // 1. Fetch Subscription
-  const subscription = await db.monitorSubscription.findUnique({
+  const subscription = await monitoringDb.monitorSubscription.findUnique({
     where: { id: subscriptionId },
     include: {
       user: true,
@@ -112,7 +120,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
   });
 
   // 6. Save Delta Report
-  const deltaReport = await db.monitorDeltaReport.create({
+  const deltaReport = await monitoringDb.monitorDeltaReport.create({
     data: {
       subscriptionId: subscription.id,
       previousAuditId: previousAuditId || currentAuditId,
@@ -125,7 +133,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
   });
 
   // 7. Update Subscription state
-  await db.monitorSubscription.update({
+  await monitoringDb.monitorSubscription.update({
     where: { id: subscription.id },
     data: { lastRun: new Date() }
   });
@@ -133,7 +141,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
   // Basic alert stub (could email here)
   if (subscription.notificationsEnabled && (delta.newClaimsCount > 0 || delta.riskScoreDelta !== 0)) {
     console.log(`[Alert Stub] Monitoring found drift! Risk delta: ${delta.riskScoreDelta}, New claims: ${delta.newClaimsCount}. URL: ${subscription.url}`);
-    await db.monitorSubscription.update({
+    await monitoringDb.monitorSubscription.update({
       where: { id: subscription.id },
       data: { lastNotified: new Date() }
     });
@@ -151,36 +159,64 @@ function calculateDelta(prev: AuditResult | null, curr: AuditResult): MonitorDel
       resolvedClaimsCount: 0,
       riskScoreDelta: curr.claim_audit.summary.claim_support_score, // Initial score
       newEvidenceGaps: curr.claim_audit.summary.unsupported_count,
-      aiVisibilityDelta: 'Baseline AI Visibility established.'
+      aiVisibilityDelta: 'Baseline AI Visibility established.',
+      newClaims: curr.claim_audit.claims.map((claim) => ({
+        claim: claim.normalized_claim || claim.original_text,
+        status: claim.claim_status,
+        priority: claim.priority,
+      })),
+      changedClaims: [],
+      resolvedClaims: [],
     };
   }
 
-  // Extract IDs for matching
-  const prevClaims = new Map(prev.claim_audit.claims.map(c => [c.id, c]));
-  const currClaims = new Map(curr.claim_audit.claims.map(c => [c.id, c]));
+  const prevClaims = new Map(prev.claim_audit.claims.map(c => [claimKey(c), c]));
+  const currClaims = new Map(curr.claim_audit.claims.map(c => [claimKey(c), c]));
 
   let newClaimsCount = 0;
   let changedClaimsCount = 0;
   let resolvedClaimsCount = 0;
   let newEvidenceGaps = 0;
+  const newClaims: MonitorDeltaResult['newClaims'] = [];
+  const changedClaims: MonitorDeltaResult['changedClaims'] = [];
+  const resolvedClaims: MonitorDeltaResult['resolvedClaims'] = [];
 
-  for (const [id, currClaim] of currClaims) {
-    const prevClaim = prevClaims.get(id);
+  for (const [key, currClaim] of currClaims) {
+    const prevClaim = prevClaims.get(key);
     if (!prevClaim) {
       newClaimsCount++;
+      newClaims.push({
+        claim: currClaim.normalized_claim || currClaim.original_text,
+        status: currClaim.claim_status,
+        priority: currClaim.priority,
+      });
       if (currClaim.claim_status === 'unsupported' || currClaim.claim_status === 'overstated') {
         newEvidenceGaps++;
       }
     } else {
-      if (prevClaim.claim_status !== currClaim.claim_status || prevClaim.original_text !== currClaim.original_text) {
+      if (
+        prevClaim.claim_status !== currClaim.claim_status ||
+        prevClaim.priority !== currClaim.priority ||
+        prevClaim.support_gap !== currClaim.support_gap ||
+        prevClaim.safer_framing !== currClaim.safer_framing
+      ) {
         changedClaimsCount++;
+        changedClaims.push({
+          claim: currClaim.normalized_claim || currClaim.original_text,
+          from: `${prevClaim.claim_status} / ${prevClaim.priority}`,
+          to: `${currClaim.claim_status} / ${currClaim.priority}`,
+        });
       }
     }
   }
 
-  for (const [id] of prevClaims) {
-    if (!currClaims.has(id)) {
+  for (const [key, prevClaim] of prevClaims) {
+    if (!currClaims.has(key)) {
       resolvedClaimsCount++;
+      resolvedClaims.push({
+        claim: prevClaim.normalized_claim || prevClaim.original_text,
+        previousStatus: prevClaim.claim_status,
+      });
     }
   }
 
@@ -194,6 +230,17 @@ function calculateDelta(prev: AuditResult | null, curr: AuditResult): MonitorDel
     newEvidenceGaps,
     aiVisibilityDelta: riskScoreDelta < 0 
       ? 'Risk score increased; AI engines may drop citation confidence.' 
-      : 'Visibility remains stable or improved.'
+      : 'Visibility remains stable or improved.',
+    newClaims,
+    changedClaims,
+    resolvedClaims,
   };
+}
+
+function claimKey(claim: Claim): string {
+  return (claim.normalized_claim || claim.original_text)
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/[^\w\s]/g, '')
+    .trim();
 }

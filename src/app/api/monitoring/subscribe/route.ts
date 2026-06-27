@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUserId } from '@/lib/subscription';
 
+const monitoringDb = db as typeof db & {
+  monitorSubscription: any;
+};
+
 export async function POST(req: Request) {
   try {
     const userId = await getCurrentUserId();
@@ -16,7 +20,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 });
     }
 
-    const subscription = await db.monitorSubscription.upsert({
+    const subscription = await monitoringDb.monitorSubscription.upsert({
       where: {
         userId_url: { userId, url },
       },

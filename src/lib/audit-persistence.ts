@@ -36,6 +36,8 @@ export async function persistAudit(params: {
   transcript?: string | null;
   auditJson: AuditResult;
   userId?: string | null;
+  agencyId?: string;
+  clientId?: string;
 }): Promise<string> {
   const publicId = generatePublicId();
   await db.audit.create({
@@ -52,6 +54,8 @@ export async function persistAudit(params: {
       auditJson: JSON.stringify({ __auditType: params.auditType, ...params.auditJson }),
       publicId,
       userId: params.userId || null,
+      agencyId: params.agencyId || null,
+      clientId: params.clientId || null,
     },
   });
   return publicId;
