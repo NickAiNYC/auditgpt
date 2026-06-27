@@ -284,7 +284,6 @@ export function EnhancedSnapshotReport({
             </Button>
           )}
         </div>
-        </div>
       </SectionShell>
 
       {(agencyBranding?.poweredByEnabled !== false) && (
