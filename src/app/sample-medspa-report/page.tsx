@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { auraMockData, ClaimStatus, RiskLevel } from '@/lib/mock-report-data';
+import { medspaMockData, ClaimStatus, RiskLevel } from '@/lib/mock-report-data';
 import { Logo } from '@/components/logo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AlertTriangle, CheckCircle2, Info, XCircle, ChevronRight, Activity, ShieldAlert, Bot, SearchX } from 'lucide-react';
 
 export default function SampleReportDashboard() {
-  const data = auraMockData;
+  const data = medspaMockData;
 
   const getRiskColor = (level: RiskLevel) => {
     switch (level) {
@@ -87,7 +87,7 @@ export default function SampleReportDashboard() {
             </div>
           </div>
           <div className="text-[10px] font-mono uppercase tracking-widest text-stone-500 bg-stone-100 border border-stone-200 rounded-sm px-3 py-2 text-center sm:text-right">
-            Illustrative sample · Northwind AI is fictional · figures illustrative
+            Illustrative sample · Lumina Aesthetics is fictional · figures illustrative
           </div>
         </div>
 

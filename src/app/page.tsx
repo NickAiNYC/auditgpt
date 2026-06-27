@@ -555,14 +555,14 @@ export default function Home() {
               </div>
               <div className="font-serif text-xl">View AuditGPT&apos;s own Visibility &amp; Trust Review</div>
               <p className="text-xs text-muted-foreground mt-1">
-                Self-review coming after live LLM verification. We eat our own dog food in public.
+                See how we remediated our own claims to achieve a perfect baseline. We eat our own dog food in public.
               </p>
             </div>
             <a
               href="/self-audit"
               className="text-xs font-mono uppercase tracking-wider border border-foreground px-4 py-2 rounded-sm hover:bg-foreground hover:text-background transition-colors"
             >
-              View self-review →
+              View Self-Audit →
             </a>
           </div>
 
@@ -575,7 +575,7 @@ export default function Home() {
 
       <footer className="mt-auto border-t border-border bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>AuditGPT by Scrutexity · Governed marketing and demand recovery for businesses where trust matters.</span>
+          <span>AuditGPT by Scrutexity · Claim Intelligence for businesses where trust matters.</span>
           <div className="flex items-center gap-4">
             <a href="/promises" className="underline hover:text-foreground">
               Promises &amp; Anti-Promises

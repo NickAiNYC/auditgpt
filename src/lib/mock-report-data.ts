@@ -159,3 +159,108 @@ export const auraMockData: ReportData = {
     ]
   }
 };
+
+// Illustrative sample for Med Spa
+export const medspaMockData: ReportData = {
+  clinicName: "Lumina Aesthetics",
+  industry: "Medical Spa / Wellness",
+  overallGovernanceScore: 45,
+  generatedAt: new Date().toISOString().split('T')[0],
+
+  executiveSummary: {
+    criticalRisks: 4,
+    demandLeakageEst: "Critical",
+    aiVisibilityScore: 28,
+    keyTakeaway: "Lumina Aesthetics makes bold treatment promises without visible clinical backing or provider credentials. Patients doing research — and AI answering their queries — will heavily discount these claims. Four high-priority claims risk regulatory scrutiny and competitor displacement."
+  },
+
+  claimInventory: [
+    {
+      id: "C-001",
+      originalClaim: "The most advanced laser treatment in the city.",
+      status: "Overstated",
+      riskLevel: "High",
+      riskNote: "Viewed as marketing puffery. No clinical backing or device names found on page.",
+      saferFraming: "The only clinic in [City] offering the FDA-cleared [Device] for acne scars.",
+      evidenceGap: "No device names, FDA clearance links, or clinical studies cited."
+    },
+    {
+      id: "C-002",
+      originalClaim: "Results that last forever.",
+      status: "Unsupported",
+      riskLevel: "Critical",
+      riskNote: "Absolute guarantees on aesthetic treatments are unsupported and flagged by medical boards.",
+      saferFraming: "Long-lasting results with proper maintenance — see our before and after gallery.",
+      evidenceGap: "No realistic timeline, maintenance schedule, or verifiable long-term case studies provided."
+    },
+    {
+      id: "C-003",
+      originalClaim: "Voted #1 Medical Spa by our clients.",
+      status: "Overstated",
+      riskLevel: "High",
+      riskNote: "Unverified awards or rankings are treated as puffery without a link to the source publication or survey.",
+      saferFraming: "Rated 4.9 stars by over 500 patients on Google.",
+      evidenceGap: "No link to the award, publication, or public review platform."
+    },
+    {
+      id: "C-004",
+      originalClaim: "All treatments performed by top experts.",
+      status: "Unsupported",
+      riskLevel: "Critical",
+      riskNote: "Provider credentials are missing. 'Top experts' is subjective and carries no weight without bios.",
+      saferFraming: "Treatments administered by Board-Certified Dermatologist Dr. [Name] and licensed RNs.",
+      evidenceGap: "No provider bios, medical director information, or specific licenses listed on the page."
+    },
+    {
+      id: "C-005",
+      originalClaim: "Painless hair removal.",
+      status: "Weakly Supported",
+      riskLevel: "Moderate",
+      riskNote: "Subjective sensation claims are risky. Needs framing around the specific cooling technology used.",
+      saferFraming: "Comfortable treatments using [Device Name]'s advanced cooling technology.",
+      evidenceGap: "No explanation of how the treatment mitigates pain (e.g., cooling technology)."
+    }
+  ],
+
+  aiVisibility: [
+    {
+      engine: 'ChatGPT',
+      simulatedDescription: "Lumina Aesthetics is a med spa. Its site claims 'most advanced laser treatment', but lacks specific device names or clinical citations, so an answer engine can't confirm or repeat these specifics against local competitors.",
+      citationLikelihood: 25,
+      strengths: ["Clear service categories"],
+      weaknesses: ["Missing provider credentials", "No device or FDA clearance mentions"],
+      entityGaps: ["Specific laser devices", "Medical director name", "Clinical evidence"]
+    },
+    {
+      engine: 'Perplexity',
+      simulatedDescription: "Lumina Aesthetics offers aesthetic treatments. Independent medical sources don't substantiate their 'results that last forever' claim, making it unlikely to be cited in medical or treatment-specific queries.",
+      citationLikelihood: 15,
+      strengths: ["Location data is indexed"],
+      weaknesses: ["Unverified absolute claims", "Lack of before/after verification"],
+      entityGaps: ["Treatment longevity data", "Verified patient reviews"]
+    },
+    {
+      engine: 'Gemini',
+      simulatedDescription: "Lumina Aesthetics provides cosmetic services. They claim 'top experts', but provider bios and board certifications are not linked, so specifics can't be confirmed for patients researching safe providers.",
+      citationLikelihood: 32,
+      strengths: ["Service menu is readable"],
+      weaknesses: ["Provider expertise asserted, not shown"],
+      entityGaps: ["Provider bios", "Board certifications", "State licenses"]
+    }
+  ],
+
+  proofDensity: {
+    clinicalCitations: 0,   // clinical studies / FDA clearance linked
+    providerBios: 0,        // verifiable provider credentials
+    beforeAfterVerified: 1  // verifiable before/after galleries
+  },
+
+  demandLeakage: {
+    summary: "Patients researching high-trust aesthetic treatments look for provider credentials, specific device names, and verifiable before/afters. Lumina's broad claims lack this proof, causing high-intent buyers to bounce to competitors with transparent medical backgrounds.",
+    issues: [
+      { area: "Provider bios", impact: "'Top experts' without named bios causes patients to distrust the clinic's safety and medical oversight." },
+      { area: "Treatment pages", impact: "'Most advanced laser' with no device name prevents patients from confirming the treatment's efficacy via independent research." },
+      { area: "Review surface", impact: "'Voted #1' with no link to a verifiable platform makes the claim seem fabricated, hurting overall brand trust." }
+    ]
+  }
+};
