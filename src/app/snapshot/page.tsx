@@ -102,13 +102,18 @@ export default function SnapshotPage() {
             {loading ? 'Scanning Infrastructure...' : 'Initialize Snapshot'}
           </h1>
           
-          <p className="text-stone-500 mb-10 font-light text-sm sm:text-base">
+          <div className="text-stone-500 mb-10 font-light text-sm sm:text-base max-w-lg mx-auto">
             {loading 
               ? 'Analyzing claims, cross-referencing evidence, and evaluating AI visibility risk.'
               : step === 1 
-                ? 'Enter the target URL to generate a point-in-time compliance and risk assessment.'
-                : 'Where should we send your completed risk assessment?'}
-          </p>
+                ? (
+                  <>
+                    Paste a public website URL. Scrutexity reviews public-facing claims, flags unsupported or overstated language, and returns a prioritized fix plan.<br/><br/>
+                    <span className="text-xs text-stone-400">Public pages only. No login required. Diagnostic review only — not legal, medical, clinical, or regulatory advice.</span>
+                  </>
+                )
+                : 'Where should we send your snapshot link?'}
+          </div>
 
           {/* Input Area */}
           <div className="max-w-xl mx-auto">
@@ -168,12 +173,18 @@ export default function SnapshotPage() {
           </div>
 
           {/* Trust Signals */}
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 border-t border-stone-200/50 pt-8">
+          <div className="mt-12 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 border-t border-stone-200/50 pt-8">
             <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Read-Only Analysis
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Public page only
             </span>
             <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-stone-300" /> Zero-Downtime Execution
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-300" /> No login required
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> No patient/system data
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-stone-300" /> Diagnostic review only
             </span>
           </div>
 

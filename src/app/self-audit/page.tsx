@@ -65,8 +65,9 @@ export default function SelfAuditPage() {
         </section>
 
         {/* Scope Box */}
-        <section className="bg-white/[0.02] border border-white/5 rounded-md p-4 text-xs font-mono text-muted-foreground/80">
+        <section className="bg-white/[0.02] border border-white/5 rounded-md p-4 text-xs font-mono text-muted-foreground/80 flex flex-col sm:flex-row justify-between gap-4">
           <p><strong className="text-muted-foreground">Audit Scope:</strong> 4 foundational claims reviewed. This does not represent a full-site or full-digital-footprint audit.</p>
+          <p><strong className="text-muted-foreground">Next Review Date:</strong> September 30, 2026</p>
         </section>
 
         {/* The Remediation Ledger */}
@@ -131,6 +132,23 @@ export default function SelfAuditPage() {
                   </TableCell>
                   <TableCell className="text-sm text-foreground align-top font-medium">
                     "Your audit will begin generating immediately."
+                  </TableCell>
+                  <TableCell className="align-top">
+                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>
+                  </TableCell>
+                </TableRow>
+
+                {/* Claim 4 */}
+                <TableRow className="border-white/10 hover:bg-white/[0.02] transition-colors group">
+                  <TableCell className="font-medium text-sm text-muted-foreground line-through decoration-red-500/50 align-top">
+                    "Generate a point-in-time compliance and risk assessment."
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground align-top">
+                    <span className="text-red-500 block mb-1">Compliance Overclaim</span>
+                    We are not a compliance tool and do not certify compliance. The language is legally risky.
+                  </TableCell>
+                  <TableCell className="text-sm text-foreground align-top font-medium">
+                    "Generate a point-in-time claim and proof snapshot."
                   </TableCell>
                   <TableCell className="align-top">
                     <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>

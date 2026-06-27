@@ -62,13 +62,36 @@ export default function ProofCenterPage() {
               <h2 className="font-mono text-xs uppercase tracking-widest text-stone-400 mb-6 flex items-center gap-2">
                 <span className="w-4 h-[1px] bg-stone-300"></span> 01. See the output
               </h2>
-              <div className="space-y-4">
-                <a href="/sample-report" className="block group bg-white border border-stone-200 p-6 rounded-sm hover:border-stone-400 transition-colors shadow-sm print:shadow-none">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">Sample Claim Report</h3>
+              <div className="space-y-3">
+                <a href="/ai-answer-reality/sample" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample AI Answer Reality Snapshot</h3>
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
                   </div>
-                  <p className="text-sm text-stone-600">Exactly what a finished AuditGPT report looks like, claim by claim &mdash; on an illustrative example company.</p>
+                </a>
+                <a href="/ai-answer-reality/sample" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Record & Evidence Pack</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
+                  </div>
+                </a>
+                <a href="/self-audit" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Scrutexity Self-Audit</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Live</span>
+                  </div>
+                </a>
+                <a href="/verified/sample" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Verification Badge</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
+                  </div>
+                </a>
+                <a href="/agency" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Agency Certificate</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
+                  </div>
                 </a>
               </div>
             </section>

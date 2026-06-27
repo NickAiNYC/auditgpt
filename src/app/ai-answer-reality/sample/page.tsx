@@ -5,6 +5,7 @@ import { DistortionTable } from "@/components/ai-answer-reality/distortion-table
 import { ClaimRiskTable } from "@/components/ai-answer-reality/claim-risk-table";
 import { PriorityFixList } from "@/components/ai-answer-reality/priority-fix-list";
 import { ReportCTA } from "@/components/ai-answer-reality/report-cta";
+import { StickyScanCTA } from "@/components/sticky-scan-cta";
 import { StickyConversionSidebar } from "@/components/ai-answer-reality/sticky-conversion-sidebar";
 
 export const metadata: Metadata = {
@@ -138,6 +139,8 @@ export default function SampleAIAnswerRealityScan() {
           <ReportCTA />
         </section>
 
+        {/* Sticky CTA */}
+        <StickyScanCTA />
       </main>
     </div>
   );

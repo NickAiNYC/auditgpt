@@ -114,24 +114,13 @@ export default function Home() {
             <Logo variant="full" height={28} />
           </a>
           <nav className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            <a href="/proof" className="hover:text-foreground hidden sm:inline-block">
-              Proof Center
-            </a>
-            <a href="/security" className="hover:text-foreground">
-              Trust & Security
-            </a>
-            <a href="/deployment" className="hover:text-foreground">
-              Deployment
-            </a>
-            <a href="/sample-report" className="hover:text-foreground">
-              Sample report
-            </a>
-            <a href="/snapshot" className="hover:text-foreground">
-              Free snapshot
-            </a>
-            <a href="/pricing" className="hover:text-foreground">
-              Pricing
-            </a>
+            <a href="/" className="hover:text-foreground hidden sm:inline-block">Platform</a>
+            <a href="/ai-answer-reality" className="hover:text-foreground hidden sm:inline-block">AI Answer Reality</a>
+            <a href="/ai-answer-reality/sample" className="hover:text-foreground">Sample Report</a>
+            <a href="/pricing" className="hover:text-foreground">Pricing</a>
+            <a href="/proof" className="hover:text-foreground hidden sm:inline-block">Proof</a>
+            <a href="/agency" className="hover:text-foreground">Partners</a>
+            <a href="/snapshot" className="text-accent hover:text-foreground font-bold">Run Claim Snapshot</a>
           </nav>
         </div>
       </header>
@@ -552,7 +541,7 @@ export default function Home() {
                 <li>AI Answer Reality monitoring</li>
                 <li>Verification and trust assets</li>
                 <li>Revenue leakage insights</li>
-                <li><strong>Agency white-label reports</strong> to protect your clients</li>
+                <li>Agency white-label reporting</li>
                 <li>Manual review</li>
               </ul>
             </section>

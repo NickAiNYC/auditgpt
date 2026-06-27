@@ -16,7 +16,7 @@ const WILL_DO = [
   'Identify AI/search readability gaps (whether the page clearly answers the buyer questions AI and search now ask).',
   'Identify demand leakage points (weak CTAs, broken contact paths, missing follow-up, dormant lead opportunities).',
   'Recommend safer framing for claims that lack evidence.',
-  'Recommend a Scrutexity next step (Contento, AI Visibility, Recovery, Proof & Reputation, Agency White Label, or Manual Review).',
+  'Recommend a Scrutexity next step (Governed claim rewrites, AI Answer Reality monitoring, Verification and trust assets, Revenue leakage insights, Agency white-label reporting, or Manual review).',
 ];
 
 const WILL_NOT_DO = [

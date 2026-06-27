@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
 import { Logo } from '@/components/logo';
 
 const STRIPE_PRICE_IDS = {
+  evidence: process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_PRICE_ID || '',
   monitor: process.env.NEXT_PUBLIC_STRIPE_MONITOR_PRICE_ID || '',
   agency: process.env.NEXT_PUBLIC_STRIPE_AGENCY_PRICE_ID || '',
 } as const;
@@ -17,22 +18,44 @@ interface Tier {
   price: string;
   cadence: string;
   description: string;
-  priceId: string;
+  priceId: string | null;
   cta: string;
   highlight: boolean;
-  mode: 'payment' | 'subscription';
+  mode: 'payment' | 'subscription' | 'free';
 }
 
 const TIERS: Tier[] = [
+  {
+    id: 'free',
+    name: 'Free Claim Snapshot',
+    price: '$0',
+    cadence: '',
+    description: 'Find top claim risks on your public surfaces.',
+    priceId: null,
+    cta: 'Run Snapshot',
+    highlight: false,
+    mode: 'free',
+  },
+  {
+    id: 'evidence',
+    name: 'Claim Evidence Pack',
+    price: '$299',
+    cadence: 'One-time',
+    description: 'Review, evidence mapping, and safer rewrites.',
+    priceId: STRIPE_PRICE_IDS.evidence,
+    cta: 'Get Evidence Pack',
+    highlight: false,
+    mode: 'payment',
+  },
   {
     id: 'monitor',
     name: 'Scrutexity Monitor',
     price: '$299',
     cadence: '/month',
-    description: 'Monthly public claim scan, AI Answer Reality snapshot, and unsupported claim alerts.',
+    description: 'Monthly claim + AI Answer Reality monitoring.',
     priceId: STRIPE_PRICE_IDS.monitor,
     cta: 'Start Monitoring',
-    highlight: false,
+    highlight: true,
     mode: 'subscription',
   },
   {
@@ -40,28 +63,29 @@ const TIERS: Tier[] = [
     name: 'Agency Trust Partner',
     price: '$999',
     cadence: '/month',
-    description: 'Up to 10 client domains, white-label baselines, and monthly scans.',
+    description: 'White-label scans for up to 10 clients.',
     priceId: STRIPE_PRICE_IDS.agency,
     cta: 'Partner Program',
-    highlight: true,
+    highlight: false,
     mode: 'subscription',
   },
 ];
 
 interface FeatureRow {
   name: string;
+  free: string;
+  evidence: string;
   monitor: string;
   agency: string;
 }
 
 const CAPABILITIES: FeatureRow[] = [
-  { name: 'Monthly Claim Scan', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Target Scope', monitor: '1 domain', agency: 'Up to 10 domains' },
-  { name: 'AI Answer Reality Snapshot', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Safer Rewrite Engine', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Public Verification Page', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'White-Label Baseline Export', monitor: '—', agency: '[ Active ]' },
-  { name: 'Governed Growth Certificate', monitor: '—', agency: 'Quarterly' },
+  { name: 'Initial Scan', free: '[ Active ]', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Evidence Mapping', free: '—', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Safer Rewrites', free: '—', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Continuous Monitoring', free: '—', evidence: '—', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'AI Answer Reality', free: '—', evidence: '—', monitor: '[ Active ]', agency: '[ Active ]' },
+  { name: 'White-Label Exports', free: '—', evidence: '—', monitor: '—', agency: '[ Active ]' },
 ];
 
 export default function PricingPage() {
@@ -107,22 +131,14 @@ export default function PricingPage() {
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
           </a>
-          <div className="flex items-center gap-4">
-            <a href="/proof" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
-              Proof Center
-            </a>
-            <a href="/security" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
-              Trust & Security
-            </a>
-            <a href="/deployment" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground hidden sm:inline-block">
-              Deployment
-            </a>
-            <a href="/snapshot" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground">
-              Initialize Free Snapshot
-            </a>
-            <a href="/" className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
-              <ArrowLeft className="h-3 w-3" /> System Root
-            </a>
+          <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            <a href="/" className="hover:text-foreground hidden sm:inline-block">Platform</a>
+            <a href="/ai-answer-reality" className="hover:text-foreground hidden sm:inline-block">AI Answer Reality</a>
+            <a href="/ai-answer-reality/sample" className="hover:text-foreground hidden sm:inline-block">Sample Report</a>
+            <a href="/pricing" className="hover:text-foreground">Pricing</a>
+            <a href="/proof" className="hover:text-foreground hidden sm:inline-block">Proof</a>
+            <a href="/agency" className="hover:text-foreground">Partners</a>
+            <a href="/snapshot" className="text-accent hover:text-foreground font-bold">Run Claim Snapshot</a>
           </div>
         </div>
       </header>
@@ -134,28 +150,13 @@ export default function PricingPage() {
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="h-2 w-2 rounded-none bg-black animate-pulse" />
               <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-                Infrastructure Authorization
+                Pricing
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl mb-4 leading-tight">
-              Audit Infrastructure Deployment
+              Simple claim intelligence audits for teams that need proof before they publish.
             </h1>
-            <p className="text-sm font-mono text-muted-foreground max-w-2xl mx-auto mb-5 leading-relaxed">
-              Predictable claim governance and risk mitigation. Transparent tiering based on audit volume and continuous monitoring requirements.
-            </p>
           </div>
-
-          {(!STRIPE_PRICE_IDS.monitor || !STRIPE_PRICE_IDS.agency) && process.env.NODE_ENV === 'production' && (
-            <div className="bg-white border border-white/10 p-4 mb-8 text-xs font-mono text-center">
-              <a href="/snapshot" className="text-accent hover:underline">Request a manual audit &rarr;</a>
-            </div>
-          )}
-
-          {(!STRIPE_PRICE_IDS.monitor || !STRIPE_PRICE_IDS.agency) && process.env.NODE_ENV !== 'production' && (
-            <div className="bg-amber-50 border border-amber-200 p-4 mb-8 text-xs font-mono text-amber-900">
-              <strong>WARNING: System nodes degraded.</strong> Missing environment variables for STRIPE_PRICE_IDS.
-            </div>
-          )}
 
           {error && (
             <div className="bg-red-50 border border-red-200 p-4 mb-8 text-xs font-mono text-red-900">

@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-6 text-center">
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-mono uppercase tracking-widest">
           <Link
-            href="/sample-report"
+            href="/ai-answer-reality/sample"
             className="text-foreground hover:opacity-70 underline underline-offset-4"
           >
             See a sample report →
@@ -20,6 +20,13 @@ export function Footer() {
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
+            href="/self-audit"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Self-Audit Ledger
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
             href="/security"
             className="text-muted-foreground hover:text-foreground underline underline-offset-4"
           >
@@ -27,17 +34,10 @@ export function Footer() {
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
-            href="/deployment"
-            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
-          >
-            Deployment
-          </Link>
-          <span className="hidden sm:inline text-muted-foreground">|</span>
-          <Link
             href="/snapshot"
             className="text-muted-foreground hover:text-foreground underline underline-offset-4"
           >
-            Free Visibility &amp; Trust Snapshot
+            Free Claim Snapshot
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
