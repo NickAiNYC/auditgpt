@@ -1,21 +1,22 @@
 import { Metadata } from "next";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import fs from "fs/promises";
 import path from "path";
-import { redirect } from "next/navigation";
+import { LeadTableClient } from "./LeadTableClient";
 
 export const metadata: Metadata = {
   title: "Admin | Scrutexity Leads",
 };
 
 interface Lead {
+  id?: string;
   websiteUrl: string;
   email: string;
   businessType: string;
   sourcePage: string;
   submittedAt: string;
   status: string;
+  trigger_found?: string;
 }
 
 export default async function AdminLeadsPage({
@@ -24,8 +25,8 @@ export default async function AdminLeadsPage({
   searchParams: { key?: string };
 }) {
   // Simple environment key protection for MVP
-  const ADMIN_KEY = process.env.ADMIN_KEY || "scrutexity-admin-123";
-  if (searchParams.key !== ADMIN_KEY) {
+  const ADMIN_KEY = process.env.ADMIN_KEY;
+  if (!ADMIN_KEY || searchParams.key !== ADMIN_KEY) {
     return (
       <div className="min-h-screen bg-black text-foreground flex items-center justify-center">
         <div className="text-center">
@@ -74,62 +75,7 @@ export default async function AdminLeadsPage({
           </Badge>
         </header>
 
-        <div className="rounded-md border border-white/10 bg-white/[0.01] overflow-hidden">
-          <Table>
-            <TableHeader className="bg-white/[0.02]">
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">URL (Target)</TableHead>
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Email (Contact)</TableHead>
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Segment</TableHead>
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Source</TableHead>
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Submitted At</TableHead>
-                <TableHead className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {leads.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground font-mono text-sm">
-                    No leads ingested yet.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                leads.map((lead, idx) => (
-                  <TableRow key={idx} className="border-white/10 hover:bg-white/[0.02] transition-colors">
-                    <TableCell className="font-medium text-sm text-foreground">
-                      <a href={lead.websiteUrl} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline">
-                        {lead.websiteUrl.replace(/^https?:\/\//, '')}
-                      </a>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      <a href={`mailto:${lead.email}`} className="hover:text-accent">{lead.email}</a>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      <Badge variant="outline" className="text-[10px] bg-white/[0.02] border-white/10">{lead.businessType}</Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground font-mono text-xs">
-                      {lead.sourcePage}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground font-mono text-xs">
-                      {new Date(lead.submittedAt).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant="outline" 
-                        className={
-                          lead.status === 'new' ? "border-amber-500/30 text-amber-400 bg-amber-500/10 uppercase tracking-widest text-[10px]" : 
-                          "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]"
-                        }
-                      >
-                        {lead.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <LeadTableClient initialLeads={leads} adminKey={ADMIN_KEY} />
 
       </div>
     </div>
