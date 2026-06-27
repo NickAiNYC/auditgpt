@@ -16,7 +16,7 @@
 
 import ZAI from 'z-ai-web-dev-sdk';
 
-export type LLMProviderName = 'zai' | 'openai' | 'anthropic' | 'deepseek';
+export type LLMProviderName = 'zai' | 'openai' | 'anthropic' | 'deepseek' | 'gemini';
 
 export interface LLMCallInput {
   system: string;
@@ -44,6 +44,7 @@ export function getLLMConfigurationStatus(): { configured: boolean; provider: LL
     anthropic: 'ANTHROPIC_API_KEY',
     deepseek: 'DEEPSEEK_API_KEY',
     zai: 'Z_AI_API_KEY',
+    gemini: 'GEMINI_API_KEY',
   };
   const missing = requiredKeyByProvider[provider];
   if (missing && !process.env[missing]) return { configured: false, provider, missing };
@@ -177,6 +178,50 @@ async function callDeepseek(input: LLMCallInput): Promise<LLMCallResult> {
   };
 }
 
+
+// ──────────────────────────────────────────────────────────────
+// Gemini (Google AI Studio)
+// ──────────────────────────────────────────────────────────────
+async function callGemini(input: LLMCallInput): Promise<LLMCallResult> {
+  const key = requireEnv('GEMINI_API_KEY');
+  // Pinned to explicit frozen version instead of the rolling 'gemini-1.5-flash' alias
+  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash-002';
+  
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      systemInstruction: {
+        parts: [{ text: input.system }]
+      },
+      contents: [{
+        role: 'user',
+        parts: [{ text: input.user }]
+      }],
+      generationConfig: {
+        temperature: input.temperature ?? 0.2,
+        maxOutputTokens: input.maxTokens ?? 4096,
+      }
+    }),
+  });
+  
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Gemini error ${res.status}: ${errText.slice(0, 200)}`);
+  }
+  
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  
+  return {
+    provider: 'gemini',
+    model,
+    text,
+  };
+}
+
 // ──────────────────────────────────────────────────────────────
 // Router
 // ──────────────────────────────────────────────────────────────
@@ -187,6 +232,8 @@ export async function callLLM(input: LLMCallInput): Promise<LLMCallResult> {
     throw new Error(`LLM provider ${config.provider} is not configured. Set ${config.missing}.`);
   }
   switch (raw) {
+    case 'gemini':
+      return callGemini(input);
     case 'openai':
       return callOpenAI(input);
     case 'anthropic':
