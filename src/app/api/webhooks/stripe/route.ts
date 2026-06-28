@@ -71,7 +71,9 @@ export async function POST(req: NextRequest) {
               const { persistAudit } = await import('@/lib/audit-persistence');
               const { fallbackAuditResult } = await import('@/lib/audit-pipeline');
               await persistAudit({
-                auditType: plan === 'full' ? 'full' : 'starter',
+                // The only one-time paid tier is the $299 Claim Intelligence Report
+                // (plan id 'evidence'), which buys a full-depth audit — not a starter.
+                auditType: plan === 'starter' ? 'starter' : 'full',
                 path: 'paid_intake',
                 companyName: session.metadata.companyName || null,
                 websiteUrl: session.metadata.websiteUrl,

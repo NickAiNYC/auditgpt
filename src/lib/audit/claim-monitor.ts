@@ -24,7 +24,7 @@ export interface MonitorDeltaResult {
 /**
  * Runs a fresh audit pipeline against the subscribed URL, computes drift against
  * the previous audit, and saves a MonitorDeltaReport. This is the core engine
- * for the $799/mo monitoring offering.
+ * for the $299/mo Claim Drift Monitoring offering.
  */
 export async function runMonitorScan(subscriptionId: string): Promise<string> {
   // 1. Fetch Subscription
@@ -81,7 +81,7 @@ export async function runMonitorScan(subscriptionId: string): Promise<string> {
     inputType: 'website',
   });
 
-  // Calculate AI Answer Reality Delta (deep mode always on for $799 monitoring users)
+  // Calculate AI Answer Reality Delta (deep mode always on for $299/mo monitoring users)
   try {
     const claimFindings = newAuditJson.claim_audit.claims.map((c: Claim) => ({
       id: c.id,

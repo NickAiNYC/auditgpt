@@ -270,7 +270,7 @@ export function EnhancedSnapshotReport({
             style={agencyBranding?.primaryColor ? { backgroundColor: agencyBranding.primaryColor } : undefined}
           >
             <Link href="/monitoring">
-              Start Monthly Monitoring ($799/mo) <ArrowUpRight className="h-4 w-4" />
+              Start Claim Drift Monitoring ($299/mo) <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
           <Button asChild variant="outline">
