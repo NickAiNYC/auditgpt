@@ -22,16 +22,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowRight, ArrowDown, Sparkles, ShieldCheck, Loader2, Building2, Cpu, Search, CheckCircle2, AlertTriangle, ArrowUpRight, FileText, TrendingUp, Clock, Ban, Lock, Eye } from 'lucide-react';
+import { ArrowRight, ArrowDown, Sparkles, ShieldCheck, Loader2, Building2, Cpu, Search, CheckCircle2, AlertTriangle, ArrowUpRight, FileText, TrendingUp, Clock, Ban, Lock, Eye, Menu } from 'lucide-react';
 import { motion, useAnimate } from 'framer-motion';
+import { Sheet, SheetTrigger, SheetContent, SheetClose } from '@/components/ui/sheet';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const PATH_CARDS = [
-  { path: '01', label: "I'm a med spa or wellness business", icon: Sparkles, href: '#intake' },
-  { path: '02', label: "I'm an agency auditing a client", icon: Building2, href: '#intake' },
-  { path: '03', label: "I'm a SaaS / AI startup", icon: Cpu, href: '#intake' },
-  { path: '04', label: "I'm evaluating a company / deal", icon: Search, href: '#intake' },
+  { path: '01', label: "I'm a med spa or wellness business", icon: Sparkles, route: '/snapshot?path=medspa' },
+  { path: '02', label: "I'm an agency auditing a client", icon: Building2, route: '/snapshot?path=agency' },
+  { path: '03', label: "I'm a SaaS / AI startup", icon: Cpu, route: '/snapshot?path=saas' },
+  { path: '04', label: "I'm evaluating a company / deal", icon: Search, route: '/snapshot?path=diligence' },
 ] as const;
 
 const HOW_IT_WORKS = [
@@ -60,8 +61,8 @@ const PLANS = [
   {
     name: 'Claim Intelligence Report',
     for: 'Launching a new funnel',
-    depth: '5–7 claims, score, rewrites',
-    outcome: 'Ship a buyer-safe flagship page in 7 days.',
+    depth: '5–7 claims, receipt, badge',
+    outcome: 'Leave with a dated receipt and a reviewed-badge summary.',
     price: '$299',
     cta: 'Get the $299 Report',
     highlight: true,
@@ -76,10 +77,10 @@ const PLANS = [
     highlight: false,
   },
   {
-    name: 'Agency Founding Beta',
+    name: 'Agency Receipt Beta',
     for: 'Agencies & consultancies',
-    depth: 'Multi-client, white-label',
-    outcome: 'Founding Beta: $499/mo for the first 5 partners, then $799/mo. Turn claim audits into billable retainers.',
+    depth: '10 receipts/mo, white-label',
+    outcome: 'Attach a Claim Intelligence Receipt to every high-claim launch.',
     price: '$499/mo',
     cta: 'Join the Founding Beta',
     highlight: false,
@@ -94,68 +95,77 @@ const METHODOLOGY_STEPS = [
 ] as const;
 
 function AnimatedScanReceipt() {
-  const lines = [
-    { label: 'Claim scanned', value: '34 total' },
-    { label: 'Evidence gaps', value: '18 found' },
-    { label: 'Overstated', value: '9 flagged' },
-    { label: 'High risk', value: '7 claims' },
-    { label: 'Safer rewrites', value: '12 ready' },
-    { label: 'Health score', value: '52 / 100' },
+  const claims = [
+    { text: 'Clinically proven', label: 'Reviewed', color: 'bg-green-100 text-green-700 border-green-200' },
+    { text: 'Permanent results', label: 'Overstated', color: 'bg-amber-100 text-amber-700 border-amber-200' },
+    { text: 'No downtime', label: 'Needs Support', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+    { text: 'FDA approved', label: 'Rewrite Suggested', color: 'bg-red-100 text-red-700 border-red-200' },
   ];
+
   return (
-    <div className="relative bg-stone-900 rounded-sm border border-stone-700 p-6 font-mono text-sm shadow-2xl">
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-0.5">AuditGPT</div>
-          <div className="text-white font-serif text-lg">Claim Audit Receipt</div>
-        </div>
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60 animate-ping" />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400" />
-        </span>
+    <div className="relative bg-white rounded-sm border border-stone-200 shadow-2xl overflow-hidden flex flex-col">
+      <div className="bg-stone-100 border-b border-stone-200 px-3 py-2 flex items-center gap-2">
+        <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-400" /><div className="w-2.5 h-2.5 rounded-full bg-amber-400" /><div className="w-2.5 h-2.5 rounded-full bg-green-400" /></div>
+        <div className="bg-white border border-stone-200 rounded-sm px-2 text-[10px] text-stone-500 font-mono flex-1 text-center truncate">example.com/treatment</div>
       </div>
-      <div className="h-px bg-stone-700 mb-5" />
-      <div className="space-y-3 mb-5">
-        {lines.map((line, i) => (
-          <motion.div
-            key={line.label}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: EASE, delay: 0.4 + i * 0.18 }}
-            className="flex items-center justify-between"
-          >
-            <span className="text-stone-500 text-[11px] uppercase tracking-wider">{line.label}</span>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.7 + i * 0.18 }}
-              className="text-white text-[11px] font-semibold"
+      <div className="p-5 flex flex-col gap-4 bg-stone-50 h-full relative">
+        <div className="absolute top-0 right-0 p-4">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400" />
+          </span>
+        </div>
+        <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Scanning Surface...</div>
+        <div className="space-y-3 relative z-10">
+          {claims.map((claim, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: EASE, delay: 0.4 + i * 0.8 }}
+              className="flex items-center gap-3"
             >
-              {line.value}
-            </motion.span>
-          </motion.div>
-        ))}
-      </div>
-      <div className="h-px bg-stone-700 mb-4" />
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-[9px] uppercase tracking-widest text-stone-600">Claim Health Score</div>
-          <div className="text-3xl font-serif text-white mt-0.5">52<span className="text-lg text-stone-500">/100</span></div>
+              <div className="bg-white border border-stone-200 shadow-sm px-3 py-2 rounded-sm text-xs font-serif text-stone-800 flex-1 relative overflow-hidden group">
+                <motion.div 
+                  className="absolute inset-0 bg-blue-50/50"
+                  initial={{ x: '-100%' }}
+                  whileInView={{ x: '100%' }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 0.5 + i * 0.8, ease: EASE }}
+                />
+                &ldquo;{claim.text}&rdquo;
+              </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 1.0 + i * 0.8 }}
+                className={`text-[9px] font-mono uppercase tracking-wider px-2 py-1 border rounded-sm ${claim.color} w-32 text-center flex-shrink-0`}
+              >
+                {claim.label}
+              </motion.div>
+            </motion.div>
+          ))}
         </div>
-        <div className="text-right">
-          <div className="text-[9px] uppercase tracking-widest text-stone-600 mb-1">Priority</div>
-          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-sm bg-red-900/50 text-red-400 border border-red-800">High Risk</span>
-        </div>
-      </div>
-      <div className="mt-4 h-1.5 bg-stone-800 rounded-full overflow-hidden">
+        
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-red-500 to-amber-400"
-          initial={{ width: '0%' }}
-          animate={{ width: '52%' }}
-          transition={{ duration: 1.4, ease: EASE, delay: 1.8 }}
-        />
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: EASE, delay: 4.2 }}
+          className="mt-4 pt-4 border-t border-stone-200"
+        >
+          <div className="bg-stone-900 rounded-sm p-4 text-white shadow-lg relative overflow-hidden">
+             <div className="flex justify-between items-center mb-2">
+               <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400">Diagnostic Complete</span>
+               <CheckCircle2 className="h-4 w-4 text-green-400" />
+             </div>
+             <div className="font-serif text-lg">Claim Intelligence Report</div>
+             <div className="text-xs text-stone-400 mt-1">4 claims flagged · Fix plan generated</div>
+          </div>
+        </motion.div>
       </div>
-      <div className="mt-4 text-[9px] uppercase tracking-widest text-stone-600 text-center">Issued by AuditGPT · Scrutexity Infrastructure</div>
     </div>
   );
 }
@@ -245,15 +255,43 @@ export default function Home() {
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
           </a>
-          <nav className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-stone-500">
-            <a href="/" className="hover:text-stone-900 transition-colors hidden sm:inline-block">Platform</a>
-            <a href="/ai-answer-reality" className="hover:text-stone-900 transition-colors hidden sm:inline-block">AI Answer Reality</a>
+
+          {/* Desktop nav */}
+          <nav className="hidden sm:flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-stone-500">
+            <a href="/" className="hover:text-stone-900 transition-colors">Platform</a>
+            <a href="/ai-answer-reality" className="hover:text-stone-900 transition-colors">AI Answer Reality</a>
             <a href="/ai-answer-reality/sample" className="hover:text-stone-900 transition-colors">Sample Report</a>
             <a href="/pricing" className="hover:text-stone-900 transition-colors">Pricing</a>
-            <a href="/proof" className="hover:text-stone-900 transition-colors hidden sm:inline-block">Proof</a>
+            <a href="/proof" className="hover:text-stone-900 transition-colors">Proof</a>
             <a href="/agency" className="hover:text-stone-900 transition-colors">Partners</a>
             <a href="/snapshot" className="bg-stone-900 text-white px-3 py-1.5 rounded-sm hover:bg-stone-700 transition-colors font-semibold">Run Claim Snapshot</a>
           </nav>
+
+          {/* Mobile hamburger */}
+          <div className="sm:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="p-2 text-stone-500 hover:text-stone-900 transition-colors" aria-label="Open menu">
+                  <Menu className="h-5 w-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[260px] bg-white border-l border-stone-200 p-6 pt-12">
+                <nav className="flex flex-col gap-4 text-sm font-mono uppercase tracking-wider text-stone-500">
+                  <a href="/" className="hover:text-stone-900 transition-colors">Platform</a>
+                  <a href="/ai-answer-reality" className="hover:text-stone-900 transition-colors">AI Answer Reality</a>
+                  <a href="/ai-answer-reality/sample" className="hover:text-stone-900 transition-colors">Sample Report</a>
+                  <a href="/pricing" className="hover:text-stone-900 transition-colors">Pricing</a>
+                  <a href="/proof" className="hover:text-stone-900 transition-colors">Proof</a>
+                  <a href="/agency" className="hover:text-stone-900 transition-colors">Partners</a>
+                  <div className="mt-3 pt-4 border-t border-stone-200">
+                    <a href="/snapshot" className="block text-center bg-stone-900 text-white px-4 py-2.5 rounded-sm hover:bg-stone-700 transition-colors font-semibold text-xs">
+                      Run Claim Snapshot
+                    </a>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 
@@ -268,14 +306,17 @@ export default function Home() {
                   <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full rounded-full bg-stone-400 opacity-40 animate-ping" /><span className="relative inline-flex h-2 w-2 rounded-full bg-stone-900" /></span>
                   <span className="text-xs font-mono uppercase tracking-widest text-stone-500">AuditGPT by Scrutexity</span>
                 </motion.div>
-                <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE, delay: 0.1 }} className="font-serif font-light text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-6 text-stone-900">
+                <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE, delay: 0.1 }} className="font-serif font-light text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-4 text-stone-900">
                   AI made publishing cheap.<br /><span className="italic text-stone-500">Scrutexity makes growth governable.</span>
                 </motion.h1>
+                <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.15 }} className="text-sm font-mono tracking-wider text-stone-400 uppercase mb-3">
+                  AuditGPT scans your pages. <span className="text-stone-700">Scrutexity fixes them.</span>
+                </motion.p>
                 <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.2 }} className="text-base text-stone-600 max-w-lg mb-8 leading-relaxed">
                   AuditGPT scans public buyer-facing pages to find unsupported claims, evidence gaps, and AI Answer Reality risks before buyers repeat or distrust them.
                 </motion.p>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.3 }} className="flex flex-col sm:flex-row sm:flex-wrap items-start gap-3 mb-6">
-                  <a href="/snapshot" className="btn-cta text-sm px-6 py-3.5 flex-shrink-0 w-auto">Run a Client Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" /></a>
+                  <a href="/snapshot" className="btn-cta text-sm px-6 py-3.5 flex-shrink-0 w-auto">Run a Free Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" /></a>
                   <a href="/ai-answer-reality/sample" className="px-6 py-3.5 text-sm font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center">View Sample Audit</a>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="inline-flex items-center gap-2 p-3 border border-stone-200 rounded-sm bg-stone-50">
@@ -296,17 +337,8 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-6">Choose Your Path</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {PATH_CARDS.map(({ path, label, icon: Icon, href }, i) => (
-                <motion.a key={path} href={href}
-                  onClick={
-                    path === '01'
-                      ? () => { setIsMedical(true); setIsAgency(false); setCompanyType('Med spa / wellness'); }
-                      : path === '02'
-                        ? () => { setIsMedical(false); setIsAgency(true); setCompanyType('Agency / consulting'); }
-                        : path === '03'
-                          ? () => { setIsMedical(false); setIsAgency(false); setCompanyType('AI / SaaS'); }
-                          : undefined
-                  }
+              {PATH_CARDS.map(({ path, label, icon: Icon, route }, i) => (
+                <motion.a key={path} href={route}
                   initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ y: -2, borderColor: '#1c1917' }} viewport={{ once: true }}
                   transition={{ duration: 0.4, ease: EASE, delay: i * 0.07 }}
                   className="group block p-5 border border-stone-200 bg-white hover:shadow-md rounded-sm transition-shadow duration-300"
@@ -402,7 +434,7 @@ export default function Home() {
         </section>
 
         {/* ── FEATURE MOCKUP CARDS ───────────────────────────── */}
-        <section className="px-4 sm:px-6 py-16 bg-white border-t border-stone-100">
+          <section className="px-4 sm:px-6 py-16 bg-white border-t border-stone-100">
           <div className="max-w-6xl mx-auto">
             <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-10">What You Get in Every Report</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -457,6 +489,19 @@ export default function Home() {
                 <div className="text-sm font-serif text-stone-900">Safer Rewrite Recommendations</div>
                 <div className="text-xs text-stone-500 leading-relaxed">Claim-safe rewrites that keep your marketing intent without the risk.</div>
               </motion.div>
+            </div>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                ['Dated Claim Intelligence Receipt', 'A one-page record of what was reviewed, what proof was visible, what was missing, and what safer language was recommended.'],
+                ['Reviewed by AuditGPT badge', 'A conservative badge link your team can use immediately. It says reviewed, not approved, verified, or compliant.'],
+                ['Static review summary', 'A public summary page with audit date, claim categories checked, cleanup status, and next review date.'],
+              ].map(([title, body]) => (
+                <div key={title} className="border border-stone-200 bg-stone-50 p-5 rounded-sm">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Entry-tier proof</div>
+                  <h3 className="font-serif text-xl text-stone-900 mb-2">{title}</h3>
+                  <p className="text-xs text-stone-600 leading-relaxed">{body}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -661,7 +706,7 @@ export default function Home() {
                 <div className="bg-white border border-stone-200 rounded-sm p-6">
                   <h3 className="font-serif text-xl mb-3 text-stone-900">Claim Intelligence Report — $299</h3>
                   <p className="text-sm text-stone-600 mb-4">A deeper review of one homepage, landing page, or sales page. Outcome: <span className="font-medium italic">Ship a buyer-safe page in 7 days.</span></p>
-                  <ul className="space-y-2">{['5–7 claim and proof findings', 'Supported / overstated / unsupported labels', 'Evidence gaps', 'Safer framing recommendations', 'AI/search readability notes', 'Claim drift notes', '7-day fix list', 'AuditGPT Claim Review link'].map((item) => (<li key={item} className="flex items-start gap-2 text-sm text-stone-700"><CheckCircle2 className="h-3.5 w-3.5 text-stone-400 mt-0.5 flex-shrink-0" />{item}</li>))}</ul>
+                  <ul className="space-y-2">{['5–7 claim and proof findings', 'Dated Claim Intelligence Receipt', 'Reviewed by AuditGPT badge + static summary', 'Supported / overstated / unsupported labels', 'Evidence gaps', 'Safer framing recommendations', 'AI/search readability notes', 'Claim drift notes', '7-day fix list'].map((item) => (<li key={item} className="flex items-start gap-2 text-sm text-stone-700"><CheckCircle2 className="h-3.5 w-3.5 text-stone-400 mt-0.5 flex-shrink-0" />{item}</li>))}</ul>
                 </div>
                 <div className="bg-white border border-stone-200 rounded-sm p-6">
                   <h3 className="font-serif text-xl mb-3 text-stone-900">Claim Drift Monitoring — $299/mo</h3>
