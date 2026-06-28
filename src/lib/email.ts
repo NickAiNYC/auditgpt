@@ -27,7 +27,7 @@ export async function sendClaimExpiryEmail(input: ExpiryEmailInput): Promise<voi
     to: input.to,
     subject: `${input.companyName}: ${input.expiredClaimCount} trust claim${input.expiredClaimCount === 1 ? '' : 's'} expired`,
     text: [
-      `${input.expiredClaimCount} claim${input.expiredClaimCount === 1 ? '' : 's'} in ${input.companyName}'s evidence ledger reached the verification deadline.`,
+      `${input.expiredClaimCount} claim${input.expiredClaimCount === 1 ? '' : 's'} in ${input.companyName}'s evidence ledger reached the review deadline.`,
       'The original evidence record is unchanged. The audit is now marked stale until a rescan refreshes the evidence.',
       `Review the audit: ${appUrl}/audit/${input.publicId}`,
     ].join('\n\n'),

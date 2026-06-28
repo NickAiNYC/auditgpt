@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     companyName: audit.companyName,
     badgeUrl,
     verifyUrl,
-    embedCode: `<a href="${verifyUrl}" target="_blank" rel="noopener"><img src="${badgeUrl}" alt="AuditGPT Report Review" width="260" height="64" /></a>`,
+    embedCode: `<a href="${verifyUrl}" target="_blank" rel="noopener"><img src="${badgeUrl}" alt="AuditGPT Claim Review Badge" width="260" height="64" /></a>`,
   });
 }
 

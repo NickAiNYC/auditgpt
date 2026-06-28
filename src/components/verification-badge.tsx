@@ -37,12 +37,12 @@ export function VerificationBadge({
     try {
       const res = await fetch(`/api/verify?publicId=${publicId}`, { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Could not issue report review');
+      if (!res.ok) throw new Error(data.error || 'Could not issue claim review');
       setIsAvailable(true);
-      toast.success('Report review issued.');
+      toast.success('Claim review issued.');
     } catch (e: unknown) {
       const err = e as { message?: string };
-      toast.error(err.message || 'Could not issue report review');
+      toast.error(err.message || 'Could not issue claim review');
     } finally {
       setIssuing(false);
     }
@@ -53,10 +53,10 @@ export function VerificationBadge({
       <a
         href={`/verified/${publicId}`}
         className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-foreground border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors"
-        title="View public report review"
+        title="View public claim review"
       >
         <ScrollText className="h-3.5 w-3.5" />
-        AuditGPT Report Review{scopeLabel ? ` · ${scopeLabel}` : ''}
+        AuditGPT Claim Review{scopeLabel ? ` · ${scopeLabel}` : ''}
       </a>
     );
   }
@@ -66,7 +66,7 @@ export function VerificationBadge({
       onClick={handleIssue}
       disabled={issuing}
       className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground border border-border hover:border-black px-3 py-1.5 rounded-sm transition-colors disabled:opacity-50"
-      title="Publish a public report review for this audit"
+      title="Publish a public claim review for this audit"
     >
       {issuing ? (
         <>
@@ -74,7 +74,7 @@ export function VerificationBadge({
         </>
       ) : (
         <>
-          <ScrollText className="h-3 w-3" /> Issue report review
+          <ScrollText className="h-3 w-3" /> Issue claim review
         </>
       )}
     </button>

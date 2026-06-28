@@ -1,7 +1,7 @@
 import type { AuditResult, Claim } from '@/lib/audit-schema';
 
 export const REPORT_DISCLAIMER =
-  'AuditGPT is not legal advice, compliance certification, clinical review, or regulatory determination. It identifies public claims that may need stronger proof, clearer support, or safer framing.';
+  'AuditGPT is not legal advice, compliance certification, clinical review, or regulatory determination. It identifies public claims that may need stronger proof, clearer support, or safer framing. It does not certify truth, legal compliance, medical or regulatory compliance, rankings, AI answer changes, or revenue outcomes.';
 
 export type ClaimReportType = 'Claim Support Review' | "Founder’s Audit";
 

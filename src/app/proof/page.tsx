@@ -83,13 +83,13 @@ export default function ProofCenterPage() {
                 </a>
                 <a href="/verified/sample" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Verification Badge</h3>
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Review Badge</h3>
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
                   </div>
                 </a>
                 <a href="/agency" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Agency Certificate</h3>
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Review Certificate</h3>
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
                   </div>
                 </a>

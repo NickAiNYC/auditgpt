@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   // Example usage: /api/badge?score=98
   
   const searchParams = request.nextUrl.searchParams;
-  const score = searchParams.get('score') || 'LOW RISK';
+  const score = searchParams.get('score') || 'REVIEWED';
 
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="40" viewBox="0 0 220 40">
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   <rect x="125" width="10" height="40" fill="url(#b)" />
 
   <g fill="#fff" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600">
-    <text x="65" y="25">AuditGPT Verified</text>
+    <text x="65" y="25">AuditGPT Claim Review</text>
     <text x="172.5" y="25">${score}</text>
   </g>
 </svg>

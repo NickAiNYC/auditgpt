@@ -95,12 +95,13 @@ export async function getPublicAudit(publicId: string): Promise<PersistedAudit |
 }
 
 // ============================================================
-// REPORT REVIEW BADGE — scoped to what was actually checked.
+// CLAIM REVIEW BADGE — scoped to what was actually checked.
 // ============================================================
 // We no longer issue a "Verified by AuditGPT" trust badge.
-// The badge is now a *report review* artifact: it states the
+// The badge is now a *Claim Review* artifact: it states the
 // scope of the audit (claim count, supported, needs_evidence,
-// overstated) and an expiry date. It does NOT certify truth.
+// overstated) and an expiry date. It does NOT certify truth,
+// compliance, rankings, AI answer changes, or revenue outcomes.
 
 export const REVIEW_TTL_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 
@@ -141,8 +142,8 @@ export function computeReportReview(audit: PersistedAudit): ReportReviewStatus {
       insufficientEvidence: count('insufficient_public_evidence'),
     },
     reason: expired
-      ? `Report review expired on ${expiresAt.toLocaleDateString('en-US')}. Re-audit to refresh.`
-      : `Report review issued ${issuedAt.toLocaleDateString('en-US')}. Expires ${expiresAt.toLocaleDateString('en-US')}.`,
+      ? `Claim review expired on ${expiresAt.toLocaleDateString('en-US')}. Re-audit to refresh.`
+      : `Claim review issued ${issuedAt.toLocaleDateString('en-US')}. Expires ${expiresAt.toLocaleDateString('en-US')}.`,
   };
 }
 

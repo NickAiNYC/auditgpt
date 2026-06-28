@@ -70,7 +70,7 @@ export default function SampleReportDashboard() {
             Claim Intelligence Audit: {data.clinicName}
           </h1>
           <p className="text-stone-500 font-mono text-sm uppercase tracking-widest">
-            Generated: {data.generatedAt} // Vertical: {data.industry}
+            Generated: {data.generatedAt} {'//'} Vertical: {data.industry}
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function SampleReportDashboard() {
             </div>
           </div>
           <div className="text-[10px] font-mono uppercase tracking-widest text-stone-500 bg-stone-100 border border-stone-200 rounded-sm px-3 py-2 text-center sm:text-right">
-            Illustrative sample · Northwind AI is fictional · figures illustrative
+            Fictional demonstration. Not a real client audit. · Northwind AI is fictional · figures illustrative
           </div>
         </div>
 
@@ -382,6 +382,10 @@ export default function SampleReportDashboard() {
                 Run Your Own Free Snapshot
              </a>
            </div>
+
+           <p className="mt-12 text-xs text-stone-400 max-w-2xl mx-auto leading-relaxed">
+             Fictional demonstration. Not a real client audit. AuditGPT reviews public website claims against visible evidence and suggests safer rewrites. It does not provide legal, medical, regulatory, or clinical advice, and does not guarantee compliance, rankings, AI answer changes, or revenue outcomes.
+           </p>
         </div>
       </footer>
 

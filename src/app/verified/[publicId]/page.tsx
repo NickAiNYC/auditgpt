@@ -14,13 +14,13 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { publicId } = await params;
   const audit = await getPublicAudit(publicId);
-  if (!audit) return { title: 'Report review not found — AuditGPT' };
+  if (!audit) return { title: 'Claim review not found — AuditGPT' };
   const name = audit.companyName || 'This business';
   return {
-    title: `${name} — AuditGPT Report Review`,
+    title: `${name} — AuditGPT Claim Review`,
     description: `AuditGPT Visibility & Trust Review for ${name}.`,
     openGraph: {
-      title: `${name} — AuditGPT Report Review`,
+      title: `${name} — AuditGPT Claim Review`,
       description: `AuditGPT Visibility & Trust Review for ${name}.`,
       type: 'website',
       siteName: 'AuditGPT',
@@ -43,7 +43,7 @@ export default async function VerifiedPage({ params }: PageProps) {
   const companyName = audit.companyName || 'This business';
   const appUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   const badgeUrl = `${appUrl}/api/badge/${publicId}`;
-  const embedCode = `<a href="${appUrl}/verified/${publicId}" target="_blank" rel="noopener"><img src="${badgeUrl}" alt="AuditGPT Report Review" width="260" height="64" /></a>`;
+  const embedCode = `<a href="${appUrl}/verified/${publicId}" target="_blank" rel="noopener"><img src="${badgeUrl}" alt="AuditGPT Claim Review Badge" width="260" height="64" /></a>`;
 
   const isActive = review.available && !review.expired;
   const isExpired = review.expired;
@@ -79,15 +79,15 @@ export default async function VerifiedPage({ params }: PageProps) {
               )}
             </div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
-              AuditGPT Report Review
+              AuditGPT Claim Review
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl mb-3 leading-tight">
               {companyName}
             </h1>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               {isExpired
-                ? `Report review expired on ${review.expiresAt?.toLocaleDateString('en-US')}. Re-audit to refresh the public report.`
-                : `Report review issued. Expires ${review.expiresAt?.toLocaleDateString('en-US')}.`}
+                ? `Claim review expired on ${review.expiresAt?.toLocaleDateString('en-US')}. Re-audit to refresh the public record.`
+                : `Claim review issued. Expires ${review.expiresAt?.toLocaleDateString('en-US')}.`}
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export default async function VerifiedPage({ params }: PageProps) {
               <div className="bg-neutral-50 border border-border p-6 rounded-sm mb-4 flex items-center justify-center">
                 <img
                   src={badgeUrl}
-                  alt="AuditGPT Report Review"
+                  alt="AuditGPT Claim Review Badge"
                   width={260}
                   height={64}
                 />
@@ -128,7 +128,7 @@ export default async function VerifiedPage({ params }: PageProps) {
                 {embedCode}
               </pre>
               <p className="text-xs text-muted-foreground mt-3">
-                After 90 days the badge automatically shows &quot;Report review expired&quot; until you re-audit.
+                After 90 days the badge automatically shows &quot;Claim review expired&quot; until you re-audit.
               </p>
             </div>
           )}
@@ -142,13 +142,13 @@ export default async function VerifiedPage({ params }: PageProps) {
               <div className="bg-neutral-50 border border-border p-6 rounded-sm mb-4 flex items-center justify-center">
                 <img
                   src={badgeUrl}
-                  alt="Report review expired"
+                  alt="Claim review expired"
                   width={260}
                   height={64}
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                Re-run the audit to restore the active report review.
+                Re-run the audit to restore the active claim review.
               </p>
             </div>
           )}
