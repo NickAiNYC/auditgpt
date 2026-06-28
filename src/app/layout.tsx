@@ -6,7 +6,7 @@ import { CookieConsent } from "@/components/cookie-consent";
 import { JsonLd, ScrutexityOrganizationSchema, AuditGPTSoftwareSchema } from "@/components/json-ld";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://scrutexity.com"),
+  metadataBase: new URL("https://auditgpt.ai"),
   title: "AuditGPT — AI Answer Reality & Claim Intelligence",
   description:
     "AuditGPT by Scrutexity. The claim intelligence platform for high-risk, high-growth brands. Scan your website and see how AI engines describe your business.",
