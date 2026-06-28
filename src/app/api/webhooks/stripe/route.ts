@@ -41,11 +41,35 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
-        const plan = session.metadata?.plan;
+        const metadata = session.metadata || {};
+        const userId = metadata.userId;
+        const plan = metadata.plan;
+        const product = metadata.product;
+
+        // ── Claim Intelligence Report (one-time paid audit unlock) ──
+        if (product === 'claim_intelligence_report' && metadata.publicId) {
+          const publicId = metadata.publicId;
+          // Idempotent: check if already marked paid
+          const existing = await db.audit.findUnique({ where: { publicId } });
+          if (existing && !existing.paidAt) {
+            await db.audit.update({
+              where: { publicId },
+              data: {
+                paidAt: new Date(),
+                stripeSessionId: session.id,
+                auditType: 'full',
+              },
+            });
+            console.log(`[WEBHOOK] Unlocked audit ${publicId} via session ${session.id}`);
+          } else if (existing?.paidAt) {
+            console.log(`[WEBHOOK] Idempotent skip: audit ${publicId} already paid`);
+          }
+          break;
+        }
+
+        // ── Legacy: one-time payment linked to user integration ──
         if (userId && plan) {
           if (session.mode === 'payment') {
-            // One-time purchase — mark as paid in metadata
             await db.integration.upsert({
               where: { userId_provider: { userId, provider: 'one_time_audit' } },
               create: {
@@ -54,6 +78,7 @@ export async function POST(req: NextRequest) {
                 status: 'paid',
                 metadata: JSON.stringify({
                   plan,
+                  product,
                   stripeSessionId: session.id,
                   paidAt: new Date().toISOString(),
                 }),
@@ -62,32 +87,46 @@ export async function POST(req: NextRequest) {
                 status: 'paid',
                 metadata: JSON.stringify({
                   plan,
+                  product,
                   stripeSessionId: session.id,
                   paidAt: new Date().toISOString(),
                 }),
               },
             });
-            if (session.metadata?.websiteUrl) {
+
+            // Also try to match by websiteUrl if available
+            if (metadata.websiteUrl) {
               const { persistAudit } = await import('@/lib/audit-persistence');
               const { fallbackAuditResult } = await import('@/lib/audit-pipeline');
-              await persistAudit({
-                // The only one-time paid tier is the $299 Claim Intelligence Report
-                // (plan id 'evidence'), which buys a full-depth audit — not a starter.
-                auditType: plan === 'starter' ? 'starter' : 'full',
-                path: 'paid_intake',
-                companyName: session.metadata.companyName || null,
-                websiteUrl: session.metadata.websiteUrl,
-                industry: session.metadata.industry || null,
-                focusNotes: 'Paid audit checkout completed; audit intake pending.',
-                auditJson: fallbackAuditResult({
-                  companyName: session.metadata.companyName || 'Paid audit',
-                  websiteUrl: session.metadata.websiteUrl,
-                  reason: 'Stripe checkout completed before audit intake was submitted.',
-                }),
-                userId,
+              const audit = await db.audit.findFirst({
+                where: { websiteUrl: metadata.websiteUrl, paidAt: null },
+                orderBy: { createdAt: 'desc' },
               });
+              if (audit) {
+                await db.audit.update({
+                  where: { id: audit.id },
+                  data: { paidAt: new Date(), stripeSessionId: session.id },
+                });
+              } else {
+                // Create a pending audit record for manual fulfillment
+                await persistAudit({
+                  auditType: 'full',
+                  path: 'paid_intake',
+                  companyName: metadata.companyName || null,
+                  websiteUrl: metadata.websiteUrl,
+                  industry: metadata.industry || null,
+                  focusNotes: 'Paid audit checkout completed; audit intake pending.',
+                  auditJson: fallbackAuditResult({
+                    companyName: metadata.companyName || 'Paid audit',
+                    websiteUrl: metadata.websiteUrl,
+                    reason: 'Stripe checkout completed before audit intake was submitted.',
+                  }),
+                  userId,
+                });
+              }
             }
           } else if (session.subscription) {
+            // ── Subscription (monitoring / agency) ──
             const subscription = await stripe.subscriptions.retrieve(
               session.subscription as string
             );
@@ -145,7 +184,6 @@ export async function POST(req: NextRequest) {
         break;
       }
       default:
-        // Unhandled event types are fine - we don't need to handle every one.
         break;
     }
   } catch (err: any) {

@@ -100,7 +100,7 @@ export default function SelfAuditPage() {
                     "Scan your website, monitor unsupported claims, and see how AI engines describe your business."
                   </TableCell>
                   <TableCell className="align-top">
-                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>
+                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">REVIEWED</Badge>
                   </TableCell>
                 </TableRow>
 
@@ -117,7 +117,7 @@ export default function SelfAuditPage() {
                     "The diagnostic engine that maps the gap between what you claim and what you can prove."
                   </TableCell>
                   <TableCell className="align-top">
-                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>
+                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">REVIEWED</Badge>
                   </TableCell>
                 </TableRow>
 
@@ -134,7 +134,7 @@ export default function SelfAuditPage() {
                     "Your audit will begin generating immediately."
                   </TableCell>
                   <TableCell className="align-top">
-                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>
+                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">REVIEWED</Badge>
                   </TableCell>
                 </TableRow>
 
@@ -151,7 +151,7 @@ export default function SelfAuditPage() {
                     "Generate a point-in-time claim and proof snapshot."
                   </TableCell>
                   <TableCell className="align-top">
-                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">VERIFIED</Badge>
+                    <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase tracking-widest text-[10px]">REVIEWED</Badge>
                   </TableCell>
                 </TableRow>
 

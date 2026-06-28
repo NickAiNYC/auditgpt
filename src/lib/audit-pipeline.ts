@@ -155,6 +155,34 @@ For every unsupported/overstated claim, produce safer_framing: exact replacement
 - Amber: 1-3 high-priority claims.
 - Red: any critical-priority claim.
 
+### 9. RECOMMENDED NEXT STEP ENUM
+For every claim's "recommended_next_step" field, use EXACTLY one of these values and nothing else:
+- "keep" — claim is fine as-is
+- "soften" — tone down overstated language
+- "add_proof" — evidence exists elsewhere but needs to be adjacent
+- "rewrite" — replace the entire claim
+- "remove" — claim cannot be supported
+- "split_claim" — one claim conflates multiple assertions
+- "requires_review" — needs human judgment
+- "monitor" — safe now but watch for drift
+
+Do NOT invent, abbreviate, or modify these values.
+
+### 10. SPECIFICITY & URGENCY REQUIREMENT
+Every extracted claim must include:
+- The EXACT claim text as it appears on the page (verbatim, quoted)
+- The page section or URL where it was found (source_url)
+- Specific evidence of why it creates risk for buyers or AI engines — not generic ("no proof"), but what specifically a buyer cannot verify: "No linked clinical study, no device name, no patient count"
+
+Priority order for claim selection (fill higher tiers first):
+1. SUPERLATIVES & ABSOLUTES: "#1", "best", "top", "only", "guaranteed", "permanent", "never", "always"
+2. REGULATORY-ADJACENT: "FDA", "approved", "clinical", "medical", "safe", "certified"
+3. UNSUPPORTED METRICS: Any number, percentage, or statistic without a source link
+4. VAGUE AUTHORITY: "experts", "leading", "trusted by thousands", "years of experience" without quantification
+5. OVERSTATED OUTCOMES: "results", "transform", "dramatic", "rapid" without specific timeframe or proof
+
+Do not extract low-priority claims while high-priority ones remain unextracted.
+
 ## OUTPUT FORMAT
 Output raw JSON exactly matching this structure (no code fences):
 {

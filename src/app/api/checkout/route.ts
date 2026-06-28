@@ -18,8 +18,11 @@ function getStripe(): Stripe {
 
 interface CheckoutBody {
   priceId: string;
-  plan: string;      // 'pro' | 'agent' | 'one-time'
-  mode?: string;     // 'subscription' | 'payment' — defaults to subscription
+  plan: string;
+  mode?: string;
+  publicId?: string;       // audit publicId to unlock on payment
+  product?: string;         // "claim_intelligence_report"
+  email?: string;           // buyer email for receipt
 }
 
 export async function POST(req: NextRequest) {
@@ -64,19 +67,27 @@ export async function POST(req: NextRequest) {
 
     const appUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
+    // Build metadata with product info for the webhook entitlement unlock
+    const metadata: Record<string, string> = {
+      userId: user.id,
+      plan: body.plan,
+      product: body.product || 'claim_intelligence_report',
+    };
+    if (body.publicId) metadata.publicId = body.publicId;
+    if (body.email || user.email) metadata.email = body.email || user.email;
+
     const checkoutParams: Stripe.Checkout.SessionCreateParams = {
       customer: customerId,
       line_items: [{ price: body.priceId, quantity: 1 }],
       mode: isSubscription ? 'subscription' : 'payment',
       success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&plan=${encodeURIComponent(body.plan)}`,
       cancel_url: `${appUrl}/pricing?canceled=1`,
-      metadata: { userId: user.id, plan: body.plan },
+      metadata,
     };
 
-    // For subscriptions, attach subscription_data metadata
     if (isSubscription) {
       checkoutParams.subscription_data = {
-        metadata: { userId: user.id, plan: body.plan },
+        metadata,
       };
     }
 

@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ publicId: string }>;
+  searchParams?: Promise<{ unlocked?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -31,10 +32,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function PublicAuditPage({ params }: PageProps) {
+export default async function PublicAuditPage({ params, searchParams }: PageProps) {
   const { publicId } = await params;
+  const sp = searchParams ? await searchParams : undefined;
   const audit = await getPublicAudit(publicId);
   if (!audit) notFound();
+
+  // ── Entitlement check ─────────────────────────────────────
+  // Paid: audit.paidAt is set by Stripe webhook
+  // Dev bypass: ?unlocked=1 (only works outside production)
+  const isProduction = process.env.NODE_ENV === 'production';
+  const devBypass = sp?.unlocked === '1' && !isProduction;
+  const isUnlocked = !!audit.paidAt || devBypass;
 
   let agencyBranding = undefined;
   if (audit.agencyId) {
@@ -74,7 +83,9 @@ export default async function PublicAuditPage({ params }: PageProps) {
           </Link>
           <div className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground">
             <div className="h-1.5 w-1.5 rounded-full bg-black" />
-            <span className="ml-1">Public report · Read-only</span>
+            <span className="ml-1">
+              {isUnlocked ? 'Full report · Paid' : 'Public report · Free preview'}
+            </span>
           </div>
         </div>
       </header>
@@ -87,6 +98,11 @@ export default async function PublicAuditPage({ params }: PageProps) {
               {review.expiresAt
                 ? ` · Expires ${review.expiresAt.toLocaleDateString('en-US')}`
                 : ''}
+              {!isUnlocked && (
+                <span className="ml-2 text-amber-600 font-semibold">
+                  · Free preview (3 of {review.scope.claimsReviewed} findings shown)
+                </span>
+              )}
             </div>
             <ShareButtons
               publicId={audit.publicId}
@@ -97,7 +113,7 @@ export default async function PublicAuditPage({ params }: PageProps) {
           {enhancedSnapshot ? (
             <EnhancedSnapshotReport
               report={enhancedSnapshot}
-              mode="free"
+              mode={isUnlocked ? 'full' : 'free'}
               publicId={audit.publicId}
               agencyBranding={agencyBranding}
             />
@@ -105,9 +121,30 @@ export default async function PublicAuditPage({ params }: PageProps) {
             <PublicAuditView
               audit={audit.auditJson}
               createdAt={audit.createdAt}
-              showCta={true}
+              showCta={!isUnlocked}
               publicId={audit.publicId}
             />
+          )}
+
+          {!isUnlocked && (
+            <div className="mt-12 border border-stone-200 bg-stone-50 rounded-sm p-8 text-center">
+              <h2 className="font-serif text-2xl mb-2 text-stone-900">See the full report</h2>
+              <p className="text-sm text-stone-600 mb-6 max-w-md mx-auto">
+                Upgrade to see all {review.scope.claimsReviewed} findings, the full AI Answer Reality
+                Receipt, safer rewrites, and the 7-day fix plan.
+              </p>
+              <a
+                href={`/pricing?publicId=${publicId}`}
+                className="inline-block bg-stone-900 text-white px-8 py-3 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors"
+              >
+                Unlock Full Report — $299
+              </a>
+              {devBypass && (
+                <p className="text-xs text-stone-400 mt-3 font-mono">
+                  Dev bypass active (?unlocked=1) — full report visible
+                </p>
+              )}
+            </div>
           )}
         </div>
       </main>

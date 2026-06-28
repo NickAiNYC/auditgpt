@@ -204,6 +204,9 @@ model Audit {
   expiryRescanJob   ExpiryRescanJob?
   deployFixPR       DeployFixPR?
   createdAt         DateTime             @default(now())
+  paidAt            DateTime?            // When payment was confirmed via Stripe webhook
+  stripeSessionId   String?              // Stripe Checkout Session ID for entitlement lookup
+  auditType         String               @default("snapshot") // "snapshot" | "full" | "starter"
 
   @@index([publicId])
   @@index([userId])

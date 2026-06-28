@@ -232,7 +232,7 @@ export default function AgencyPage() {
             <div className="text-center mb-10">
               <h2 className="font-serif text-3xl sm:text-4xl mb-4 text-stone-900">Ship an AI-safe homepage in 7 days</h2>
               <p className="text-stone-500 mb-10 max-w-lg mx-auto">
-                From URL submission to verified claim-safe copy in one week. No endless revisions — just evidence-backed confidence.
+                From URL submission to reviewed, safer copy in one week. No endless revisions — just evidence-backed confidence.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-12">
@@ -244,7 +244,7 @@ export default function AgencyPage() {
               <div className="text-center">
                 <div className="w-12 h-12 rounded-full bg-stone-900 text-white flex items-center justify-center mx-auto mb-4 font-mono text-sm font-bold">2</div>
                 <h3 className="font-serif text-lg mb-2 text-stone-900">Get Findings</h3>
-                <p className="text-sm text-stone-500">Receive a full claim audit: verified claims, unsupported claims, and risk-rated gaps.</p>
+                <p className="text-sm text-stone-500">Receive a full claim audit: reviewed claims, unsupported claims, and risk-rated gaps.</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 rounded-full bg-stone-900 text-white flex items-center justify-center mx-auto mb-4 font-mono text-sm font-bold">3</div>
