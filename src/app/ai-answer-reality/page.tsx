@@ -34,7 +34,7 @@ export default function AiAnswerRealityPage() {
                 The Primary Wedge
               </span>
             </div>
-            <h1 className="font-serif text-5xl sm:text-7xl leading-tight mb-6 text-stone-900">
+            <h1 className="font-serif font-light text-5xl sm:text-7xl leading-tight mb-6 text-stone-900">
               Stop tracking rankings. <br />
               <span className="text-stone-500 italic">Start tracking whether AI tells the truth about you.</span>
             </h1>
@@ -50,6 +50,52 @@ export default function AiAnswerRealityPage() {
               </Link>
             </div>
           </div>
+
+          {/* What AI tells buyers about you vs what you claim */}
+          <section className="mb-20">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-6 text-center">Claim Perception Gap</div>
+            <div className="bg-white border border-stone-200 rounded-md overflow-hidden shadow-sm">
+              <div className="grid grid-cols-2 divide-x divide-stone-200">
+                <div className="p-6 sm:p-8">
+                  <h3 className="font-mono text-xs uppercase tracking-widest text-stone-400 mb-5 text-center">What you claim on your site</h3>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-stone-500 mb-1">Claim 1</div>
+                      <p className="text-sm text-stone-700 font-medium">&ldquo;Industry-leading AI platform&rdquo;</p>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-stone-500 mb-1">Claim 2</div>
+                      <p className="text-sm text-stone-700 font-medium">&ldquo;Trusted by thousands&rdquo;</p>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-stone-500 mb-1">Claim 3</div>
+                      <p className="text-sm text-stone-700 font-medium">&ldquo;100% compliance guaranteed&rdquo;</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 sm:p-8 bg-stone-50">
+                  <h3 className="font-mono text-xs uppercase tracking-widest text-amber-600 mb-5 text-center">What AI tells buyers</h3>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-amber-500 mb-1">AI Verdict</div>
+                      <p className="text-sm text-stone-600"><span className="text-red-500">✗</span> &ldquo;No independent benchmarks found — treating as marketing claim.&rdquo;</p>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-amber-500 mb-1">AI Verdict</div>
+                      <p className="text-sm text-stone-600"><span className="text-red-500">✗</span> &ldquo;No logos or case studies linked on page — evidence gap.&rdquo;</p>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-amber-500 mb-1">AI Verdict</div>
+                      <p className="text-sm text-stone-600"><span className="text-amber-500">⚠</span> &ldquo;Absolute guarantee without linked SOC2/HIPAA docs — overstatement risk.&rdquo;</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-stone-900 px-6 py-3 text-center">
+                <p className="text-xs font-mono uppercase tracking-widest text-stone-400">This gap costs you credibility. AuditGPT closes it.</p>
+              </div>
+            </div>
+          </section>
 
           {/* What AI may get wrong */}
           <section className="mb-20">
@@ -108,6 +154,30 @@ export default function AiAnswerRealityPage() {
             </div>
           </section>
 
+          {/* Quantified Outcomes */}
+          <section className="mb-20 bg-stone-900 rounded-xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-700">
+              <div className="p-8 sm:p-10 text-center">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">Remediation Speed</div>
+                <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-serif italic">
+                  &ldquo;After remediation, AI engines stopped recommending competitors for our top intent query within 14 days.&rdquo;
+                </p>
+              </div>
+              <div className="p-8 sm:p-10 text-center">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">Claim Health Score</div>
+                <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-serif italic">
+                  &ldquo;Claim Health Score moved from 52 to 84 after 11 rewrites and 9 new proof blocks.&rdquo;
+                </p>
+              </div>
+              <div className="p-8 sm:p-10 text-center">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">Surfaced per Scan</div>
+                <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-serif italic">
+                  &ldquo;Average 10&ndash;20 unsupported claims surfaced per page scanned.&rdquo;
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Industry Examples */}
           <section className="mb-20 bg-stone-900 text-stone-100 p-8 sm:p-12 rounded-xl">
             <h2 className="font-serif text-3xl mb-8">Claim Drift is everywhere.</h2>
@@ -127,12 +197,61 @@ export default function AiAnswerRealityPage() {
             </div>
           </section>
 
+          {/* Mini-Case: The $2M deal */}
+          <section className="mb-20">
+            <div className="border-l-4 border-amber-500 bg-amber-50 p-6 sm:p-8 rounded-r-md">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 mb-3">The $2M Deal That Died</div>
+              <blockquote className="font-serif text-lg sm:text-xl leading-relaxed text-stone-800 mb-4">
+                Startup X lost a $2M deal. An AI research agent told the buyer their claims were unverifiable. 
+                The deal died in diligence. AuditGPT exists to prevent this scenario.
+              </blockquote>
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-xs">CX</div>
+                <div>
+                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500">Real Prospect Conversation</div>
+                  <div className="text-[10px] font-mono text-stone-400">From AuditGPT discovery interviews, Q1 2025</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Bottom CTA */}
           <div className="text-center py-12 border-t border-stone-200">
             <h2 className="font-serif text-3xl mb-4 text-stone-900">Stop guessing what AI thinks of you.</h2>
             <p className="text-stone-500 mb-8 max-w-md mx-auto">Get a fast public-page claim snapshot to see exactly where your evidence gaps are.</p>
             <Link href="/snapshot" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
               Run Free Snapshot <ArrowRight className="h-4 w-4 ml-2" />
+            </Link>
+          </div>
+
+          {/* 7-Day CTA Variant */}
+          <div className="text-center py-12 border-t border-stone-200 mt-12">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600">Fast Track</span>
+            </div>
+            <h2 className="font-serif text-3xl mb-4 text-stone-900">Ship an AI-safe homepage in the next 7 days.</h2>
+            <div className="max-w-lg mx-auto mb-8">
+              <div className="grid grid-cols-3 gap-4 text-left">
+                <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
+                  <div className="font-mono text-xs text-stone-400 mb-1">Step 1</div>
+                  <div className="font-mono text-sm font-bold text-stone-900">Submit URL</div>
+                  <div className="text-[11px] text-stone-500 mt-1">Paste your homepage link</div>
+                </div>
+                <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
+                  <div className="font-mono text-xs text-stone-400 mb-1">Step 2</div>
+                  <div className="font-mono text-sm font-bold text-stone-900">Review findings</div>
+                  <div className="text-[11px] text-stone-500 mt-1">See every unsupported claim</div>
+                </div>
+                <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
+                  <div className="font-mono text-xs text-stone-400 mb-1">Step 3</div>
+                  <div className="font-mono text-sm font-bold text-stone-900">Apply rewrites</div>
+                  <div className="text-[11px] text-stone-500 mt-1">Go live in the same week</div>
+                </div>
+              </div>
+            </div>
+            <Link href="/snapshot" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
+              Start Your 7-Day Sprint <ArrowRight className="h-4 w-4 ml-2" />
             </Link>
           </div>
 
