@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Logo } from '@/components/logo';
 
 export const metadata = {
-  title: 'Agency Claims Intelligence — AuditGPT',
-  description: 'White-label claim intelligence reports for agencies serving regulated or trust-sensitive clients.',
+  title: 'Agency Claim Intelligence Receipts — AuditGPT',
+  description: 'White-label Claim Intelligence Receipts, review record summaries, and client approval language for high-claim launches.',
 };
 
 export default function AgencyPage() {
@@ -35,16 +35,16 @@ export default function AgencyPage() {
               </span>
             </div>
             <h1 className="font-serif font-light text-5xl sm:text-6xl leading-tight mb-6 text-stone-900">
-              Protect your clients from claim drift.
+              The claim-review receipt your agency attaches to high-claim launches.
             </h1>
             <p className="text-lg sm:text-xl text-stone-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-              White-label claim intelligence reports for agencies serving regulated, medical, or trust-sensitive clients. Show them you govern their growth. Founding Beta: $499/mo for the first 5 partners, then $799/mo.
+              Give clients a dated Claim Intelligence Receipt that shows what was reviewed, what proof was missing, what safer language was recommended, and what the client approved before launch. Founding Beta: $499/mo for the first 5 partners, then $799/mo.
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/pricing" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors flex items-center">
-                Join the Founding Beta — $499/mo <ArrowRight className="h-4 w-4 ml-2" />
+                Join the Receipt Beta — $499/mo <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
-              <Link href="/snapshot" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
+              <Link href="/auditgpt" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
                 Run one client sample
               </Link>
             </div>
@@ -55,27 +55,27 @@ export default function AgencyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
                 <FileText className="h-6 w-6 text-stone-400 mb-4" />
-                <h3 className="font-serif text-2xl mb-2 text-stone-900">White-Label Export</h3>
+                <h3 className="font-serif text-2xl mb-2 text-stone-900">White-Label Receipt</h3>
                 <p className="text-sm text-stone-600 leading-relaxed mb-4">
-                  Export beautiful, client-ready PDF reports with your agency's branding. Present claim gaps and AI answer reality risks as your own proprietary audit.
+                  Export client-ready Claim Intelligence Receipts with your agency's branding. Present claim gaps, AI answer reality risks, safer rewrites, and launch approval status as your own deliverable.
                 </p>
                 <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Custom Branding Included</div>
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
                 <Bot className="h-6 w-6 text-stone-400 mb-4" />
-                <h3 className="font-serif text-2xl mb-2 text-stone-900">25 Audits / Month</h3>
+                <h3 className="font-serif text-2xl mb-2 text-stone-900">10 Receipts / Month</h3>
                 <p className="text-sm text-stone-600 leading-relaxed mb-4">
-                  Run comprehensive Multi-Surface Audits for up to 25 client domains per month. Use them as powerful sales wedges for prospects or quarterly reviews for retained clients.
+                  Generate Claim Intelligence Receipts for high-claim pages, launches, and client approvals. Use them as sales wedges, launch packet attachments, or quarterly retained-client reviews.
                 </p>
-                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">High Volume Capacity</div>
+                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Launch Packet Artifact</div>
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
                 <ShieldCheck className="h-6 w-6 text-stone-400 mb-4" />
-                <h3 className="font-serif text-2xl mb-2 text-stone-900">Claim Review Certificate</h3>
+                <h3 className="font-serif text-2xl mb-2 text-stone-900">Review Record Summary</h3>
                 <p className="text-sm text-stone-600 leading-relaxed mb-4">
-                  Provide your clients with a quarterly AuditGPT Claim Review Certificate, recording that their public claims were reviewed against visible evidence on the date of review. It does not certify truth, ranking, or compliance.
+                  Give clients a conservative "Reviewed by AuditGPT" badge page showing the audit date, claim categories checked, cleanup status, and next review date. It does not certify truth, ranking, or compliance.
                 </p>
-                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Quarterly Claim Review</div>
+                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Reviewed, Not Approved</div>
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm bg-stone-50">
                 <Shield className="h-6 w-6 text-stone-400 mb-4" />
@@ -83,7 +83,7 @@ export default function AgencyPage() {
                 <p className="text-sm text-stone-600 leading-relaxed mb-4">
                   Perfect for agencies serving healthcare, med spas, legal, finance, and AI/SaaS — industries where an unsupported claim can lead to regulatory action or lost deals.
                 </p>
-                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Compliance-Adjacent</div>
+                <div className="text-xs font-mono uppercase tracking-widest text-stone-400">Claim-Sensitive</div>
               </div>
               <div id="creator-white-label" className="bg-white border border-stone-900 p-8 rounded-sm shadow-sm md:col-span-2">
                 <Users className="h-6 w-6 text-stone-400 mb-4" />
@@ -106,10 +106,10 @@ export default function AgencyPage() {
                 </span>
               </div>
               <h2 className="font-serif text-4xl sm:text-5xl leading-tight mb-4 text-stone-900">
-                Ship with confidence. Audit before you launch.
+                Document public claim risk before you launch.
               </h2>
               <p className="text-stone-600 max-w-2xl mx-auto text-lg">
-                Your homepage makes promises your AI might not keep. We find the gap before prospects — or regulators — do.
+                Your homepage may make promises your evidence does not visibly support. We find the gap before prospects, platforms, or AI research agents repeat it.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -117,7 +117,7 @@ export default function AgencyPage() {
                 <Shield className="h-6 w-6 text-stone-400 mb-4" />
                 <h3 className="font-serif text-xl mb-3 text-stone-900">Stop SDR Blowback</h3>
                 <p className="text-sm text-stone-600 leading-relaxed">
-                  Stop your SDRs from sending decks that promise what your product can't prove. Every claim on your site gets verified against your actual evidence base.
+                  Stop your SDRs from sending decks that promise what your product cannot visibly support. Every claim on your site is checked against the evidence available to buyers.
                 </p>
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
@@ -150,7 +150,7 @@ export default function AgencyPage() {
                 Differentiate your agency with proprietary intelligence.
               </h2>
               <p className="text-stone-600 max-w-2xl mx-auto text-lg">
-                Give your clients a level of governance that competitors can't match — and turn it into recurring revenue.
+                Give clients a concrete receipt before risky pages go live — and turn that artifact into recurring revenue.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -158,7 +158,7 @@ export default function AgencyPage() {
                 <ShieldCheck className="h-6 w-6 text-stone-400 mb-4" />
                 <h3 className="font-serif text-xl mb-3 text-stone-900">Justify Your Retainers</h3>
                 <p className="text-sm text-stone-600 leading-relaxed">
-                  Give clients a quarterly Claim Intelligence score to justify retainers. Show ROI with hard data on claim accuracy, drift trends, and risk exposure.
+                  Give clients a dated receipt, review record, and cleanup queue to justify retainers. Show what was reviewed, what changed, and what still needs proof.
                 </p>
               </div>
               <div className="bg-white border border-stone-200 p-8 rounded-sm shadow-sm">
@@ -172,7 +172,7 @@ export default function AgencyPage() {
                 <FileText className="h-6 w-6 text-stone-400 mb-4" />
                 <h3 className="font-serif text-xl mb-3 text-stone-900">Recurring Billable Work</h3>
                 <p className="text-sm text-stone-600 leading-relaxed">
-                  Turn claim audits into recurring billable work. Add Claim Intelligence as a quarterly service line that generates predictable revenue for your agency.
+                  Turn claim receipts into recurring billable work. Add Claim Intelligence as a launch-review and quarterly-rescan service line.
                 </p>
               </div>
             </div>
@@ -216,7 +216,7 @@ export default function AgencyPage() {
               </div>
               <h2 className="font-serif text-3xl sm:text-4xl leading-tight mb-4">The First 10 Program</h2>
               <p className="text-stone-300 max-w-xl mx-auto mb-8 text-lg leading-relaxed">
-                Limited to 10 high-risk, high-growth brands. Includes founder-led onboarding, priority audits, and a quarterly claim review certificate. <strong>Join the cohort →</strong>
+                Limited to 10 high-risk, high-growth brands. Includes founder-led onboarding, priority receipts, and review record summaries. <strong>Join the cohort →</strong>
               </p>
               <Link
                 href="/pricing"
@@ -230,9 +230,9 @@ export default function AgencyPage() {
           {/* Founder CTA */}
           <section className="py-12 border-t border-stone-200">
             <div className="text-center mb-10">
-              <h2 className="font-serif text-3xl sm:text-4xl mb-4 text-stone-900">Ship an AI-safe homepage in 7 days</h2>
+              <h2 className="font-serif text-3xl sm:text-4xl mb-4 text-stone-900">Ship a claim-reviewed homepage in 7 days</h2>
               <p className="text-stone-500 mb-10 max-w-lg mx-auto">
-                From URL submission to reviewed, safer copy in one week. No endless revisions — just evidence-backed confidence.
+                From URL submission to reviewed, better-supported copy in one week. No endless revisions — just a clearer record of what your page claims and what still needs support.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-12">
@@ -254,7 +254,7 @@ export default function AgencyPage() {
             </div>
             <div className="text-center">
               <Link
-                href="/snapshot"
+                href="/auditgpt"
                 className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center"
               >
                 Audit Your Homepage <ArrowRight className="h-4 w-4 ml-2" />

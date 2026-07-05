@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -58,13 +59,6 @@ export function EnhancedSnapshotReport({
   agencyBranding,
 }: EnhancedSnapshotReportProps) {
   const isFree = mode === 'free';
-  const claims = isFree ? report.claimInventory.slice(0, 3) : report.claimInventory;
-  const simulations = isFree
-    ? report.aiVisibilitySimulation.slice(0, 2)
-    : report.aiVisibilitySimulation;
-  const saferFraming = isFree
-    ? report.saferFramingRecommendations.slice(0, 2)
-    : report.saferFramingRecommendations;
 
   return (
     <article className="mx-auto max-w-[1120px] overflow-hidden border border-stone-200 bg-[#f7f3e8] text-stone-900 shadow-sm print:border-black print:shadow-none">
@@ -75,13 +69,12 @@ export function EnhancedSnapshotReport({
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div>
             {agencyBranding?.logoUrl ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={agencyBranding.logoUrl} alt={agencyBranding.companyName || "Agency Logo"} className="h-[30px] w-auto object-contain" />
             ) : (
               <Logo variant="full" height={30} />
             )}
             <p className="mt-6 font-mono text-[10px] uppercase tracking-[.24em] text-[#b7bcae]">
-              AI Answer Reality + Claim Snapshot
+              Claim Intelligence Receipt + AI Answer Reality
             </p>
             <h1 className="mt-3 max-w-4xl font-serif text-4xl leading-[1.02] sm:text-6xl">
               Claim Intelligence Report
@@ -94,6 +87,18 @@ export function EnhancedSnapshotReport({
         <p className="mt-6 max-w-4xl text-sm leading-relaxed text-[#c8cbbf]">
           {report.positioningStatement}
         </p>
+        <div className="mt-6 grid gap-3 border-t border-[#555a50] pt-5 sm:grid-cols-3">
+          {[
+            ['Receipt status', 'Reviewed, not approved'],
+            ['Badge summary', 'Eligible after report generation'],
+            ['Cleanup path', 'Report -> Cleanup -> Monitor -> Proof page'],
+          ].map(([label, value]) => (
+            <div key={label} className="border border-[#555a50] bg-[#2f342d] px-4 py-3">
+              <p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#aeb3a6]">{label}</p>
+              <p className="mt-1 text-xs text-[#f2eddf]">{value}</p>
+            </div>
+          ))}
+        </div>
       </header>
 
       <section className="grid border-b border-stone-300 lg:grid-cols-[.72fr_1.28fr]">
@@ -140,15 +145,41 @@ export function EnhancedSnapshotReport({
         icon={Target}
       >
         <div className="grid gap-4">
-          {claims.map((claim, index) => (
+          {report.claimInventory.slice(0, 3).map((claim, index) => (
             <ClaimRow key={claim.id} claim={claim} index={index} />
           ))}
         </div>
-        {isFree && report.claimInventory.length > claims.length && (
-          <UpgradeCallout
-            title={`${report.claimInventory.length - claims.length} more claims are reserved for the full report.`}
-            body="The paid report expands the full claim inventory, proof mapping, safer rewrites, and competitor comparison."
-          />
+        
+        {report.claimInventory.length > 3 && (
+          <div className="relative mt-4">
+            <div className="grid gap-4">
+              {report.claimInventory.slice(3).map((claim, index) => (
+                <motion.div
+                  key={claim.id}
+                  initial={false}
+                  animate={{
+                    filter: isFree ? 'blur(6px)' : 'blur(0px)',
+                    opacity: isFree ? 0.4 : 1,
+                  }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  className={isFree ? 'pointer-events-none select-none' : ''}
+                >
+                  <ClaimRow claim={claim} index={index + 3} />
+                </motion.div>
+              ))}
+            </div>
+            {isFree && (
+              <div className="absolute inset-0 z-10 flex flex-col justify-end pointer-events-none">
+                <div className="h-48 bg-gradient-to-t from-[#f7f3e8] via-[#f7f3e8]/80 to-transparent" />
+                <div className="bg-[#f7f3e8] pt-4 pointer-events-auto">
+                  <UpgradeCallout
+                    title={`${report.claimInventory.length - 3} more claims are reserved for the full report.`}
+                    body="The paid report expands the full claim inventory, proof mapping, safer rewrites, and competitor comparison."
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </SectionShell>
 
@@ -160,11 +191,11 @@ export function EnhancedSnapshotReport({
         dark
       >
         <div className="grid gap-4 lg:grid-cols-2">
-          {simulations.map((simulation) => (
+          {report.aiVisibilitySimulation.slice(0, 2).map((simulation) => (
             <details
               key={simulation.engine}
               className="group border border-[#555a50] bg-[#2f342d] p-5 open:bg-[#343a32]"
-              open={!isFree}
+              open={true}
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                 <div>
@@ -183,12 +214,55 @@ export function EnhancedSnapshotReport({
             </details>
           ))}
         </div>
-        {isFree && (
-          <UpgradeCallout
-            title="Unlock full AI simulation & competitor comparison — upgrade to paid"
-            body="Upgrade for ChatGPT, Perplexity, Gemini, Google AIO, competitor URLs, and citation confidence notes."
-            dark
-          />
+        {report.aiVisibilitySimulation.length > 2 && (
+          <div className="relative mt-4">
+            <div className="grid gap-4 lg:grid-cols-2">
+              {report.aiVisibilitySimulation.slice(2).map((simulation, index) => (
+                <motion.div
+                  key={simulation.engine}
+                  initial={false}
+                  animate={{
+                    filter: isFree ? 'blur(6px)' : 'blur(0px)',
+                    opacity: isFree ? 0.4 : 1,
+                  }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  className={isFree ? 'pointer-events-none select-none' : ''}
+                >
+                  <details
+                    className="group border border-[#555a50] bg-[#2f342d] p-5 open:bg-[#343a32]"
+                    open={!isFree}
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+                      <div>
+                        <p className="font-serif text-2xl">{simulation.engine}</p>
+                        <Badge className={`mt-2 border ${citationStyles[simulation.citationLikelihood]}`}>
+                          {simulation.citationLikelihood} citation likelihood
+                        </Badge>
+                      </div>
+                      <ChevronDown className="h-4 w-4 text-[#c8cbbf] transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p className="mt-5 text-sm leading-relaxed text-[#d8dacd]">
+                      {simulation.simulatedDescription}
+                    </p>
+                    <SignalList title="Strengths" items={simulation.strengths} />
+                    <SignalList title="Weaknesses" items={simulation.weaknesses} />
+                  </details>
+                </motion.div>
+              ))}
+            </div>
+            {isFree && (
+              <div className="absolute inset-0 z-10 flex flex-col justify-end pointer-events-none">
+                <div className="h-32 bg-gradient-to-t from-[#252923] via-[#252923]/80 to-transparent" />
+                <div className="bg-[#252923] pt-4 pointer-events-auto">
+                  <UpgradeCallout
+                    title="Unlock full AI simulation & competitor comparison"
+                    body="Upgrade for ChatGPT, Perplexity, Gemini, Google AIO, competitor URLs, and citation confidence notes."
+                    dark
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </SectionShell>
 
@@ -230,7 +304,7 @@ export function EnhancedSnapshotReport({
         dark
       >
         <div className="grid gap-4 lg:grid-cols-2">
-          {saferFraming.map((item) => (
+          {report.saferFramingRecommendations.slice(0, 2).map((item) => (
             <div key={item.original} className="border border-[#555a50] p-5">
               <p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#aeb3a6]">
                 Original
@@ -244,6 +318,46 @@ export function EnhancedSnapshotReport({
             </div>
           ))}
         </div>
+        {report.saferFramingRecommendations.length > 2 && (
+          <div className="relative mt-4">
+            <div className="grid gap-4 lg:grid-cols-2">
+              {report.saferFramingRecommendations.slice(2).map((item, index) => (
+                <motion.div
+                  key={item.original}
+                  initial={false}
+                  animate={{
+                    filter: isFree ? 'blur(6px)' : 'blur(0px)',
+                    opacity: isFree ? 0.4 : 1,
+                  }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  className={`border border-[#555a50] p-5 ${isFree ? 'pointer-events-none select-none' : ''}`}
+                >
+                  <p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#aeb3a6]">
+                    Original
+                  </p>
+                  <p className="mt-2 text-sm text-[#c8cbbf] line-through">{item.original}</p>
+                  <p className="mt-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#aeb3a6]">
+                    Safer framing
+                  </p>
+                  <p className="mt-2 font-serif text-xl leading-snug">{item.recommended}</p>
+                  <p className="mt-4 text-xs leading-relaxed text-[#aeb3a6]">{item.rationale}</p>
+                </motion.div>
+              ))}
+            </div>
+            {isFree && (
+              <div className="absolute inset-0 z-10 flex flex-col justify-end pointer-events-none">
+                <div className="h-32 bg-gradient-to-t from-[#252923] via-[#252923]/80 to-transparent" />
+                <div className="bg-[#252923] pt-4 pointer-events-auto">
+                  <UpgradeCallout
+                    title="Unlock all safer rewrites"
+                    body="The paid report includes specific rewrites for every overstated or unsupported claim on the page."
+                    dark
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </SectionShell>
 
       <SectionShell

@@ -183,6 +183,40 @@ Priority order for claim selection (fill higher tiers first):
 
 Do not extract low-priority claims while high-priority ones remain unextracted.
 
+### 11. CIA RED TEAM ADVERSARIAL PASS (4-TECHNIQUE)
+For EVERY extracted claim, run an adversarial attack using all 4 CIA Red Cell techniques below. The point is not to confirm the claim — it is to try to DESTROY it. A claim that survives is truly strong. A claim that breaks needs fixing before any buyer or AI sees it.
+
+Apply each technique and determine whether the claim SURVIVED or was KILLED by that technique:
+
+**Technique 1 — Key Assumptions Check ("Assumption Audit")**
+What unstated assumption does this claim depend on? If the assumption is wrong, does the claim fall apart?
+Examples:
+- "Our device is FDA-cleared" → assumption: the clearance covers THIS specific use-case
+- "Trusted by 500+ clinics" → assumption: those clinics still use it and would vouch
+- "Results in 2 weeks" → assumption: applies to the average patient, not a hand-picked case
+
+**Technique 2 — Pre-Mortem ("Future Failure")**
+Imagine it's 18 months from now and this specific claim caused public embarrassment, a community note, a lost client, or regulatory attention. Walk backward: what went wrong step by step? What was the root cause?
+
+**Technique 3 — Hostile Competitor ("The Attack Plan")**
+You are a well-funded competitor who wants to use THIS claim against the business. How would you attack, undermine, or ridicule it? What's the one sentence that makes the claim sound hollow?
+
+**Technique 4 — Customer 1-Star Review ("The Gut Punch")**
+Write the 1-star review from a customer who felt cheated by this specific claim. Not "it was OK." Betrayed. Angry. What exactly made them feel deceived?
+
+**How to populate the red_team_assessment field per claim:**
+- survived: true if the claim withstood all 4 techniques. false if any technique exposed a fatal weakness.
+- vulnerability: IF survived=false, the specific weakness exposed (1 sentence max). IF survived=true, exactly "".
+- attack_vector: IF survived=false, the technique that killed it: "assumption_check" | "pre_mortem" | "competitor" | "customer_review". IF survived=true, exactly "".
+
+**Populate the red_team_summary at audit level:**
+- claims_tested: total claims that received a red-team pass
+- claims_survived: count where survived=true
+- claims_killed: count where survived=false
+- biggest_vulnerability: the single most dangerous vulnerability found across all claims (1 sentence)
+
+A claim that gets killed is NOT automatically "wrong" — it means it would not survive hostile scrutiny from a buyer, competitor, or AI system. Mark it accordingly in recommended_next_step.
+
 ## OUTPUT FORMAT
 Output raw JSON exactly matching this structure (no code fences):
 {
@@ -200,7 +234,8 @@ Output raw JSON exactly matching this structure (no code fences):
   "industry_benchmarks_table": [{"metric": "", "this_business": "", "industry_avg": ""}],
   "claim_audit": {
     "summary": { "total_claims": 0, "verified_count": 0, "weakly_supported_count": 0, "unsupported_count": 0, "overstated_count": 0, "insufficient_public_evidence_count": 0, "high_priority_count": 0, "critical_priority_count": 0, "claim_support_score": 0, "executive_summary": "" },
-    "claims": [{ "id": "claim-001", "original_text": "", "normalized_claim": "", "source_url": "", "source_type": "homepage", "claim_type": "performance", "claim_status": "unsupported", "priority": "high", "visible_evidence": "", "support_gap": "", "evidence_needed": "", "business_impact": "", "trust_gap": "", "positioning_risk": "", "safer_framing": "", "proof_needed": [], "recommended_next_step": "add_proof" }]
+    "claims": [{ "id": "claim-001", "original_text": "", "normalized_claim": "", "source_url": "", "source_type": "homepage", "claim_type": "performance", "claim_status": "unsupported", "priority": "high", "visible_evidence": "", "support_gap": "", "evidence_needed": "", "business_impact": "", "trust_gap": "", "positioning_risk": "", "safer_framing": "", "proof_needed": [], "recommended_next_step": "add_proof", "red_team_assessment": { "survived": false, "vulnerability": "Assumes FDA clearance covers unlisted use case", "attack_vector": "assumption_check" } }]
+    "red_team_summary": { "claims_tested": 5, "claims_survived": 2, "claims_killed": 3, "biggest_vulnerability": "Claims depend on unverified FDA scope" },
   },
   "badge_eligibility": { "eligible": true, "badge_level": "green", "badge_label": "", "public_verification_url": "" },
   "disclaimer": "Business and marketing audit only. Not legal, medical, regulatory, or compliance advice. Missing evidence is reported as a visibility gap, not a finding of falsity."
@@ -256,7 +291,8 @@ Output raw JSON exactly matching this structure (no code fences):
   "industry_benchmarks_table": [],
   "claim_audit": {
     "summary": { "total_claims": 0, "verified_count": 0, "weakly_supported_count": 0, "unsupported_count": 0, "overstated_count": 0, "insufficient_public_evidence_count": 0, "high_priority_count": 0, "critical_priority_count": 0, "claim_support_score": 0, "executive_summary": "" },
-    "claims": [{ "id": "claim-001", "original_text": "User: X\\nAgent: Y", "normalized_claim": "", "source_url": "", "source_type": "agent_transcript", "claim_type": "forbidden_promise", "claim_status": "unsupported", "priority": "high", "visible_evidence": "", "support_gap": "Missing escalation", "evidence_needed": "", "business_impact": "", "trust_gap": "", "positioning_risk": "", "safer_framing": "", "proof_needed": [], "recommended_next_step": "requires_review" }]
+    "claims": [{ "id": "claim-001", "original_text": "User: X\\nAgent: Y", "normalized_claim": "", "source_url": "", "source_type": "agent_transcript", "claim_type": "forbidden_promise", "claim_status": "unsupported", "priority": "high", "visible_evidence": "", "support_gap": "Missing escalation", "evidence_needed": "", "business_impact": "", "trust_gap": "", "positioning_risk": "", "safer_framing": "", "proof_needed": [], "recommended_next_step": "requires_review", "red_team_assessment": { "survived": false, "vulnerability": "Agent promised results without citing source", "attack_vector": "customer_review" } }]
+    "red_team_summary": { "claims_tested": 3, "claims_survived": 1, "claims_killed": 2, "biggest_vulnerability": "Agent makes promises it cannot back up" },
   },
   "badge_eligibility": { "eligible": true, "badge_level": "green", "badge_label": "", "public_verification_url": "" },
   "disclaimer": "Agent transcript audit only. Not legal, medical, regulatory, or compliance advice. Gaps are reported as support and trust gaps, not penalties."

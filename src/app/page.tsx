@@ -1,833 +1,351 @@
 'use client';
 
-// ============================================================
-// AuditGPT — Homepage (Scrutexity v2)
-// ============================================================
-// Find what is unsupported, invisible, risky, or leaking.
-// One intake form → /api/audit (starter type) → public report.
-// The free snapshot has its own route at /snapshot.
-// ============================================================
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { ArrowRight } from 'lucide-react';
+import { Instrument_Serif } from 'next/font/google';
 import { Logo } from '@/components/logo';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { ArrowRight, ArrowDown, Sparkles, ShieldCheck, Loader2, Building2, Cpu, Search, CheckCircle2, AlertTriangle, ArrowUpRight, FileText, TrendingUp, Clock, Ban, Lock, Eye, Menu } from 'lucide-react';
-import { motion, useAnimate } from 'framer-motion';
-import { Sheet, SheetTrigger, SheetContent, SheetClose } from '@/components/ui/sheet';
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
 
-const PATH_CARDS = [
-  { path: '01', label: "I'm a med spa or wellness business", icon: Sparkles, route: '/snapshot?path=medspa' },
-  { path: '02', label: "I'm an agency auditing a client", icon: Building2, route: '/snapshot?path=agency' },
-  { path: '03', label: "I'm a SaaS / AI startup", icon: Cpu, route: '/snapshot?path=saas' },
-  { path: '04', label: "I'm evaluating a company / deal", icon: Search, route: '/snapshot?path=diligence' },
+const NAV_ITEMS = [
+  ['Sample Report', '/sample-medspa-report'],
+  ['Pricing', '/pricing'],
+  ['Methodology', '/claim-review-methodology'],
 ] as const;
 
-const HOW_IT_WORKS = [
-  { step: '01', title: 'Submit Your URL', icon: FileText, desc: 'Enter your homepage or any buyer-facing page. AuditGPT pulls the visible content instantly.' },
-  { step: '02', title: 'Claim Intelligence Runs', icon: Cpu, desc: 'Every claim is labeled: supported, weakly supported, overstated, or unsupported — with evidence gaps mapped.' },
-  { step: '03', title: 'Get Your Report', icon: ShieldCheck, desc: 'Receive a prioritized findings report with safer rewrites, a claim health score, and next steps.' },
+const PROMISE_ITEMS = [
+  'one unsupported or weak claim',
+  'one visible proof gap',
+  'one safer rewrite',
 ] as const;
 
-const WHO_USES = [
-  { tag: 'AI / SaaS', desc: 'Monitors buyer-facing surfaces for claim drift and AI answer distortion at scale.' },
-  { tag: 'Med spa & aesthetics', desc: 'Flags unsupported treatment and results claims before buyers or regulators do.' },
-  { tag: 'Performance agencies', desc: 'White-label claim audits used as a sales wedge and quarterly client review.' },
-  { tag: 'Growth-stage fintech', desc: 'Clears unsupported claims from revenue pages ahead of diligence.' },
+const REVIEW_STEPS = [
+  ['01', 'Extract claim'],
+  ['02', 'Map visible support'],
+  ['03', 'Classify support strength'],
+  ['04', 'Test AI distortion'],
+  ['05', 'Suggest safer wording'],
+  ['06', 'Issue receipt on paid review'],
 ] as const;
 
-const PLANS = [
-  {
-    name: 'Free Claim Snapshot',
-    for: 'Founder sanity-check',
-    depth: '1 page, 3–4 findings',
-    outcome: 'Know if this page is safe to ship.',
-    price: '$0',
-    cta: 'Run Free Snapshot',
-    highlight: false,
-  },
-  {
-    name: 'Claim Intelligence Report',
-    for: 'Launching a new funnel',
-    depth: '5–7 claims, receipt, badge',
-    outcome: 'Leave with a dated receipt and a reviewed-badge summary.',
-    price: '$299',
-    cta: 'Get the $299 Report',
-    highlight: true,
-  },
-  {
-    name: 'Claim Drift Monitoring',
-    for: 'Fundraising / M&A readiness',
-    depth: '5 surfaces, 30-day plan',
-    outcome: 'De-risk your claims before diligence.',
-    price: '$299/mo',
-    cta: 'Start Claim Drift Monitoring',
-    highlight: false,
-  },
-  {
-    name: 'Agency Receipt Beta',
-    for: 'Agencies & consultancies',
-    depth: '10 receipts/mo, white-label',
-    outcome: 'Attach a Claim Intelligence Receipt to every high-claim launch.',
-    price: '$499/mo',
-    cta: 'Join the Founding Beta',
-    highlight: false,
-  },
+const REVIEW_SCOPE = [
+  ['What it reviews', 'Treatment outcomes, device and FDA language, testimonials, credentials, before/after proof, and AI answer distortion.'],
+  ['What you get', 'A first-pass claim finding: one unsupported or weak claim, one visible proof gap, and one safer rewrite.'],
+  ['What it is not', 'Not legal advice, clinical review, approval, certification, or a promise that a page is ready for launch.'],
 ] as const;
 
-const METHODOLOGY_STEPS = [
-  { step: '1', title: 'Extract', desc: 'Our scanner pulls every factual claim from the visible surface of the page.' },
-  { step: '2', title: 'Classify', desc: 'Each claim is labeled against an evidence rubric: Supported / Weakly Supported / Overstated / Unsupported.' },
-  { step: '3', title: 'Map', desc: 'We cross-reference claims against adjacent visible evidence — links, data, quotes, certifications.' },
-  { step: '4', title: 'Recalibrate', desc: 'Methodology is re-tested monthly against live ChatGPT, Perplexity, Gemini, and Copilot outputs.' },
-] as const;
-
-function AnimatedScanReceipt() {
-  const claims = [
-    { text: 'Clinically proven', label: 'Reviewed', color: 'bg-green-100 text-green-700 border-green-200' },
-    { text: 'Permanent results', label: 'Overstated', color: 'bg-amber-100 text-amber-700 border-amber-200' },
-    { text: 'No downtime', label: 'Needs Support', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-    { text: 'FDA approved', label: 'Rewrite Suggested', color: 'bg-red-100 text-red-700 border-red-200' },
-  ];
-
-  return (
-    <div className="relative bg-white rounded-sm border border-stone-200 shadow-2xl overflow-hidden flex flex-col">
-      <div className="bg-stone-100 border-b border-stone-200 px-3 py-2 flex items-center gap-2">
-        <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-400" /><div className="w-2.5 h-2.5 rounded-full bg-amber-400" /><div className="w-2.5 h-2.5 rounded-full bg-green-400" /></div>
-        <div className="bg-white border border-stone-200 rounded-sm px-2 text-[10px] text-stone-500 font-mono flex-1 text-center truncate">example.com/treatment</div>
-      </div>
-      <div className="p-5 flex flex-col gap-4 bg-stone-50 h-full relative">
-        <div className="absolute top-0 right-0 p-4">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60 animate-ping" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400" />
-          </span>
-        </div>
-        <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Scanning Surface...</div>
-        <div className="space-y-3 relative z-10">
-          {claims.map((claim, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: EASE, delay: 0.4 + i * 0.8 }}
-              className="flex items-center gap-3"
-            >
-              <div className="bg-white border border-stone-200 shadow-sm px-3 py-2 rounded-sm text-xs font-serif text-stone-800 flex-1 relative overflow-hidden group">
-                <motion.div 
-                  className="absolute inset-0 bg-blue-50/50"
-                  initial={{ x: '-100%' }}
-                  whileInView={{ x: '100%' }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.5 + i * 0.8, ease: EASE }}
-                />
-                &ldquo;{claim.text}&rdquo;
-              </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 1.0 + i * 0.8 }}
-                className={`text-[9px] font-mono uppercase tracking-wider px-2 py-1 border rounded-sm ${claim.color} w-32 text-center flex-shrink-0`}
-              >
-                {claim.label}
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE, delay: 4.2 }}
-          className="mt-4 pt-4 border-t border-stone-200"
-        >
-          <div className="bg-stone-900 rounded-sm p-4 text-white shadow-lg relative overflow-hidden">
-             <div className="flex justify-between items-center mb-2">
-               <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400">Diagnostic Complete</span>
-               <CheckCircle2 className="h-4 w-4 text-green-400" />
-             </div>
-             <div className="font-serif text-lg">Claim Intelligence Report</div>
-             <div className="text-xs text-stone-400 mt-1">4 claims flagged · Fix plan generated</div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-const COMPANY_TYPES = [
-  'AI / SaaS',
-  'Agency / consulting',
-  'Creator / personal brand',
-  'Med spa / wellness',
-  'Healthcare provider',
-  'Local service business',
-  'Ecommerce',
-  'Marketplace',
-  'Other',
-];
-
-const PRIMARY_WORRIES = [
-  'Buyers don\'t trust our claims',
-  'We\'re invisible in AI/search results',
-  'We\'re losing inbound demand',
-  'Sponsors may flag our claims',
-  'Our reputation surface is weak',
-  'Not sure — show me what\'s leaking',
-];
-
-
+// Film-grain overlay — keeps the big soft gradients from banding and adds tactility.
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
 export default function Home() {
   const router = useRouter();
-  const [inputType, setInputType] = useState<'website' | 'agent_transcript'>('website');
   const [website, setWebsite] = useState(() => {
     if (typeof window === 'undefined') return '';
     return new URLSearchParams(window.location.search).get('url') || '';
   });
-  const [transcript, setTranscript] = useState('');
-  const [name, setName] = useState('');
-  const [companyType, setCompanyType] = useState('');
-  const [worry, setWorry] = useState('');
-  const [isAgency, setIsAgency] = useState(false);
-  const [isMedical, setIsMedical] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const valid = inputType === 'website' ? website.trim().length >= 3 : transcript.trim().length >= 10;
-
-  const run = async () => {
-    if (!valid || loading) return;
-    setLoading(true);
+  const handleScan = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isScanning) return;
+    if (website.trim().length < 3) {
+      toast.error('Please enter a website URL.');
+      return;
+    }
+    setIsScanning(true);
     try {
       const res = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           auditType: 'starter',
-          inputType,
-          websiteUrl: inputType === 'website' ? website.trim() : undefined,
-          transcript: inputType === 'agent_transcript' ? transcript.trim() : undefined,
-          companyName: name.trim() || undefined,
-          industry: companyType || undefined,
-          companyType: isAgency
-            ? 'agency'
-            : isMedical
-              ? 'medical_or_wellness'
-              : companyType || undefined,
-          focusNotes: worry || undefined,
+          inputType: 'website',
+          websiteUrl: website.trim(),
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Audit failed.');
+      if (!res.ok) throw new Error(data.error || 'Scan failed.');
       if (data.publicId) {
         router.push(`/audit/${data.publicId}`);
       } else {
-        toast.error('Audit ran but no shareable link was generated.');
+        toast.error('Scan ran but no result link was generated.');
+        setIsScanning(false);
       }
     } catch (e: unknown) {
       const err = e as { message?: string };
-      toast.error(err.message || 'Audit failed.');
-    } finally {
-      setLoading(false);
+      toast.error(err.message || 'Scan failed.');
+      setIsScanning(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      {/* Top bar */}
-      <header className="border-b border-stone-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-            <Logo variant="full" height={28} />
+    <div className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#FAF9F6] font-sans">
+      {/* Atmospheric cloud glows */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-[-10%] top-[-10%] h-[50vw] w-[50vw] rounded-full bg-[#E8DCCB] mix-blend-multiply blur-[120px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute bottom-[-20%] right-[-10%] h-[60vw] w-[60vw] rounded-full bg-[#C86A53] mix-blend-multiply blur-[150px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.08, 0.16, 0.08] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+          className="absolute right-[15%] top-[5%] h-[35vw] w-[35vw] rounded-full bg-[#D8C7E8] mix-blend-multiply blur-[130px]"
+        />
+      </div>
+
+      {/* Film grain */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.035] mix-blend-multiply"
+        style={{ backgroundImage: GRAIN }}
+        aria-hidden
+      />
+
+      {/* Nav */}
+      <header className="relative z-10">
+        <div className="mx-auto flex min-h-16 max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-1 px-6 py-4">
+          <a href="/" className="flex items-center gap-2" aria-label="AuditGPT home">
+            <Logo variant="full" height={26} priority />
           </a>
-
-          {/* Desktop nav */}
-          <nav className="hidden sm:flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-stone-500">
-            <a href="/" className="hover:text-stone-900 transition-colors">Platform</a>
-            <a href="/ai-answer-reality" className="hover:text-stone-900 transition-colors">AI Answer Reality</a>
-            <a href="/ai-answer-reality/sample" className="hover:text-stone-900 transition-colors">Sample Report</a>
-            <a href="/pricing" className="hover:text-stone-900 transition-colors">Pricing</a>
-            <a href="/proof" className="hover:text-stone-900 transition-colors">Proof</a>
-            <a href="/agency" className="hover:text-stone-900 transition-colors">Partners</a>
-            <a href="/snapshot" className="bg-stone-900 text-white px-3 py-1.5 rounded-sm hover:bg-stone-700 transition-colors font-semibold">Run Claim Snapshot</a>
+          <nav className="flex items-center gap-5 sm:gap-8">
+            {NAV_ITEMS.map(([label, href]) => (
+              <a
+                key={label}
+                href={href}
+                className="group relative whitespace-nowrap text-xs font-medium text-[#1C1C1C]/60 transition-colors hover:text-[#1C1C1C] sm:text-sm"
+              >
+                {label}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#C86A53] transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
           </nav>
-
-          {/* Mobile hamburger */}
-          <div className="sm:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="p-2 text-stone-500 hover:text-stone-900 transition-colors" aria-label="Open menu">
-                  <Menu className="h-5 w-5" />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[260px] bg-white border-l border-stone-200 p-6 pt-12">
-                <nav className="flex flex-col gap-4 text-sm font-mono uppercase tracking-wider text-stone-500">
-                  <a href="/" className="hover:text-stone-900 transition-colors">Platform</a>
-                  <a href="/ai-answer-reality" className="hover:text-stone-900 transition-colors">AI Answer Reality</a>
-                  <a href="/ai-answer-reality/sample" className="hover:text-stone-900 transition-colors">Sample Report</a>
-                  <a href="/pricing" className="hover:text-stone-900 transition-colors">Pricing</a>
-                  <a href="/proof" className="hover:text-stone-900 transition-colors">Proof</a>
-                  <a href="/agency" className="hover:text-stone-900 transition-colors">Partners</a>
-                  <div className="mt-3 pt-4 border-t border-stone-200">
-                    <a href="/snapshot" className="block text-center bg-stone-900 text-white px-4 py-2.5 rounded-sm hover:bg-stone-700 transition-colors font-semibold text-xs">
-                      Run Claim Snapshot
-                    </a>
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
         </div>
       </header>
 
-      <main className="flex-1">
+      {/* Hero scanner */}
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:py-20">
+        <div className="flex w-full max-w-3xl flex-col items-center">
+          {/* Status badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-[#1C1C1C]/[0.08] bg-white/50 px-4 py-1.5 text-xs font-medium tracking-wide text-[#1C1C1C]/70 shadow-sm backdrop-blur-md"
+          >
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C86A53] opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#C86A53]" />
+            </span>
+            AuditGPT by Scrutexity
+          </motion.div>
 
-        {/* ── HERO ───────────────────────────────────────────── */}
-        <section className="px-4 sm:px-6 pt-16 sm:pt-24 pb-16 bg-white">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div>
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE }} className="inline-flex items-center gap-2 mb-6">
-                  <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full rounded-full bg-stone-400 opacity-40 animate-ping" /><span className="relative inline-flex h-2 w-2 rounded-full bg-stone-900" /></span>
-                  <span className="text-xs font-mono uppercase tracking-widest text-stone-500">AuditGPT by Scrutexity</span>
-                </motion.div>
-                <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE, delay: 0.1 }} className="font-serif font-light text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-4 text-stone-900">
-                  AI made publishing cheap.<br /><span className="italic text-stone-500">Scrutexity makes growth governable.</span>
-                </motion.h1>
-                <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.15 }} className="text-sm font-mono tracking-wider text-stone-400 uppercase mb-3">
-                  AuditGPT scans your pages. <span className="text-stone-700">Scrutexity fixes them.</span>
-                </motion.p>
-                <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.2 }} className="text-base text-stone-600 max-w-lg mb-8 leading-relaxed">
-                  AuditGPT scans public buyer-facing pages to find unsupported claims, evidence gaps, and AI Answer Reality risks before buyers repeat or distrust them.
-                </motion.p>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.3 }} className="flex flex-col sm:flex-row sm:flex-wrap items-start gap-3 mb-6">
-                  <a href="/snapshot" className="btn-cta text-sm px-6 py-3.5 flex-shrink-0 w-auto">Run a Free Claim Snapshot <ArrowRight className="h-4 w-4 ml-2 inline" /></a>
-                  <a href="/ai-answer-reality/sample" className="px-6 py-3.5 text-sm font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center">View Sample Audit</a>
-                </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="inline-flex items-center gap-2 p-3 border border-stone-200 rounded-sm bg-stone-50">
-                  <Building2 className="h-3.5 w-3.5 text-stone-400 flex-shrink-0" />
-                  <p className="text-xs text-stone-500 font-mono uppercase tracking-widest">Agency?</p>
-                  <a href="/agency" className="text-xs font-semibold text-stone-900 underline underline-offset-2 hover:text-stone-600 transition-colors">White-label our engine →</a>
-                </motion.div>
-              </div>
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}>
-                <AnimatedScanReceipt />
-              </motion.div>
-            </div>
-          </div>
-        </section>
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className={`${instrumentSerif.className} mb-6 text-5xl leading-[1.05] tracking-tight text-[#1C1C1C] md:text-7xl`}
+          >
+            Public claim scanner for <br />
+            <em className="text-[#C86A53]">med-spa and wellness pages.</em>
+          </motion.h1>
 
-        {/* ── PATH CARDS ─────────────────────────────────────── */}
-        <section className="px-4 sm:px-6 py-12 border-t border-stone-100 bg-stone-50">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-6">Choose Your Path</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {PATH_CARDS.map(({ path, label, icon: Icon, route }, i) => (
-                <motion.a key={path} href={route}
-                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ y: -2, borderColor: '#1c1917' }} viewport={{ once: true }}
-                  transition={{ duration: 0.4, ease: EASE, delay: i * 0.07 }}
-                  className="group block p-5 border border-stone-200 bg-white hover:shadow-md rounded-sm transition-shadow duration-300"
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-12 max-w-xl text-lg font-light leading-relaxed text-[#1C1C1C]/70 md:text-xl"
+          >
+            Know what your page is claiming before patients, platforms, or AI
+            answer engines repeat it. AuditGPT reviews one public page for
+            unsupported claims, visible proof gaps, and safer wording.
+          </motion.p>
+
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            onSubmit={handleScan}
+            className="group relative w-full max-w-2xl"
+          >
+            {/* Ambient glow behind input (activates on focus) */}
+            <div
+              className={`absolute -inset-1.5 rounded-[1.75rem] bg-gradient-to-r from-[#E8DCCB] via-[#C86A53]/25 to-[#D8C7E8]/40 blur-xl transition-opacity duration-500 ${
+                isFocused ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+
+            {/* Glassmorphic input container */}
+            <div
+              className={`relative flex w-full flex-col items-stretch gap-2 rounded-[1.5rem] border bg-white/70 p-2 shadow-[0_1px_2px_rgba(28,28,28,0.04),0_12px_40px_-12px_rgba(28,28,28,0.12)] backdrop-blur-xl transition-all duration-300 sm:flex-row sm:items-center ${
+                isFocused ? 'border-[#C86A53]/30' : 'border-[#1C1C1C]/[0.08]'
+              }`}
+            >
+              <input
+                type="text"
+                inputMode="url"
+                autoComplete="url"
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+                placeholder="yourwebsite.com"
+                aria-label="Website URL"
+                disabled={isScanning}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className="flex-grow rounded-xl border-none bg-transparent px-4 py-3.5 text-lg text-[#1C1C1C] outline-none placeholder:text-[#1C1C1C]/35 disabled:opacity-60 sm:px-5 sm:py-4"
+              />
+
+              {/* Modern layered button */}
+              <motion.button
+                type="submit"
+                disabled={isScanning}
+                whileHover={isScanning ? undefined : { scale: 1.02 }}
+                whileTap={isScanning ? undefined : { scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className="group/btn relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#D1755C] to-[#B85A44] px-7 py-3.5 font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_1px_2px_rgba(184,90,68,0.4),0_10px_28px_-8px_rgba(200,106,83,0.55)] transition-shadow duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_1px_2px_rgba(184,90,68,0.4),0_14px_36px_-8px_rgba(200,106,83,0.7)] disabled:opacity-95 sm:py-3.5"
+              >
+                <span
+                  className={`relative z-10 flex items-center justify-center gap-2 whitespace-nowrap transition-opacity duration-300 ${
+                    isScanning ? 'opacity-0' : 'opacity-100'
+                  }`}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400">Path {path}</span>
-                    <ArrowUpRight className="h-3.5 w-3.5 text-stone-300 group-hover:text-stone-700 transition-colors" />
-                  </div>
-                  <Icon className="h-5 w-5 text-stone-400 group-hover:text-stone-700 transition-colors mb-3" strokeWidth={1.5} />
-                  <div className="font-serif text-base text-stone-900 leading-snug">{label}</div>
-                </motion.a>
-              ))}
-            </div>
-          </div>
-        </section>
+                  Run Free Claim Snapshot
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+                </span>
 
-        {/* ── WHO USES AUDITGPT TODAY ────────────────────────── */}
-        <section className="px-4 sm:px-6 py-14 bg-white border-t border-stone-100">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-3">Built For Teams Like These</div>
-            <p className="text-center text-xs text-stone-400 max-w-2xl mx-auto">Modeled use cases. Not published client results.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-              {WHO_USES.map(({ tag, desc }, i) => (
-                <motion.div key={tag}
-                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: EASE, delay: i * 0.1 }}
-                  className="border border-stone-200 bg-stone-50 p-5 rounded-sm"
-                >
-                  <div className="inline-block text-[10px] font-mono uppercase tracking-wider bg-stone-900 text-white px-2.5 py-1 rounded-sm mb-3">{tag}</div>
-                  <p className="text-sm text-stone-600 leading-relaxed">{desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── PLAN COMPARISON TABLE ──────────────────────────── */}
-        <section className="px-4 sm:px-6 py-16 bg-stone-50 border-t border-stone-100">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-3">Find Your Plan</div>
-            <div className="overflow-x-auto mt-8">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-stone-300 font-mono text-[11px] uppercase tracking-widest text-stone-500">
-                    <th className="p-4 pl-0 w-[20%]">Plan</th>
-                    <th className="p-4 w-[22%]">For whom</th>
-                    <th className="p-4 w-[22%]">Depth of scan</th>
-                    <th className="p-4 w-[26%]">Key outcome</th>
-                    <th className="p-4 w-[10%]"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-200">
-                  {PLANS.map((plan, i) => (
-                    <motion.tr key={plan.name}
-                      initial={{ opacity: 0, y: 6 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                      transition={{ duration: 0.4, ease: EASE, delay: i * 0.06 }}
-                      className={`group hover:bg-stone-100/50 transition-colors ${plan.highlight ? 'bg-stone-100' : ''}`}
-                    >
-                      <td className="p-4 pl-0">
-                        <div className={`font-serif text-lg ${plan.highlight ? 'text-stone-900' : 'text-stone-800'}`}>{plan.name}</div>
-                        <div className="text-xs font-mono text-stone-400 mt-0.5">{plan.price}</div>
-                      </td>
-                      <td className="p-4 text-sm text-stone-600">{plan.for}</td>
-                      <td className="p-4 text-sm text-stone-600">{plan.depth}</td>
-                      <td className="p-4 text-sm text-stone-800 font-medium italic">{plan.outcome}</td>
-                      <td className="p-4 pr-0">
-                        <a href={plan.price === '$0' ? '/snapshot' : '/pricing'}
-                          className={`text-[10px] font-mono uppercase tracking-wider px-3 py-2 rounded-sm transition-colors whitespace-nowrap inline-block ${
-                            plan.highlight
-                              ? 'bg-stone-900 text-white hover:bg-stone-700'
-                              : 'border border-stone-300 text-stone-600 hover:bg-stone-100'
-                          }`}
-                        >
-                          {plan.cta}
-                        </a>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-6 text-center">
-              <div className="inline-flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 rounded-sm font-mono text-[11px] uppercase tracking-widest">
-                <AlertTriangle className="h-3.5 w-3.5" /> Average 10–20 unsupported claims surfaced per page
-              </div>
-              <div className="mt-4">
-                <a href="/personal-brand-audit" className="text-xs font-semibold text-stone-600 underline underline-offset-4 hover:text-stone-900 transition-colors">
-                  Also available: Run a Personal Brand Snapshot →
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── FEATURE MOCKUP CARDS ───────────────────────────── */}
-          <section className="px-4 sm:px-6 py-16 bg-white border-t border-stone-100">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-10">What You Get in Every Report</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: 0 }} className="border border-stone-200 bg-white rounded-sm p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="rounded-sm bg-stone-900 p-4 flex flex-col items-center justify-center gap-1">
-                  <div className="text-4xl font-serif text-white">82</div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400">/100</div>
-                  <div className="w-full bg-stone-700 rounded-full h-1.5 mt-2">
-                    <motion.div className="h-full rounded-full bg-white" initial={{ width: '0%' }} whileInView={{ width: '82%' }} viewport={{ once: true }} transition={{ duration: 1.2, ease: EASE, delay: 0.3 }} />
-                  </div>
-                </div>
-                <div className="text-sm font-serif text-stone-900">Claim Health Score</div>
-                <div className="text-xs text-stone-500 leading-relaxed">A 0–100 score showing how well your claims are backed by visible evidence.</div>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: 0.08 }} className="border border-stone-200 bg-white rounded-sm p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="rounded-sm bg-stone-50 border border-stone-100 p-3 space-y-2">
-                  {[{ text: '"#1 rated in the region"', tag: 'Unsupported', color: 'bg-red-100 text-red-700' }, { text: '"Instant results guaranteed"', tag: 'Overstated', color: 'bg-amber-100 text-amber-700' }, { text: '"Backed by research"', tag: 'Needs proof', color: 'bg-blue-100 text-blue-700' }].map((row, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, x: -6 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, ease: EASE, delay: 0.2 + i * 0.1 }} className="flex items-start gap-2">
-                      <AlertTriangle className="h-3 w-3 text-stone-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[11px] text-stone-700 truncate font-mono">{row.text}</div>
-                        <span className={`inline-block text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm mt-0.5 ${row.color}`}>{row.tag}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="text-sm font-serif text-stone-900">Unsupported Claim Table</div>
-                <div className="text-xs text-stone-500 leading-relaxed">Every risky claim labeled by type, with evidence gaps and fix recommendations.</div>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: 0.16 }} className="border border-stone-200 bg-white rounded-sm p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="rounded-sm bg-stone-50 border border-stone-100 p-3 space-y-2.5">
-                  {[{ engine: 'ChatGPT', status: 'Partial', color: 'text-amber-600' }, { engine: 'Perplexity', status: 'Incorrect', color: 'text-red-600' }, { engine: 'Gemini', status: 'Accurate', color: 'text-green-600' }].map(({ engine, status, color }, i) => (
-                    <motion.div key={engine} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.1 }} className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono text-stone-500">{engine}</span>
-                      <span className={`text-[11px] font-mono font-semibold ${color}`}>{status}</span>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="text-sm font-serif text-stone-900">AI Answer Reality Snapshot</div>
-                <div className="text-xs text-stone-500 leading-relaxed">See how ChatGPT, Perplexity, and Gemini describe your business — accurately or not.</div>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: 0.24 }} className="border border-stone-200 bg-white rounded-sm p-5 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="rounded-sm bg-stone-50 border border-stone-100 p-3 space-y-2">
-                  <div className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-1.5">Before</div>
-                  <div className="text-[11px] text-stone-500 font-mono line-through">&ldquo;We get results faster than anyone.&rdquo;</div>
-                  <div className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-2 mb-1.5">Safer Rewrite</div>
-                  <div className="flex items-start gap-1.5">
-                    <CheckCircle2 className="h-3 w-3 text-green-600 mt-0.5 flex-shrink-0" />
-                    <div className="text-[11px] text-stone-800 font-mono">&ldquo;Our clients report [X]% faster results within [Y] days.&rdquo;</div>
-                  </div>
-                </div>
-                <div className="text-sm font-serif text-stone-900">Safer Rewrite Recommendations</div>
-                <div className="text-xs text-stone-500 leading-relaxed">Claim-safe rewrites that keep your marketing intent without the risk.</div>
-              </motion.div>
-            </div>
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                ['Dated Claim Intelligence Receipt', 'A one-page record of what was reviewed, what proof was visible, what was missing, and what safer language was recommended.'],
-                ['Reviewed by AuditGPT badge', 'A conservative badge link your team can use immediately. It says reviewed, not approved, verified, or compliant.'],
-                ['Static review summary', 'A public summary page with audit date, claim categories checked, cleanup status, and next review date.'],
-              ].map(([title, body]) => (
-                <div key={title} className="border border-stone-200 bg-stone-50 p-5 rounded-sm">
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Entry-tier proof</div>
-                  <h3 className="font-serif text-xl text-stone-900 mb-2">{title}</h3>
-                  <p className="text-xs text-stone-600 leading-relaxed">{body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── AI ANSWER REALITY: FEAR + ROI ──────────────────── */}
-        <section className="px-4 sm:px-6 py-16 border-t border-stone-100 bg-stone-900 text-white">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <div>
-                <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-4">What Buyers See vs. What You Claim</div>
-                <div className="space-y-4">
-                  <div className="bg-stone-800/60 border border-stone-700 p-4 rounded-sm">
-                    <div className="text-[9px] font-mono uppercase tracking-widest text-stone-500 mb-2">Your Site Says</div>
-                    <div className="text-sm text-stone-300 font-mono">&ldquo;The most advanced laser treatment in the city.&rdquo;</div>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <ArrowDown className="h-5 w-5 text-stone-500" />
-                  </div>
-                  <div className="bg-red-900/20 border border-red-800/50 p-4 rounded-sm">
-                    <div className="text-[9px] font-mono uppercase tracking-widest text-red-400 mb-2">ChatGPT Tells Buyers</div>
-                    <div className="text-sm text-red-300 font-mono">&ldquo;Several clinics in [City] offer advanced laser treatments. No single provider is consistently cited as the most advanced.&rdquo;</div>
-                  </div>
-                </div>
-                <div className="mt-6 space-y-3 text-sm text-stone-400 leading-relaxed">
-                  <p>AI answer engines cross-reference your claims against public evidence. If there's no proof adjacent to your claim, they ignore it — or worse, recommend a competitor who links to data.</p>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <div className="bg-stone-800/40 border border-stone-700 p-6 rounded-sm">
-                  <div className="flex items-start gap-3">
-                    <Ban className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm text-stone-300 leading-relaxed font-serif italic">&ldquo;A Series B startup lost a $2M deal when an AI research agent told the buyer their claims were unverifiable. The deal died in diligence. AuditGPT exists to prevent this scenario.&rdquo;</p>
-                      <p className="text-[10px] font-mono text-stone-500 mt-2">Anonymized — deal intelligence from founder network</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-stone-800/40 border border-stone-700 p-5 rounded-sm text-center">
-                    <div className="text-2xl font-serif text-white mb-1">52 → 84</div>
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400">Claim Health Score</div>
-                    <p className="text-xs text-stone-500 mt-2">After 11 rewrites and 9 new proof blocks</p>
-                  </div>
-                  <div className="bg-stone-800/40 border border-stone-700 p-5 rounded-sm text-center">
-                    <div className="text-2xl font-serif text-white mb-1">14 days</div>
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400">AI Correction Time</div>
-                    <p className="text-xs text-stone-500 mt-2">AI engines stopped recommending competitors on core queries</p>
-                  </div>
-                </div>
-                <a href="/ai-answer-reality" className="block w-full text-center border border-stone-600 text-stone-300 py-3 rounded-sm text-xs font-mono uppercase tracking-widest hover:bg-stone-800 hover:text-white transition-colors">
-                  See Full AI Answer Reality Report →
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── INTERACTIVE SAMPLE ─────────────────────────────── */}
-        <section className="px-4 sm:px-6 py-16 border-t border-stone-100 bg-stone-50">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-center text-stone-400 mb-6">Explore a live Claim Intelligence Report</div>
-            <div className="bg-white border border-stone-200 shadow-xl rounded-sm overflow-hidden h-[600px] w-full relative">
-              <div className="bg-stone-900 border-b border-stone-700 p-3 flex items-center gap-3 absolute top-0 w-full z-10">
-                <div className="flex gap-1.5"><div className="w-3 h-3 rounded-full bg-red-400" /><div className="w-3 h-3 rounded-full bg-amber-400" /><div className="w-3 h-3 rounded-full bg-green-400" /></div>
-                <div className="text-xs font-mono text-stone-400">scrutexity-interactive-sample.pdf</div>
-              </div>
-              <iframe src="/ai-answer-reality/sample" className="w-full h-full pt-[44px] border-none" title="Interactive Sample Report" />
-            </div>
-          </div>
-        </section>
-
-        {/* ── FOUNDER QUOTE ──────────────────────────────────── */}
-        <section className="px-4 sm:px-6 py-10 bg-white border-t border-stone-100">
-          <div className="max-w-2xl mx-auto flex items-center justify-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-stone-200 overflow-hidden flex-shrink-0">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=f3f4f6" alt="Founder avatar" className="w-full h-full object-cover mix-blend-multiply" />
-            </div>
-            <div>
-              <p className="text-sm font-serif italic text-stone-700">&ldquo;We built AuditGPT after watching too many startups lose deals because AI wrote claims their product couldn&apos;t actually prove.&rdquo;</p>
-              <p className="text-xs font-mono uppercase tracking-widest text-stone-400 mt-1">Founder, Scrutexity</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── INTAKE FORM ────────────────────────────────────── */}
-        <section className="px-4 sm:px-6 py-16 border-t border-stone-100 bg-stone-50">
-          <div className="max-w-3xl mx-auto">
-            <div id="intake" className="bg-white border border-stone-200 shadow-md rounded-sm p-6 sm:p-8">
-              <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-stone-500 mb-4">
-                <Sparkles className="h-3.5 w-3.5" /><span>Claim Intelligence Report ($299)</span><span className="text-stone-300 mx-2">·</span>
-                <a href="/snapshot" className="underline underline-offset-4 hover:text-stone-900 transition-colors">Or: Free claim snapshot ($0) →</a>
-              </div>
-              <div className="flex gap-6 mb-5 border-b border-stone-100 pb-4">
-                <label className="flex items-center gap-2 text-sm cursor-pointer font-medium"><input type="radio" checked={inputType === 'website'} onChange={() => setInputType('website')} className="accent-black w-4 h-4" />Website Audit</label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer font-medium"><input type="radio" checked={inputType === 'agent_transcript'} onChange={() => setInputType('agent_transcript')} className="accent-black w-4 h-4" />Agent Guardrail Audit</label>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {inputType === 'website' ? (
-                  <div><label className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-1">Website URL *</label><Input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="yourcompany.com" className="!text-base !rounded-sm !border-black" /></div>
-                ) : (
-                  <div className="col-span-1 sm:col-span-2 mb-2"><label className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-1">Agent Transcript *</label><Textarea value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Paste chatbot or support agent transcript here..." className="!text-base !rounded-sm !border-black min-h-[120px]" /></div>
+                {isScanning && (
+                  <motion.div
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '200%' }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-0 z-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                  />
                 )}
-                <div><label className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-1">Company name</label><Input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Acme Inc." className="!text-base !rounded-sm !border-black" /></div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div><label className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-1">Company type</label>
-                  <Select value={companyType} onValueChange={setCompanyType}><SelectTrigger className="!rounded-sm !border-black !h-10"><SelectValue placeholder="Select type" /></SelectTrigger><SelectContent>{COMPANY_TYPES.map((t) => (<SelectItem key={t} value={t}>{t}</SelectItem>))}</SelectContent></Select>
-                </div>
-                <div><label className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-1">Primary worry</label>
-                  <Select value={worry} onValueChange={setWorry}><SelectTrigger className="!rounded-sm !border-black !h-10"><SelectValue placeholder="What concerns you most?" /></SelectTrigger><SelectContent>{PRIMARY_WORRIES.map((w) => (<SelectItem key={w} value={w}>{w}</SelectItem>))}</SelectContent></Select>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-4 mb-6 text-sm text-stone-700">
-                <label className="flex items-center gap-2"><Checkbox checked={isAgency} onCheckedChange={(c) => setIsAgency(c === true)} />I&apos;m an agency auditing a client</label>
-                <label className="flex items-center gap-2"><Checkbox checked={isMedical} onCheckedChange={(c) => setIsMedical(c === true)} />Medical / wellness business</label>
-              </div>
-              <button onClick={() => { if (!valid) { toast.error(inputType === 'website' ? "Please enter a valid Website URL." : "Please enter a valid transcript (min 10 chars)."); return; } run(); }} disabled={loading} className="btn-cta w-full py-4 text-base">
-                {loading ? (<><Loader2 className="h-5 w-5 mr-2 animate-spin inline" /> RUNNING AUDIT...</>) : (<>GET MY 1-PAGE SNAPSHOT <ArrowRight className="h-5 w-5 ml-2 inline" /></>)}
-              </button>
+                {isScanning && (
+                  <span className="absolute inset-0 z-10 flex items-center justify-center font-medium">
+                    Scanning…
+                  </span>
+                )}
+              </motion.button>
             </div>
-          </div>
-        </section>
+          </motion.form>
 
-        {/* ── HOW IT WORKS ───────────────────────────────────── */}
-        <section className="px-4 sm:px-6 py-20 bg-stone-900 text-white">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 text-center mb-12">How it Works</div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 relative">
-              <div className="hidden md:block absolute top-10 h-px bg-stone-700 z-0" style={{ left: '16.7%', right: '16.7%' }} />
-              {HOW_IT_WORKS.map(({ step, title, desc, icon: Icon }, i) => (
-                <motion.div key={step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE, delay: i * 0.15 }} className="relative flex flex-col items-center text-center px-6 pb-12 md:pb-0">
-                  <motion.div initial={{ scale: 0.5, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: i * 0.15 + 0.1 }} className="relative z-10 w-20 h-20 rounded-full border-2 border-stone-600 bg-stone-800 flex flex-col items-center justify-center mb-6">
-                    <Icon className="h-6 w-6 text-stone-300" strokeWidth={1.5} /><span className="text-[9px] font-mono text-stone-500 mt-1">{step}</span>
-                  </motion.div>
-                  {i < 2 && (<div className="md:hidden flex justify-center mb-6"><div className="flex flex-col items-center gap-1"><div className="w-px h-6 bg-stone-700" /><div className="w-0 h-0 border-l-[5px] border-r-[5px] border-t-[6px] border-l-transparent border-r-transparent border-t-stone-600" /></div></div>)}
-                  <h3 className="font-serif text-xl mb-3 text-white">{title}</h3>
-                  <p className="text-sm text-stone-400 leading-relaxed max-w-xs">{desc}</p>
-                </motion.div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-6 text-sm leading-6 text-[#1C1C1C]/50"
+          >
+            Public pages only. No login. No write access. First-pass review only.
+          </motion.p>
+
+          {/* Compact promise — glass chips */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.7 }}
+            className="mt-14 w-full max-w-2xl"
+          >
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1C1C1C]/45">
+              Your free scan returns a first-pass claim finding
+            </div>
+            <ul className="mt-5 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
+              {PROMISE_ITEMS.map((item) => (
+                <li
+                  key={item}
+                  className="inline-flex items-baseline gap-2 rounded-full border border-[#1C1C1C]/[0.07] bg-white/40 px-4 py-2 text-sm text-[#1C1C1C]/85 backdrop-blur-sm"
+                >
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 translate-y-[-1px] rounded-full bg-[#C86A53]"
+                    aria-hidden
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/pricing"
+              className="mt-5 inline-flex text-sm font-medium text-[#C86A53] transition-colors hover:text-[#1C1C1C]"
+            >
+              Want the full claim inventory? Upgrade to the $497 Claim Intelligence Report.
+            </a>
+          </motion.div>
+
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-16 w-full max-w-4xl text-left"
+          >
+            <div className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#1C1C1C]/45">
+              How the review works
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-[#1C1C1C]/[0.08] bg-[#1C1C1C]/[0.08] sm:grid-cols-2 lg:grid-cols-3">
+              {REVIEW_STEPS.map(([step, label]) => (
+                <div key={step} className="bg-white/50 p-5 backdrop-blur-sm">
+                  <div className="font-mono text-[10px] uppercase tracking-widest text-[#C86A53]">{step}</div>
+                  <div className="mt-2 text-sm font-medium text-[#1C1C1C]/85">{label}</div>
+                </div>
               ))}
             </div>
-          </div>
-        </section>
+          </motion.section>
 
-        {/* ── CONTENT SECTIONS ───────────────────────────────── */}
-        <div className="divide-y divide-stone-100">
-
-          {/* Methodology & Standards */}
-          <section className="px-4 sm:px-6 py-16 bg-white">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Methodology &amp; Standards</div>
-              <h2 className="font-serif text-3xl mb-8 text-stone-900">How we label your claims</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[{ tag: 'Supported', color: 'border-green-200 bg-green-50/40', pill: 'bg-green-50 text-green-900 border-green-200', desc: 'The claim is specific, measurable, and has visible proof directly adjacent to it.' }, { tag: 'Weakly Supported', color: 'border-blue-200 bg-blue-50/40', pill: 'bg-blue-50 text-blue-900 border-blue-200', desc: "There is some proof, but it's vague, buried on another page, or requires the buyer to connect the dots." }, { tag: 'Overstated', color: 'border-amber-200 bg-amber-50/40', pill: 'bg-amber-50 text-amber-900 border-amber-200', desc: 'The business likely does this, but the language stretches beyond what the evidence proves.' }, { tag: 'Unsupported', color: 'border-red-200 bg-red-50/40', pill: 'bg-red-50 text-red-900 border-red-200', desc: 'A naked claim. No data, no customer quotes, no screenshots, no links. Highly likely to be ignored by AI search.' }].map(({ tag, color, pill, desc }, i) => (
-                  <motion.div key={tag} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }} className={`border p-5 rounded-sm ${color}`}>
-                    <span className={`inline-block text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm border mb-3 ${pill}`}>{tag}</span>
-                    <p className="text-sm text-stone-700 leading-relaxed">{desc}</p>
-                  </motion.div>
-                ))}
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="mt-14 grid w-full max-w-4xl grid-cols-1 gap-4 text-left md:grid-cols-3"
+          >
+            {REVIEW_SCOPE.map(([title, body]) => (
+              <div key={title} className="border border-[#1C1C1C]/[0.08] bg-white/40 p-5 backdrop-blur-sm">
+                <h2 className="text-sm font-semibold text-[#1C1C1C]">{title}</h2>
+                <p className="mt-3 text-sm leading-6 text-[#1C1C1C]/60">{body}</p>
               </div>
-              <div className="mt-8 bg-stone-50 border border-stone-200 p-6 rounded-sm">
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-                  {METHODOLOGY_STEPS.map(({ step, title, desc }) => (
-                    <div key={step}>
-                      <div className="text-[10px] font-mono text-stone-400 mb-1">Step {step}</div>
-                      <div className="text-sm font-serif text-stone-900 mb-1">{title}</div>
-                      <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 pt-4 border-t border-stone-200 text-xs text-stone-400 font-mono">
-                  <Eye className="h-3 w-3 inline mr-1" /> Methodology is re-tested monthly against live ChatGPT, Perplexity, Gemini, and Copilot outputs to minimize false positives.
-                </div>
-              </div>
-            </div>
-          </section>
+            ))}
+          </motion.section>
 
-          {/* Why AuditGPT Exists */}
-          <section className="px-4 sm:px-6 py-16 bg-stone-50">
-            <div className="max-w-3xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Why AuditGPT Exists</div>
-              <p className="text-lg text-stone-800 leading-relaxed mb-4">AI made it easy to publish confident websites, landing pages, comparison pages, sales copy, and product claims in minutes.</p>
-              <p className="text-lg text-stone-800 leading-relaxed mb-4">But faster publishing created a new problem: your business may now be saying more than it can clearly prove.</p>
-              <p className="text-base text-stone-600 leading-relaxed">AuditGPT reviews buyer-facing pages and identifies which claims are supported, which need evidence, which are overstated, and which should be rewritten before buyers, investors, partners, or AI search systems repeat them.</p>
-            </div>
-          </section>
-
-          {/* What the Free Snapshot Checks */}
-          <section className="px-4 sm:px-6 py-16 bg-white">
-            <div className="max-w-3xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">What the Free Snapshot Checks</div>
-              <h2 className="font-serif text-2xl mb-6 text-stone-900">The free snapshot focuses on one thing: <strong>Can this page prove what it claims?</strong></h2>
-              <ul className="space-y-3 mb-4">{['One claim that needs stronger proof', 'One missing or weak evidence signal', 'One safer rewrite or recommended fix', 'One next step inside the Scrutexity system'].map((item) => (<li key={item} className="flex items-start gap-3"><CheckCircle2 className="h-4 w-4 text-stone-400 mt-0.5 flex-shrink-0" /><span className="text-stone-700 text-sm">{item}</span></li>))}</ul>
-              <p className="text-sm text-stone-400 font-mono">This is not a legal review, compliance certification, SEO audit, or ranking report. It is a claim intelligence snapshot.</p>
-            </div>
-          </section>
-
-          {/* What Paid Audits Add */}
-          <section className="px-4 sm:px-6 py-16 bg-stone-50">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">What Paid Audits Add</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                <div className="bg-white border border-stone-200 rounded-sm p-6">
-                  <h3 className="font-serif text-xl mb-3 text-stone-900">Claim Intelligence Report — $299</h3>
-                  <p className="text-sm text-stone-600 mb-4">A deeper review of one homepage, landing page, or sales page. Outcome: <span className="font-medium italic">Ship a buyer-safe page in 7 days.</span></p>
-                  <ul className="space-y-2">{['5–7 claim and proof findings', 'Dated Claim Intelligence Receipt', 'Reviewed by AuditGPT badge + static summary', 'Supported / overstated / unsupported labels', 'Evidence gaps', 'Safer framing recommendations', 'AI/search readability notes', 'Claim drift notes', '7-day fix list'].map((item) => (<li key={item} className="flex items-start gap-2 text-sm text-stone-700"><CheckCircle2 className="h-3.5 w-3.5 text-stone-400 mt-0.5 flex-shrink-0" />{item}</li>))}</ul>
-                </div>
-                <div className="bg-white border border-stone-200 rounded-sm p-6">
-                  <h3 className="font-serif text-xl mb-3 text-stone-900">Claim Drift Monitoring — $299/mo</h3>
-                  <p className="text-sm text-stone-600 mb-4">A founder-led review across up to five buyer-facing surfaces. Outcome: <span className="font-medium italic">De-risk your claims before diligence.</span></p>
-                  <ul className="space-y-2">{['Homepage or landing page', 'Pricing or plans page', 'About, proof, case study, or comparison page', 'Claim and evidence review', 'AI/search readability review', 'Reputation and proof surface review', 'Claim drift tracking', '30-day action plan'].map((item) => (<li key={item} className="flex items-start gap-2 text-sm text-stone-700"><CheckCircle2 className="h-3.5 w-3.5 text-stone-400 mt-0.5 flex-shrink-0" />{item}</li>))}</ul>
-                  <p className="text-xs italic text-stone-400 mt-4">*During the founder-led launch period, five-surface audits are manually reviewed across up to five URLs.*</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Who It Is For */}
-          <section className="px-4 sm:px-6 py-16 bg-white">
-            <div className="max-w-3xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Who It Is For</div>
-              <h2 className="font-serif text-2xl mb-6 text-stone-900">AuditGPT is built for businesses where claims matter.</h2>
-              <ul className="space-y-3">{['AI and SaaS startups preparing for launch, fundraising, or category positioning', 'Agencies that need client-ready trust and claim reviews', 'Founder-led companies using AI tools to publish faster than they can verify', 'Med spas and wellness brands with high-trust buyer journeys', 'Local service businesses where weak proof and unclear follow-up lose demand'].map((item) => (<li key={item} className="flex items-start gap-3"><ArrowRight className="h-4 w-4 text-stone-400 mt-0.5 flex-shrink-0" /><span className="text-stone-700 text-sm">{item}</span></li>))}</ul>
-              <div className="mt-8 bg-stone-50 border border-stone-200 p-5 rounded-sm">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-stone-500 mb-3">Micro Case: Series B AI SaaS</h3>
-                <p className="text-sm text-stone-700 leading-relaxed mb-3"><span className="font-medium">Before:</span> Claim Health Score 52. AI engines recommended a direct competitor on 3 core queries. <span className="font-medium">What changed:</span> 11 rewrites, 9 new proof blocks, and 3 evidence citations added to the homepage. <span className="font-medium">After:</span> Claim Health Score 84. AI engines stopped recommending the competitor within 14 days.</p>
-                <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400">Anonymized early user result</div>
-              </div>
-            </div>
-          </section>
-
-          {/* Scrutexity Next Step */}
-          <section className="px-4 sm:px-6 py-16 bg-stone-900 text-white">
-            <div className="max-w-3xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Scrutexity Next Step</div>
-              <p className="text-lg text-stone-200 mb-6">AuditGPT does not stop at diagnosis. Depending on what the report finds, Scrutexity can help with:</p>
-              <ul className="space-y-3">{['Governed claim rewrites', 'AI Answer Reality monitoring', 'Verification and trust assets', 'Revenue leakage insights', 'Agency white-label reporting', 'Manual review'].map((item) => (<li key={item} className="flex items-start gap-3"><CheckCircle2 className="h-4 w-4 text-stone-500 mt-0.5 flex-shrink-0" /><span className="text-stone-300 text-sm">{item}</span></li>))}</ul>
-            </div>
-          </section>
-
-          {/* ── GOVERNED GROWTH / COMPLIANCE PANEL ──────────── */}
-          <section className="px-4 sm:px-6 py-16 bg-white">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Governed Growth, Not Legal Advice</div>
-              <h2 className="font-serif text-3xl mb-8 text-stone-900">How claim intelligence sits alongside compliance</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="border border-stone-200 p-6 rounded-sm">
-                  <Lock className="h-6 w-6 text-stone-400 mb-4" />
-                  <h3 className="font-serif text-lg mb-2 text-stone-900">Prevent Misrepresentation</h3>
-                  <p className="text-sm text-stone-600 leading-relaxed">AuditGPT catches claims that overstate capability, inflate results, or make unverifiable guarantees — before buyers or regulators do.</p>
-                </div>
-                <div className="border border-stone-200 p-6 rounded-sm">
-                  <TrendingUp className="h-6 w-6 text-stone-400 mb-4" />
-                  <h3 className="font-serif text-lg mb-2 text-stone-900">Reduce Diligence Friction</h3>
-                  <p className="text-sm text-stone-600 leading-relaxed">For startups raising rounds or preparing for exit: a pre-vetted claim inventory accelerates legal and technical due diligence by surfacing evidence gaps early.</p>
-                </div>
-                <div className="border border-stone-200 p-6 rounded-sm">
-                  <ShieldCheck className="h-6 w-6 text-stone-400 mb-4" />
-                  <h3 className="font-serif text-lg mb-2 text-stone-900">AI Guardrail Integration</h3>
-                  <p className="text-sm text-stone-600 leading-relaxed">AuditGPT findings can plug into existing LLM guardrail stacks, RAG content pipelines, and content review workflows — helping teams that ship with AI verify before they publish.</p>
-                </div>
-              </div>
-              <div className="bg-stone-50 border border-stone-200 p-6 rounded-sm">
-                <div className="flex items-start gap-3">
-                  <Eye className="h-5 w-5 text-stone-400 mt-0.5 flex-shrink-0" />
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    <p className="mb-2"><strong className="text-stone-700">For investors &amp; acquirers:</strong> We scan your target&rsquo;s public footprint and AI Answer Reality before you sign a term sheet. Surface unsupported claims, evidence gaps, and AI distortion patterns that could become liabilities post-acquisition.</p>
-                    <p><strong className="text-stone-700">Audited X+ sites</strong> for claim drift and AI answer distortion across med spa, SaaS, fintech, and agency verticals since 2025. We eat our own dog food — see our <a href="/self-audit" className="underline text-stone-700 hover:text-stone-900">quarterly self-audit →</a></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
+          {/* Legal footer copy */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="mt-14 max-w-2xl text-[13px] leading-relaxed text-[#1C1C1C]/45"
+          >
+            AuditGPT reviews public pages only and compares marketing language
+            against source-linked enforcement patterns and AI-generated claim
+            distortions. It does not provide legal, clinical, regulatory, or
+            medical advice. Reviewed does not mean approved, endorsed, or
+            error-free.
+          </motion.p>
         </div>
-
-        {/* ── FOUNDER CTA: SHIP IN 7 DAYS ──────────────────── */}
-        <section className="px-4 sm:px-6 py-16 bg-stone-900 text-white border-t border-stone-700">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-4">Ship an AI-safe Homepage in 7 Days</div>
-            <h2 className="font-serif text-3xl sm:text-4xl mb-6 text-white">A decisive move for high-growth brands</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 max-w-2xl mx-auto">
-              <div className="bg-stone-800 border border-stone-700 p-5 rounded-sm">
-                <div className="text-2xl font-serif text-white mb-1">1</div>
-                <div className="text-xs text-stone-400 mt-1">Submit URL</div>
-                <p className="text-[11px] text-stone-500 mt-1">Give us a single buyer-facing page.</p>
-              </div>
-              <div className="bg-stone-800 border border-stone-700 p-5 rounded-sm">
-                <div className="text-2xl font-serif text-white mb-1">2</div>
-                <div className="text-xs text-stone-400 mt-1">Review Findings</div>
-                <p className="text-[11px] text-stone-500 mt-1">Get your claim inventory with evidence gaps mapped.</p>
-              </div>
-              <div className="bg-stone-800 border border-stone-700 p-5 rounded-sm">
-                <div className="text-2xl font-serif text-white mb-1">3</div>
-                <div className="text-xs text-stone-400 mt-1">Apply Rewrites</div>
-                <p className="text-[11px] text-stone-500 mt-1">Ship safer copy with our recommendations.</p>
-              </div>
-            </div>
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4">
-              <a href="/snapshot" className="bg-white text-stone-900 px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-200 transition-colors flex items-center">Run Free Snapshot <ArrowRight className="h-4 w-4 ml-2" /></a>
-              <a href="/pricing" className="text-stone-400 underline underline-offset-4 hover:text-white transition-colors text-xs font-mono uppercase tracking-widest">Or: Join the Launch Cohort →</a>
-            </div>
-            <p className="text-[10px] font-mono text-stone-500 mt-6">Limited to 10 high-risk, high-growth brands. Includes founder-led onboarding.</p>
-          </div>
-        </section>
-
-        {/* ── SELF-AUDIT BANNER ──────────────────────────────── */}
-        <div className="px-4 sm:px-6 py-8 bg-white border-t border-stone-200">
-          <div className="max-w-5xl mx-auto bg-stone-50 border border-stone-200 rounded-sm p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="flex-1">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-1">We audit ourselves quarterly</div>
-              <div className="font-serif text-xl text-stone-900">View AuditGPT&apos;s own Visibility &amp; Trust Review</div>
-              <p className="text-xs text-stone-500 mt-1">See how we remediated our own claims. We eat our own dog food in public.</p>
-            </div>
-            <a href="/self-audit" className="text-xs font-mono uppercase tracking-wider border border-stone-900 px-5 py-2.5 rounded-sm hover:bg-stone-900 hover:text-white transition-colors flex-shrink-0">View Self-Audit →</a>
-          </div>
-        </div>
-        <p className="text-xs text-stone-400 py-8 text-center max-w-3xl mx-auto px-4">Disclaimer: AuditGPT does not provide legal, clinical, regulatory, ranking, revenue, or compliance advice. It identifies visible gaps in claims, evidence, AI/search readability, and demand paths based on the surfaces reviewed.</p>
       </main>
 
-      <footer className="border-t border-stone-200 bg-stone-900">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-stone-400">
-          <span className="font-mono">AuditGPT by Scrutexity · Claim Intelligence for businesses where trust matters.</span>
-          <div className="flex items-center gap-4">
-            <a href="/promises" className="underline hover:text-white transition-colors">Promises &amp; Anti-Promises</a>
-            <a href="/legal" className="underline hover:text-white transition-colors">Terms &amp; Privacy</a>
-          </div>
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-[#1C1C1C]/[0.08] px-6 py-8">
+        <div className="mx-auto mb-4 max-w-5xl text-sm italic leading-6 text-[#1C1C1C]/50">
+          Optimization vendors grade their own work. Bureaus keep the record.
+        </div>
+        <div className="mx-auto flex max-w-5xl flex-col gap-2 text-sm leading-6 text-[#1C1C1C]/60 sm:flex-row sm:items-center sm:justify-between">
+          <span>AuditGPT is a Scrutexity product.</span>
+          <a
+            href="/claim-review-methodology"
+            className="font-medium text-[#1C1C1C]/80 transition-colors hover:text-[#C86A53]"
+          >
+            How we review claims →
+          </a>
         </div>
       </footer>
     </div>

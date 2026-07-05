@@ -7,9 +7,9 @@ import { JsonLd, ScrutexityOrganizationSchema, AuditGPTSoftwareSchema } from "@/
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://auditgpt.ai"),
-  title: "AuditGPT — AI Answer Reality & Claim Intelligence",
+  title: "AuditGPT by Scrutexity — Public claim scanner for med-spa and wellness pages",
   description:
-    "AuditGPT by Scrutexity. The claim intelligence platform for high-risk, high-growth brands. Scan your website and see how AI engines describe your business.",
+    "Paste a public med-spa or wellness page and get a first-pass review of unsupported claims, weak proof, and safer wording. Public pages only. No login. A Scrutexity product.",
   keywords: [
     "AI Answer Reality",
     "claim intelligence",
@@ -29,18 +29,18 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "AuditGPT — AI Answer Reality & Claim Intelligence",
+    title: "AuditGPT by Scrutexity — Public claim scanner for med-spa and wellness pages",
     description:
-      "AuditGPT by Scrutexity. The claim intelligence platform for high-risk, high-growth brands.",
+      "Paste a website URL and get a first-pass review of unsupported claims, weak proof, and safer wording.",
     type: "website",
-    siteName: "AuditGPT",
-    images: [{ url: "/logo-full.png", width: 1200, height: 285, alt: "AuditGPT" }],
+    siteName: "AuditGPT by Scrutexity",
+    images: [{ url: "/logo-full.png", width: 1200, height: 285, alt: "AuditGPT by Scrutexity" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AuditGPT — AI Answer Reality & Claim Intelligence",
+    title: "AuditGPT by Scrutexity — Public claim scanner for med-spa and wellness pages",
     description:
-      "Scan your website, monitor unsupported claims, and see how AI engines describe your business. AuditGPT by Scrutexity.",
+      "Paste a website URL and get a first-pass review of unsupported claims, weak proof, and safer wording.",
     images: ["/logo-full.png"],
   },
 };

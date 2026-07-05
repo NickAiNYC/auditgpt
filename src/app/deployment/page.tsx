@@ -113,7 +113,7 @@ export default function DeploymentPage() {
           <p className="text-stone-600 mb-8 max-w-xl">
             Point AuditGPT at one public page and see which claims hold up. No account, no integration.
           </p>
-          <a href="/snapshot" className="bg-stone-900 text-white font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-sm inline-block">
+          <a href="/auditgpt" className="bg-stone-900 text-white font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-sm inline-block">
             Get a Free Snapshot
           </a>
         </section>

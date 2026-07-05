@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "AuditGPT - Claim Support Review",
-  "version": "1.0.0",
-  "description": "One-click instant claim support review. Find evidence gaps and get safer positioning recommendations.",
+  "name": "AuditGPT Claim Receipt",
+  "version": "1.1.0",
+  "description": "Pre-publish claim review for the current page. Generate a dated AuditGPT receipt and reviewed-badge summary.",
   "permissions": [
     "activeTab",
     "scripting"

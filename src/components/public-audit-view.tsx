@@ -359,7 +359,7 @@ export function PublicAuditView({
               <p className="text-sm text-slate-600 mb-6 max-w-md mx-auto font-mono">
                 Find the claims your website cannot yet prove — before a prospect, investor, or client does.
               </p>
-              <a href="/snapshot" className="btn-cta text-sm" style={{ width: 'auto', padding: '1rem 2.5rem', display: 'inline-flex' }}>
+              <a href="/auditgpt" className="btn-cta text-sm" style={{ width: 'auto', padding: '1rem 2.5rem', display: 'inline-flex' }}>
                 RUN YOUR OWN AUDIT <ArrowRight className="h-4 w-4 ml-2" />
               </a>
             </div>

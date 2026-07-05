@@ -44,6 +44,12 @@ export const ClaimSchema = z.object({
     'keep', 'soften', 'add_proof', 'rewrite', 'remove',
     'split_claim', 'requires_review', 'monitor'
   ]),
+  // CIA Red Team adversarial assessment (optional — null until red-team pass runs)
+  red_team_assessment: z.object({
+    survived: z.boolean(),        // true = claim held up under adversarial attack
+    vulnerability: z.string(),    // the key weakness exposed (empty string if survived)
+    attack_vector: z.string(),    // which CIA technique found it: "assumption_check" | "pre_mortem" | "competitor" | "customer_review" | ""
+  }).optional(),
 });
 
 export const ClaimAuditSummarySchema = z.object({
@@ -57,6 +63,13 @@ export const ClaimAuditSummarySchema = z.object({
   critical_priority_count: z.number(),
   claim_support_score: z.number(),
   executive_summary: z.string(),
+  // CIA Red Team — how many claims survived adversarial testing
+  red_team_summary: z.object({
+    claims_tested: z.number(),
+    claims_survived: z.number(),
+    claims_killed: z.number(),
+    biggest_vulnerability: z.string(),
+  }).optional(),
 });
 
 export const ClaimAuditSchema = z.object({

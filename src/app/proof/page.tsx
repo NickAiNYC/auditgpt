@@ -32,7 +32,7 @@ export default function ProofCenterPage() {
         {/* Status Header */}
         <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-8 border-b border-stone-200 mb-16 print:mb-8">
           <div className="font-mono text-[10px] text-stone-500 uppercase tracking-widest flex items-center gap-3">
-            Proof Center <span className="opacity-50">|</span> Access: Public
+            Proof &amp; Boundaries <span className="opacity-50">|</span> Access: Public
           </div>
           <button
             onClick={() => window.print()}
@@ -45,11 +45,30 @@ export default function ProofCenterPage() {
         {/* Hero Section */}
         <section className="mb-20 print:break-inside-avoid">
           <h1 className="text-4xl md:text-5xl font-medium tracking-tight mb-6 text-stone-900" style={{ fontFamily: '"Instrument Serif", serif' }}>
-            Proof Center
+            Proof &amp; Boundaries
           </h1>
           <p className="text-lg text-stone-600 font-light leading-relaxed max-w-3xl">
-            What AuditGPT produces, and how we describe our own posture &mdash; for buyers, IT, and anyone evaluating the tool. We link only to things that are real.
+            What AuditGPT produces, what it never claims, and what exists today &mdash; for buyers, agencies, IT, and anyone evaluating the tool. The sequence is receipt first, stronger proof after cleanup.
           </p>
+        </section>
+
+        <section className="mb-20 bg-white border border-stone-200 p-6 sm:p-8 rounded-sm shadow-sm print:break-inside-avoid">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-stone-400 mb-6 flex items-center gap-2">
+            <span className="w-4 h-[1px] bg-stone-300"></span> Trust center map
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              ['What AuditGPT produces', 'Dated receipts, review record summaries, cleanup queues, monitoring history, and safer wording recommendations.'],
+              ['What AuditGPT never claims', 'No legal advice, clinical review, compliance certification, approval, ranking guarantee, or revenue promise.'],
+              ['What exists today', 'Sample snapshots, sample claim records, the review methodology, and transparent notes about missing SOC2, pentest, and public case studies.'],
+            ].map(([step, title, body]) => (
+              <div key={step} className="border border-stone-200 bg-stone-50 p-4 rounded-sm">
+                <div className="font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-3">{step}</div>
+                <h3 className="font-serif text-lg text-stone-900 mb-2">{title}</h3>
+                <p className="text-xs text-stone-600 leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Index Grid */}
@@ -81,15 +100,27 @@ export default function ProofCenterPage() {
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Live</span>
                   </div>
                 </a>
+                <a href="/claim-review-methodology" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Claim Review Methodology</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Method</span>
+                  </div>
+                </a>
+                <a href="/state-of-medspa-ai-answer-reality" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View State of Med-Spa AI Answer Reality</h3>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Report</span>
+                  </div>
+                </a>
                 <a href="/verified/sample" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Review Badge</h3>
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Review Record Summary</h3>
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
                   </div>
                 </a>
                 <a href="/agency" className="block group bg-white border border-stone-200 p-4 rounded-sm hover:border-stone-400 transition-colors shadow-sm">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Review Certificate</h3>
+                    <h3 className="font-medium text-sm text-stone-900 group-hover:underline decoration-stone-300 underline-offset-4">View Sample Claim Intelligence Receipt</h3>
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">Sample</span>
                   </div>
                 </a>
@@ -142,7 +173,7 @@ export default function ProofCenterPage() {
                 <p className="text-sm text-stone-600 mb-6 leading-relaxed">
                   The fastest proof is your own page. Point AuditGPT at one buyer-facing URL and see which claims hold up.
                 </p>
-                <a href="/snapshot" className="inline-block font-mono text-[10px] uppercase tracking-widest border border-stone-300 px-4 py-2 hover:bg-white transition-all rounded-sm text-stone-600 bg-white">
+                <a href="/auditgpt" className="inline-block font-mono text-[10px] uppercase tracking-widest border border-stone-300 px-4 py-2 hover:bg-white transition-all rounded-sm text-stone-600 bg-white">
                   Get a Free Snapshot →
                 </a>
               </div>

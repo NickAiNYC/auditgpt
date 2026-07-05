@@ -120,12 +120,17 @@ model RescanLock {
 
 model ExpiryNotification {
   id           String    @id @default(cuid())
-  auditId      String    @unique
+  auditId      String
+  // "claim_expiry" — legacy per-claim expiry notice (existing reaper)
+  // "stale_warning" — day-30 heads-up before the review is marked stale
+  // "stale_expired" — day-45 notice that the review is now marked stale
+  stage        String    @default("claim_expiry")
   audit        Audit     @relation(fields: [auditId], references: [id], onDelete: Cascade)
   attemptedAt  DateTime  @default(now())
   sentAt       DateTime?
   error        String?
 
+  @@unique([auditId, stage])
   @@index([sentAt])
 }
 
@@ -200,7 +205,7 @@ model Audit {
   agentConfigs      AgentConfig[]
   claims            AuditClaim[]
   rescanLock        RescanLock?
-  expiryNotification ExpiryNotification?
+  expiryNotifications ExpiryNotification[]
   expiryRescanJob   ExpiryRescanJob?
   deployFixPR       DeployFixPR?
   createdAt         DateTime             @default(now())
@@ -342,4 +347,113 @@ model AgencyClient {
   updatedAt DateTime @updatedAt
   
   @@unique([agencyId, url])
+}
+
+model DistortionLog {
+  id            String   @id @default(cuid())
+  domain        String
+  query         String
+  answerPayload String   // JSON: what the AI answer engine returned
+  sourcePayload String?  // JSON: the source page content checked
+  status        String   // "observed" | "distortion_detected" | "clean"
+  digest        String   // SHA-256 digest of the record
+  checkedAt     DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  @@index([domain, checkedAt])
+  @@index([status])
+  @@unique([digest])
+}
+
+model PromptDefinition {
+  id         String
+  version    Int
+  promptHash String
+  promptText String
+  createdAt  DateTime  @default(now())
+  retiredAt  DateTime?
+  observations Observation[]
+
+  @@id([id, version])
+  @@unique([promptHash])
+}
+
+model Observation {
+  id                 String   @id @default(cuid())
+  domain             String
+  sourceUrl          String   // the URL we requested (pre-redirect)
+  resolvedUrl        String?  // the URL that actually served the bytes (post-redirect); null on capture failure
+  pageSnapshotHash   String
+  rawSnapshotLocation String?
+  snapshotByteLength Int?
+  snapshotStorageStatus String?
+  captureMethod      String?
+  httpStatus         Int?
+  contentType        String?
+  capturedAt         DateTime @default(now())
+  observedAt         DateTime @default(now())
+  aiSurface          String?
+  modelProvider      String?
+  modelVersionId     String?
+  modelVersionSource String?
+  promptId           String?
+  promptVersion      Int?
+  promptText         String?
+  promptHash         String?
+  answerPayload      String?
+  answerDigest       String?
+  promptDefinition   PromptDefinition? @relation(fields: [promptId, promptVersion], references: [id, version], onDelete: SetNull)
+  claimStates        ClaimState[]
+  lifecycleEvents    ClaimLifecycleEvent[]
+
+  @@index([domain, observedAt])
+  @@index([pageSnapshotHash])
+  @@index([answerDigest])
+  @@index([promptId, promptVersion])
+}
+
+model ClaimState {
+  id                  String   @id @default(cuid())
+  observationId       String
+  observation         Observation @relation(fields: [observationId], references: [id], onDelete: Cascade)
+  claimHash           String
+  stateHash           String
+  claimText           String
+  normalizedClaimText String
+  supportState        String?
+  discrepancyType     String?
+  severity            String?
+  sourceLocator       String?
+  createdAt           DateTime @default(now())
+
+  @@unique([observationId, sourceLocator])
+  @@index([claimHash])
+  @@index([stateHash])
+  @@index([sourceLocator])
+}
+
+model ClaimLifecycleEvent {
+  id                       String   @id @default(cuid())
+  claimHash                String
+  domain                   String
+  eventType                String
+  observationId            String
+  observation              Observation @relation(fields: [observationId], references: [id], onDelete: Cascade)
+  priorObservationId       String?
+  pageSnapshotHash         String
+  priorStateHash           String?
+  aiSurface                String?
+  modelVersionId           String?
+  promptId                 String?
+  observedAt               DateTime
+  priorObservedAt          DateTime?
+  chainPosition            Int
+  latencyFromPriorEventMs  BigInt?
+  eventDigest              String
+  createdAt                DateTime @default(now())
+
+  @@unique([eventDigest])
+  @@index([domain, observedAt])
+  @@index([claimHash, chainPosition])
+  @@index([eventType])
 }

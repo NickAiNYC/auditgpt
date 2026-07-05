@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <style>
       body {
-        width: 300px;
+        width: 340px;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         padding: 16px;
         margin: 0;
@@ -35,6 +35,28 @@
         margin: 0 0 16px 0;
         line-height: 1.4;
       }
+      .eyebrow {
+        font-size: 10px;
+        color: #78716c;
+        margin: 0 0 10px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 700;
+      }
+      .page {
+        background: #f5f5f4;
+        border: 1px solid #e7e5e4;
+        border-radius: 4px;
+        color: #57534e;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.35;
+        margin: 0 0 12px 0;
+        max-height: 42px;
+        overflow: hidden;
+        padding: 8px;
+        word-break: break-all;
+      }
       button {
         width: 100%;
         background: #111;
@@ -58,13 +80,25 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
+      .secondary {
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+        color: #57534e;
+        font-size: 11px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
     </style>
   </head>
   <body>
-    <h1><img class="logo" src="logo-full.png" alt="AuditGPT"> Claim Support Scanner</h1>
-    <p>Extract all testable claims from this page to scan for support gaps, evidence signals, and safer framing options.</p>
-    <button id="scanBtn">Run Free Claim Snapshot</button>
-    <div class="footer">AuditGPT Verified</div>
+    <h1><img class="logo" src="logo-full.png" alt="AuditGPT"> Claim Receipt</h1>
+    <div class="eyebrow">Pre-publish gate</div>
+    <div id="pageUrl" class="page">Reading current tab...</div>
+    <p>Review the current page for unsupported claims, proof gaps, AI answer distortion, and safer framing before it goes live.</p>
+    <button id="scanBtn">Generate Claim Intelligence Receipt</button>
+    <a id="methodLink" class="secondary" href="#">View methodology</a>
+    <div class="footer">Reviewed, not approved or compliant</div>
     <script src="popup.js"></script>
   </body>
 </html>

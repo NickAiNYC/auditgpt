@@ -3,18 +3,21 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Loader2, ShieldCheck, Activity, FileText, AlertTriangle, PenTool } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import { motion } from 'framer-motion';
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Doctrine-aligned Stripe Price IDs. Each env var must point to a Stripe Price
 // whose amount matches the public price — verify in the Stripe Dashboard.
-//   Claim Intelligence Report ...... $299 one-time
-//   Claim Drift Monitoring ......... $299/month
-//   Agency Founding Beta ........... $499/month (first 5 partners — ACTIVE checkout)
+//   Claim Intelligence Report ...... $497 one-time
+//   Guardian ....................... $1,497/month (handled by direct sales until Stripe Price is active)
+//   Agency Receipt Beta ............ $499/month (first 5 partners — ACTIVE checkout)
 //   Agency Partner Plan ............ $799/month (swap agency tier to this after the cohort fills)
 const STRIPE_PRICE_IDS = {
   claimIntelligenceReport: process.env.NEXT_PUBLIC_STRIPE_CLAIM_INTELLIGENCE_REPORT_299 || '',
-  claimDriftMonitoring: process.env.NEXT_PUBLIC_STRIPE_CLAIM_DRIFT_MONITORING_299_MONTHLY || '',
+  guardian: process.env.NEXT_PUBLIC_STRIPE_GUARDIAN_1497_MONTHLY || '',
   agencyFoundingBeta: process.env.NEXT_PUBLIC_STRIPE_AGENCY_FOUNDING_BETA_499_MONTHLY || '',
   agencyPartner: process.env.NEXT_PUBLIC_STRIPE_AGENCY_PARTNER_799_MONTHLY || '',
 } as const;
@@ -31,6 +34,7 @@ interface Tier {
   scanDepth: string;
   priceId: string | null;
   cta: string;
+  ctaHref?: string;
   highlight: boolean;
   mode: 'payment' | 'subscription' | 'free';
 }
@@ -38,14 +42,14 @@ interface Tier {
 const TIERS: Tier[] = [
   {
     id: 'free',
-    name: 'Snapshot',
+    name: 'Free Visibility Snapshot',
     label: 'Free',
     price: '$0',
     cadence: '',
-    description: 'A quick sanity check for founders — see if your page has claim risks before shipping.',
-    forWhom: 'Founder sanity-check',
-    outcome: 'Know if this page is safe to ship.',
-    scanDepth: '1 page scan',
+    description: 'A first-pass read-only scan that returns one unsupported claim, one proof gap, and one safer rewrite.',
+    forWhom: 'Initial baseline',
+    outcome: 'Know what this page is claiming before you ship.',
+    scanDepth: '1 public page',
     priceId: null,
     cta: 'Run Snapshot',
     highlight: false,
@@ -53,44 +57,45 @@ const TIERS: Tier[] = [
   },
   {
     id: 'evidence',
-    name: 'Claim Intelligence Report',
-    label: '$299 one-time',
-    price: '$299',
+    name: 'Claim Exposure Audit',
+    label: '$497 one-time',
+    price: '$497',
     cadence: 'One-time',
-    description: 'Full audit, evidence mapping, and safer rewrites so you can ship your flagship page with confidence.',
-    forWhom: 'Launching a new funnel',
-    outcome: 'Ship a buyer-safe flagship page in 7 days.',
-    scanDepth: '5–7 claims, score, rewrites',
+    description: 'Diagnostic claim mapping, evidence proximity notes, governed replacements, and a dated Owner Brief.',
+    forWhom: 'High-claim launch',
+    outcome: 'Leave with a dated review record and replacement queue.',
+    scanDepth: '5-7 claims, Owner Brief, governance path',
     priceId: STRIPE_PRICE_IDS.claimIntelligenceReport,
-    cta: 'Get the $299 Report',
-    highlight: false,
+    cta: 'Authorize Audit',
+    highlight: true,
     mode: 'payment',
   },
   {
-    id: 'monitor',
-    name: 'Claim Drift Monitoring',
-    label: '$299/month',
-    price: '$299',
+    id: 'guardian',
+    name: 'Guardian',
+    label: '$1,497/month',
+    price: '$1,497',
     cadence: '/month',
-    description: 'Continuous monitoring across surfaces — de-risk your claims before investors or regulators ask.',
-    forWhom: 'Fundraising / M&A readiness',
-    outcome: 'De-risk your claims before diligence.',
-    scanDepth: '5 surfaces, 30-day plan',
-    priceId: STRIPE_PRICE_IDS.claimDriftMonitoring,
-    cta: 'Start Claim Drift Monitoring',
-    highlight: true,
-    mode: 'subscription',
+    description: 'Ongoing read-only monitoring across public surfaces for claim drift, proof gaps, and AI answer distortion. Includes AI Distortion Watch as an add-on.',
+    forWhom: 'Founder-led claim governance',
+    outcome: 'Maintain a current claim ledger as public pages and AI answers change.',
+    scanDepth: '5 public surfaces, monthly baseline, AI Distortion Watch',
+    priceId: null,
+    cta: 'Request Guardian',
+    ctaHref: 'mailto:hello@auditgpt.ai?subject=Guardian%20Claim%20Intelligence%20Pilot',
+    highlight: false,
+    mode: 'free',
   },
   {
     id: 'agency',
-    name: 'Agency Founding Beta',
+    name: 'Agency Receipt Beta',
     label: 'First 5 partners · $799/mo after',
     price: '$499',
     cadence: '/month',
-    description: 'White-label claim audits for your client roster. Founding Beta: $499/mo for the first 5 partners, then the Agency Partner Plan is $799/mo.',
+    description: 'White-label Owner Briefs for high-claim launches. Founding Beta: $499/mo for the first 5 partners, then the agency rate is $799/mo.',
     forWhom: 'Agencies & consultancies',
-    outcome: 'Turn claim audits into billable retainers.',
-    scanDepth: 'Multi-client, white-label',
+    outcome: 'Attach a client-ready review artifact to high-claim launches.',
+    scanDepth: '10 Owner Briefs/mo, white-label',
     priceId: STRIPE_PRICE_IDS.agencyFoundingBeta,
     cta: 'Join the Founding Beta',
     highlight: false,
@@ -102,17 +107,19 @@ interface FeatureRow {
   name: string;
   free: string;
   evidence: string;
-  monitor: string;
+  guardian: string;
   agency: string;
 }
 
 const CAPABILITIES: FeatureRow[] = [
-  { name: 'Initial Scan', free: '[ Active ]', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Evidence Mapping', free: '—', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Safer Rewrites', free: '—', evidence: '[ Active ]', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'Continuous Monitoring', free: '—', evidence: '—', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'AI Answer Reality', free: '—', evidence: '—', monitor: '[ Active ]', agency: '[ Active ]' },
-  { name: 'White-Label Exports', free: '—', evidence: '—', monitor: '—', agency: '[ Active ]' },
+  { name: 'Read-Only Scan', free: '[ Active ]', evidence: '[ Active ]', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Diagnostic Claim Mapping', free: '—', evidence: '[ Active ]', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Owner Brief', free: '—', evidence: '[ Active ]', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Review Record Summary', free: '—', evidence: '[ Active ]', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Governed Replacements', free: '—', evidence: '[ Active ]', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'Continuous Baseline', free: '—', evidence: '—', guardian: '[ Active ]', agency: '[ Active ]' },
+  { name: 'AI Distortion Watch', free: '—', evidence: '—', guardian: '[ Included ]', agency: '[ Active ]' },
+  { name: 'White-Label Exports', free: '—', evidence: '—', guardian: '—', agency: '[ Active ]' },
 ];
 
 interface ComparisonRow {
@@ -123,10 +130,10 @@ interface ComparisonRow {
 }
 
 const COMPARISON: ComparisonRow[] = [
-  { plan: 'Snapshot', forWhom: 'Founder sanity-check', scanDepth: '1-page spot check', outcome: 'Know if this page is safe to ship.' },
-  { plan: 'Claim Intelligence Report', forWhom: 'Launching a new funnel', scanDepth: '5–7 claims, score, rewrites', outcome: 'Ship a buyer-safe flagship page in 7 days.' },
-  { plan: 'Claim Drift Monitoring', forWhom: 'Fundraising / M&A readiness', scanDepth: '5 surfaces, 30-day plan', outcome: 'De-risk your claims before diligence.' },
-  { plan: 'Agency Partner Plan', forWhom: 'Agencies & consultancies', scanDepth: 'Multi-client, white-label', outcome: 'Turn claim audits into billable retainers.' },
+  { plan: 'Free Visibility Snapshot', forWhom: 'Initial baseline', scanDepth: '1 public page', outcome: 'Surface one exposure signal.' },
+  { plan: 'Claim Exposure Audit', forWhom: 'High-claim launch', scanDepth: '5-7 claims, Owner Brief', outcome: 'Leave with a dated review record and governance path.' },
+  { plan: 'Guardian', forWhom: 'Founder-led claim governance', scanDepth: '5 surfaces, monthly baseline, AI Distortion Watch', outcome: 'Maintain a current claim ledger.' },
+  { plan: 'Agency Receipt Beta', forWhom: 'Agencies & consultancies', scanDepth: '10 Owner Briefs/mo, white-label', outcome: 'Attach a client-ready artifact to high-claim launches.' },
 ];
 
 export default function PricingPage() {
@@ -166,8 +173,8 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <header className="border-b border-border bg-white">
+    <div className="min-h-screen flex flex-col bg-[#FAF9F6]">
+      <header className="border-b border-[#E7DFD3] bg-white/80 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
             <Logo variant="full" height={28} />
@@ -179,7 +186,7 @@ export default function PricingPage() {
             <a href="/pricing" className="hover:text-foreground">Pricing</a>
             <a href="/proof" className="hover:text-foreground hidden sm:inline-block">Proof</a>
             <a href="/agency" className="hover:text-foreground">Partners</a>
-            <a href="/snapshot" className="text-accent hover:text-foreground font-bold">Run Claim Snapshot</a>
+            <a href="/auditgpt" className="text-accent hover:text-foreground font-bold">Run Claim Snapshot</a>
           </div>
         </div>
       </header>
@@ -189,20 +196,36 @@ export default function PricingPage() {
           {/* Hero */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4">
-              <div className="h-2 w-2 rounded-none bg-black animate-pulse" />
+              <div className="h-2 w-2 rounded-none bg-[#E2725B]" />
               <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-                Pricing
+                Diagnostic Run
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl mb-4 leading-tight">
-              Simple claim intelligence audits for teams that need proof before they publish.
+              Secure your visibility baseline.
             </h1>
+            <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-600">
+              Execute a diagnostic claim run on your highest-traffic public marketing asset. The $497 Claim Exposure Audit includes an Owner Brief, source-linked pattern notes, and governed replacement language. Reviewed does not mean approved, compliant, certified, or independently confirmed.
+            </p>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
+              AI-visibility tools tell you if you were mentioned. We prove what
+              was claimed, against what you claimed, on a date certain.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto mb-12 grid grid-cols-1 md:grid-cols-3 border border-[#E7DFD3] bg-white">
+            {['Read-only integration', 'Source-linked pattern matching', 'Owner Brief deliverable'].map((item) => (
+              <div key={item} className="border-b border-slate-200 p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+                <FileText className="mb-6 h-5 w-5 text-[#E2725B]" />
+                <p className="text-sm font-medium text-slate-900">{item}</p>
+              </div>
+            ))}
           </div>
 
           {/* Stat Banner */}
-          <div className="bg-slate-900 text-white px-6 py-4 mb-12 max-w-3xl mx-auto text-center">
+          <div className="bg-[#1A1A1A] text-white px-6 py-4 mb-12 max-w-3xl mx-auto text-center">
             <p className="font-mono text-sm uppercase tracking-wider">
-              <span className="font-bold text-lg">10–20</span> unsupported claims surfaced per page on average
+              Establish your ledger. Align public claims. Document support before surfaces change.
             </p>
           </div>
 
@@ -231,6 +254,11 @@ export default function PricingPage() {
                 />
 
                 <div className="mb-6">
+                  {tier.id === 'evidence' && (
+                    <div className="mb-4 inline-flex border border-[#E2725B]/30 bg-[#F8E9E2] px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest text-[#A24E39]">
+                      Recommended baseline
+                    </div>
+                  )}
                   <h2 className="font-mono text-sm uppercase tracking-widest font-bold mb-1">
                     {tier.name}
                   </h2>
@@ -261,23 +289,65 @@ export default function PricingPage() {
                   For whom: {tier.forWhom}
                 </p>
 
-                <button
-                  onClick={() => handleCheckout(tier.id, tier.mode, tier.priceId)}
-                  disabled={checkingOut === tier.id}
-                  className={`w-full py-3 text-xs font-mono uppercase tracking-widest transition-colors ${
-                    tier.highlight
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-slate-900 text-white hover:bg-slate-800'
-                  }`}
-                >
-                  {checkingOut === tier.id ? (
-                    <>
-                      <Loader2 className="h-3 w-3 mr-2 animate-spin inline" /> CONNECTING...
-                    </>
-                  ) : (
-                    tier.cta
-                  )}
-                </button>
+                {tier.id === 'evidence' && (
+                  <div className="mb-6 h-24 relative overflow-hidden flex items-center justify-center">
+                    {/* Preview Cards Stack */}
+                    {[
+                      { icon: Activity, title: 'Baseline', color: 'text-[#E2725B]', bg: 'bg-[#F8E9E2]' },
+                      { icon: AlertTriangle, title: 'Pattern Match', color: 'text-[#A24E39]', bg: 'bg-[#F8E9E2]' },
+                      { icon: PenTool, title: 'Owner Brief', color: 'text-[#0B3D2E]', bg: 'bg-[#E8EFE9]' }
+                    ].map((card, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 15, x: i * 8 - 8, rotate: (i - 1) * 3 }}
+                        whileInView={{ opacity: 1, y: 0, x: i * 12 - 12, rotate: (i - 1) * 4 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: EASE }}
+                        className={`absolute w-32 h-16 border border-slate-200 rounded-sm shadow-sm bg-white p-2 flex flex-col justify-between hover:z-10 hover:shadow-md transition-shadow z-[${i}]`}
+                      >
+                         <div className={`w-5 h-5 rounded-sm ${card.bg} flex items-center justify-center`}>
+                           <card.icon className={`w-3 h-3 ${card.color}`} />
+                         </div>
+                         <div className="text-[9px] font-mono uppercase tracking-widest text-slate-500">
+                           {card.title}
+                         </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
+                {tier.ctaHref ? (
+                  <a
+                    href={tier.ctaHref}
+                    className="block w-full bg-slate-900 py-3 text-center text-xs font-mono uppercase tracking-widest text-white transition-colors hover:bg-[#E2725B]"
+                  >
+                    {tier.cta}
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (tier.mode === 'free') {
+                        router.push('/auditgpt');
+                        return;
+                      }
+                      handleCheckout(tier.id, tier.mode, tier.priceId ?? undefined);
+                    }}
+                    disabled={checkingOut === tier.id}
+                    className={`w-full py-3 text-xs font-mono uppercase tracking-widest transition-colors ${
+                      tier.highlight
+                        ? 'bg-[#E2725B] text-white hover:bg-[#1A1A1A]'
+                        : 'bg-slate-900 text-white hover:bg-[#E2725B]'
+                    }`}
+                  >
+                    {checkingOut === tier.id ? (
+                      <>
+                        <Loader2 className="h-3 w-3 mr-2 animate-spin inline" /> CONNECTING...
+                      </>
+                    ) : (
+                      tier.cta
+                    )}
+                  </button>
+                )}
 
                 {/* Capabilities inside the card */}
                 <div className="mt-8 pt-6 border-t border-slate-100 space-y-3">
@@ -294,7 +364,7 @@ export default function PricingPage() {
                             isExcluded
                               ? 'text-slate-400'
                               : isActive
-                              ? 'text-green-700'
+                          ? 'text-[#0B3D2E]'
                               : 'text-slate-800'
                           }`}
                         >
@@ -308,16 +378,39 @@ export default function PricingPage() {
             ))}
           </div>
 
+          <div className="max-w-4xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] border border-slate-200 bg-white">
+            <div className="border-b border-slate-200 p-6 sm:p-8 lg:border-b-0 lg:border-r">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 mb-3">Deliverable preview</div>
+              <h2 className="font-serif text-3xl text-slate-900 leading-tight">What the $497 Claim Exposure Audit gives you</h2>
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                A clear document your owner, agency client, operator, or internal reviewer can act on without a dashboard walkthrough.
+              </p>
+            </div>
+            <div className="divide-y divide-slate-200">
+              {[
+                ['Diagnostic claim table', '5-7 claims labeled supported, weak, overstated, or unsupported.'],
+                ['Evidence proximity notes', 'Where proof is visible, missing, buried, or too vague.'],
+                ['Governed replacement queue', 'Draft language that keeps the business intent without unsupported certainty.'],
+                ['Owner Brief', 'Dated summary of reviewed URL, scope, findings, and 30-day activation path.'],
+              ].map(([title, body]) => (
+                <div key={title} className="grid gap-2 p-5 sm:grid-cols-[160px_1fr]">
+                  <div className="text-sm font-semibold text-slate-900">{title}</div>
+                  <div className="text-sm leading-relaxed text-slate-600">{body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Done-for-you hand-off to Scrutexity */}
-          <div className="max-w-4xl mx-auto mb-16 border border-slate-200 bg-slate-50 p-6 sm:p-8">
+          <div className="max-w-4xl mx-auto mb-16 border border-[#E7DFD3] bg-white p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 mb-2">Want the fixes done for you?</div>
-                <h3 className="font-serif text-2xl text-slate-900 mb-1">Med Spa Claim Cleanup Sprint — $1,997</h3>
-                <p className="text-sm text-slate-600 max-w-xl leading-relaxed">After your $299 report, Scrutexity rewrites the flagged claims and builds the proof assets for you. Delivered by Scrutexity, not self-serve.</p>
+                <h3 className="font-serif text-2xl text-slate-900 mb-1">Governed Asset Activation — via Scrutexity</h3>
+                <p className="text-sm text-slate-600 max-w-xl leading-relaxed">After your Owner Brief, Scrutexity can help operationalize replacement language and proof artifacts. Delivered by Scrutexity, not self-serve.</p>
               </div>
               <a href="https://scrutexity.com" target="_blank" rel="noopener" className="shrink-0 bg-slate-900 text-white px-6 py-3 text-xs font-mono uppercase tracking-widest hover:bg-slate-800 transition-colors text-center">
-                Get the Sprint via Scrutexity
+                Discuss Activation
               </a>
             </div>
           </div>
@@ -358,7 +451,7 @@ export default function PricingPage() {
                 Limited availability
               </p>
               <p className="font-serif text-lg text-slate-900 leading-relaxed">
-                Join the Launch Cohort — limited to 10 high-risk, high-growth brands. Includes founder-led onboarding.
+                Pilot access is reviewed for fit. No scarcity tactics, no compliance certification, no revenue promise.
               </p>
             </div>
           </div>
@@ -367,7 +460,7 @@ export default function PricingPage() {
       </main>
 
       {/* Trust & Security Footer */}
-      <section className="bg-slate-50 border-t border-border mt-auto">
+      <section className="bg-white border-t border-[#E7DFD3] mt-auto">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <div className="flex flex-col md:flex-row items-center gap-8 justify-between">
             <div className="max-w-md">
@@ -376,7 +469,7 @@ export default function PricingPage() {
                 <h3 className="font-serif text-xl">How we handle your data</h3>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                AuditGPT reads only public web pages. We don&rsquo;t connect to your systems and we don&rsquo;t process patient data.
+                AuditGPT reads only public web pages. We don&rsquo;t connect to your systems, write to your properties, or process patient data.
               </p>
             </div>
 
@@ -387,7 +480,7 @@ export default function PricingPage() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />
-                <span className="text-xs font-mono text-slate-700">Read-only — no system access</span>
+                <span className="text-xs font-mono text-slate-700">Read-only intelligence layer</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-1 w-1 bg-green-500" />

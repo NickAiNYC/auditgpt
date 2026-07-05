@@ -20,6 +20,27 @@ export function Footer() {
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
+            href="/claim-review-methodology"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Methodology
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/ai-claim-accuracy-content-stack"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Content Stack Thesis
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
+            href="/state-of-medspa-ai-answer-reality"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Med-Spa AI Reality
+          </Link>
+          <span className="hidden sm:inline text-muted-foreground">|</span>
+          <Link
             href="/self-audit"
             className="text-muted-foreground hover:text-foreground underline underline-offset-4"
           >
@@ -34,7 +55,7 @@ export function Footer() {
           </Link>
           <span className="hidden sm:inline text-muted-foreground">|</span>
           <Link
-            href="/snapshot"
+            href="/auditgpt"
             className="text-muted-foreground hover:text-foreground underline underline-offset-4"
           >
             Free Claim Snapshot

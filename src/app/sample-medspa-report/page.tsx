@@ -57,7 +57,7 @@ export default function SampleReportDashboard() {
                 <span className="font-mono text-sm font-bold text-amber-600">{data.overallGovernanceScore}/100</span>
               </div>
             </div>
-            <a href="/snapshot" className="bg-stone-900 text-stone-50 font-mono text-xs uppercase tracking-widest px-5 py-2.5 rounded-sm hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap">
+            <a href="/auditgpt" className="bg-stone-900 text-stone-50 font-mono text-xs uppercase tracking-widest px-5 py-2.5 rounded-sm hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap">
               Run Free Snapshot
             </a>
           </div>
@@ -96,7 +96,7 @@ export default function SampleReportDashboard() {
             <TabsTrigger value="summary" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Summary</TabsTrigger>
             <TabsTrigger value="claims" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Claims</TabsTrigger>
             <TabsTrigger value="ai" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">AI Answer Reality</TabsTrigger>
-            <TabsTrigger value="leakage" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Leakage</TabsTrigger>
+            <TabsTrigger value="leakage" className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm">Claim Drift</TabsTrigger>
           </TabsList>
 
           {/* TAB 1: EXECUTIVE SUMMARY */}
@@ -346,7 +346,7 @@ export default function SampleReportDashboard() {
                      <p className="text-stone-400 text-sm mb-6 max-w-xl mx-auto">
                        The same gaps that make a claim hard to verify are the gaps that make a buyer hesitate. Run a free snapshot on your own page to see which claims hold up.
                      </p>
-                     <a href="/snapshot" className="inline-block bg-white text-stone-900 font-mono text-xs uppercase tracking-widest px-6 py-3 rounded-sm hover:bg-stone-100 transition-colors shadow-sm">
+                     <a href="/auditgpt" className="inline-block bg-white text-stone-900 font-mono text-xs uppercase tracking-widest px-6 py-3 rounded-sm hover:bg-stone-100 transition-colors shadow-sm">
                         Get a Free Snapshot
                      </a>
                   </div>
@@ -361,10 +361,10 @@ export default function SampleReportDashboard() {
       <footer className="max-w-4xl mx-auto px-6 mt-20 text-center">
         <div className="border-t border-stone-200 pt-12 pb-8">
            <h3 className="text-2xl font-serif mb-4" style={{ fontFamily: '"Instrument Serif", serif' }}>
-             "AI made publishing cheap. Scrutexity makes growth governable."
+             "AuditGPT reviews public claims before trust becomes a problem."
            </h3>
            <p className="text-stone-500 text-sm mb-8">
-             This sample report is just step one. Real growth requires real governance.
+             This sample report is just step one. Better claims require visible support.
            </p>
            
            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xs font-mono uppercase tracking-widest text-stone-400">
@@ -378,7 +378,7 @@ export default function SampleReportDashboard() {
            </div>
 
            <div className="mt-12">
-             <a href="/snapshot" className="inline-block bg-stone-900 text-stone-50 font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-md">
+             <a href="/auditgpt" className="inline-block bg-stone-900 text-stone-50 font-mono text-sm uppercase tracking-widest px-8 py-4 rounded-sm hover:bg-stone-800 transition-colors shadow-md">
                 Run Your Own Free Snapshot
              </a>
            </div>
