@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/snapshot",
+        destination: "/auditgpt",
+        permanent: false,
+      },
+    ];
+  },
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts"],
   },

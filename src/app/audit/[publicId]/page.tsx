@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getPublicAudit, computeReportReview } from '@/lib/audit-persistence';
 import { PublicAuditView } from '@/components/public-audit-view';
 import { EnhancedSnapshotReport } from '@/components/enhanced-snapshot-report';
+import { FirstPassReport } from '@/components/first-pass-report';
 import { enhancedSnapshotFromAuditResult } from '@/lib/audit/snapshot-report-adapter';
 import { Logo } from '@/components/logo';
 import { ShareButtons } from '@/components/share-buttons';
@@ -45,6 +46,48 @@ export default async function PublicAuditPage({ params, searchParams }: PageProp
   const devBypass = sp?.unlocked === '1' && !isProduction;
   const isUnlocked = !!audit.paidAt || devBypass;
 
+  // Free scans get the first-pass document; paid reports keep the full views.
+  if (!isUnlocked) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white text-black">
+        <header className="border-b border-[#EAEAEA] bg-white">
+          <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-5 sm:px-8">
+            <Link href="/" className="flex items-center gap-2" aria-label="AuditGPT home">
+              <Logo variant="full" height={26} />
+            </Link>
+            <Link
+              href="/"
+              className="text-xs font-medium text-neutral-500 transition-colors hover:text-black sm:text-sm"
+            >
+              Run another scan
+            </Link>
+          </div>
+        </header>
+
+        <main className="flex-1 px-5 py-12 sm:px-8 sm:py-16">
+          <FirstPassReport
+            audit={audit.auditJson}
+            websiteUrl={audit.websiteUrl || audit.companyName || 'Scanned page'}
+            publicId={audit.publicId}
+            createdAt={audit.createdAt}
+          />
+        </main>
+
+        <footer className="mt-auto border-t border-[#EAEAEA] bg-white px-5 py-8 sm:px-8">
+          <div className="mx-auto flex max-w-4xl flex-col gap-2 text-sm leading-6 text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+            <span>AuditGPT is a Scrutexity product.</span>
+            <a
+              href="/claim-review-methodology"
+              className="font-medium text-neutral-700 transition-colors hover:text-black"
+            >
+              How we review claims →
+            </a>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
   let agencyBranding = undefined;
   if (audit.agencyId) {
     const { db } = await import('@/lib/db');
@@ -83,9 +126,7 @@ export default async function PublicAuditPage({ params, searchParams }: PageProp
           </Link>
           <div className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground">
             <div className="h-1.5 w-1.5 rounded-full bg-black" />
-            <span className="ml-1">
-              {isUnlocked ? 'Full report · Paid' : 'Public report · Free preview'}
-            </span>
+            <span className="ml-1">Full report · Paid</span>
           </div>
         </div>
       </header>
@@ -98,11 +139,6 @@ export default async function PublicAuditPage({ params, searchParams }: PageProp
               {review.expiresAt
                 ? ` · Expires ${review.expiresAt.toLocaleDateString('en-US')}`
                 : ''}
-              {!isUnlocked && (
-                <span className="ml-2 text-amber-600 font-semibold">
-                  · Free preview (3 of {review.scope.claimsReviewed} findings shown)
-                </span>
-              )}
             </div>
             <ShareButtons
               publicId={audit.publicId}
@@ -113,7 +149,7 @@ export default async function PublicAuditPage({ params, searchParams }: PageProp
           {enhancedSnapshot ? (
             <EnhancedSnapshotReport
               report={enhancedSnapshot}
-              mode={isUnlocked ? 'full' : 'free'}
+              mode="full"
               publicId={audit.publicId}
               agencyBranding={agencyBranding}
             />
@@ -121,30 +157,15 @@ export default async function PublicAuditPage({ params, searchParams }: PageProp
             <PublicAuditView
               audit={audit.auditJson}
               createdAt={audit.createdAt}
-              showCta={!isUnlocked}
+              showCta={false}
               publicId={audit.publicId}
             />
           )}
 
-          {!isUnlocked && (
-            <div className="mt-12 border border-stone-200 bg-stone-50 rounded-sm p-8 text-center">
-              <h2 className="font-serif text-2xl mb-2 text-stone-900">See the full report</h2>
-              <p className="text-sm text-stone-600 mb-6 max-w-md mx-auto">
-                Upgrade to see all {review.scope.claimsReviewed} findings, the full AI Answer Reality
-                Receipt, safer rewrites, and the 7-day fix plan.
-              </p>
-              <a
-                href={`/pricing?publicId=${publicId}`}
-                className="inline-block bg-stone-900 text-white px-8 py-3 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors"
-              >
-                Unlock Full Report — $299
-              </a>
-              {devBypass && (
-                <p className="text-xs text-stone-400 mt-3 font-mono">
-                  Dev bypass active (?unlocked=1) — full report visible
-                </p>
-              )}
-            </div>
+          {devBypass && (
+            <p className="text-xs text-stone-400 mt-6 font-mono text-center">
+              Dev bypass active (?unlocked=1) — full report visible
+            </p>
           )}
         </div>
       </main>

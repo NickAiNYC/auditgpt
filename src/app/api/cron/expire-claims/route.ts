@@ -1,6 +1,6 @@
 import { timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { runExpiryReaper } from '@/lib/expiry-reaper';
+import { runExpiryReaper, runStaleMarkSweep } from '@/lib/expiry-reaper';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -20,8 +20,10 @@ async function handle(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const result = await runExpiryReaper();
-  return NextResponse.json(result, { status: result.errors.length ? 207 : 200 });
+  const reaper = await runExpiryReaper();
+  const staleMark = await runStaleMarkSweep();
+  const errorCount = reaper.errors.length + staleMark.errors.length;
+  return NextResponse.json({ reaper, staleMark }, { status: errorCount ? 207 : 200 });
 }
 
 export const GET = handle;

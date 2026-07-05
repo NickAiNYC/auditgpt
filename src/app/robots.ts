@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/internal/', '/api/'],
     },
-    sitemap: 'https://scrutexity.com/sitemap.xml',
+    sitemap: 'https://auditgpt.ai/sitemap.xml',
   };
 }

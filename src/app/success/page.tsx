@@ -15,10 +15,12 @@ export const metadata: Metadata = {
 const PLAN_CONTENT = {
   evidence: {
     label: 'Claim Intelligence Report',
-    priceHint: '$299 one-time',
+    priceHint: '$497 one-time',
     confirm: 'Your Claim Intelligence Report is being prepared.',
     includes: [
       'Claim Health Score',
+      'Dated Claim Intelligence Receipt',
+      'Reviewed by AuditGPT badge + static summary',
       'AI Answer Reality Receipt',
       'Top risky claims — labeled supported / weak / unsupported / overstated',
       'Safer rewrites',
@@ -29,7 +31,7 @@ const PLAN_CONTENT = {
     nextBody:
       'Submit the homepage, landing page, or sales page you want reviewed. Your founder-led report follows by email — typically within 3 business days.',
     ctaLabel: 'Submit your page',
-    ctaHref: '/snapshot',
+    ctaHref: '/auditgpt',
   },
   monitor: {
     label: 'Claim Drift Monitoring',
@@ -45,17 +47,18 @@ const PLAN_CONTENT = {
     nextBody:
       'Submit the surfaces you want tracked. We rescan on a monthly cycle and brief you on what changed.',
     ctaLabel: 'Add your surfaces',
-    ctaHref: '/snapshot',
+    ctaHref: '/auditgpt',
   },
   agency: {
-    label: 'Agency Founding Beta',
+    label: 'Agency Receipt Beta',
     priceHint: '$499 / month',
-    confirm: 'Welcome to the Agency Founding Beta.',
+    confirm: 'Welcome to the Agency Receipt Beta.',
     includes: [
-      'White-label claim audits for your client roster',
+      '10 white-label Claim Intelligence Receipts per month',
+      'Reviewed-badge summaries for client sites',
+      'Launch packet approval language',
       'Founder-led onboarding',
       'Priority audits',
-      'Quarterly Claim Review Certificate for your clients',
     ],
     nextTitle: 'Book your onboarding',
     nextBody:
@@ -75,7 +78,7 @@ const GENERIC = {
   nextTitle: 'Submit your first page',
   nextBody: 'Run a review on the page you want checked and we’ll take it from there.',
   ctaLabel: 'Get started',
-  ctaHref: '/snapshot',
+  ctaHref: '/auditgpt',
 };
 
 function firstParam(v: string | string[] | undefined): string {

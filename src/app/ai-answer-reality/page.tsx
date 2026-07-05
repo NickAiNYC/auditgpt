@@ -42,8 +42,14 @@ export default function AiAnswerRealityPage() {
               AuditGPT checks how public claims, proof gaps, and brand descriptions may be interpreted by AI answer engines — so you can catch unsupported, overstated, or distorted claims before buyers do.
             </p>
             <div className="flex justify-center gap-4">
-              <Link href="/snapshot" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors flex items-center">
+              <Link href="/auditgpt" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors flex items-center">
                 Run Free Snapshot <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
+              <Link href="/state-of-medspa-ai-answer-reality" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
+                Healthcare Index
+              </Link>
+              <Link href="/ai-claim-accuracy-content-stack" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
+                Content Stack Thesis
               </Link>
               <Link href="/sample-medspa-report" className="px-8 py-4 text-base font-mono uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 border border-stone-200 rounded-sm transition-colors flex items-center justify-center shadow-sm">
                 View Med Spa Sample
@@ -51,9 +57,29 @@ export default function AiAnswerRealityPage() {
             </div>
           </div>
 
+          <section className="mb-20 bg-white border border-stone-200 p-6 sm:p-8 rounded-sm shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Link href="/ai-claim-accuracy-content-stack" className="group block border border-stone-200 bg-stone-50 p-6 rounded-sm hover:border-stone-400 transition-colors">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Market thesis</div>
+                <h2 className="font-serif text-2xl text-stone-900 mb-3 group-hover:underline underline-offset-4">AI Claim Accuracy for the Content Stack</h2>
+                <p className="text-sm text-stone-600 leading-relaxed">Why Sitecore buying Scrunch validates AI visibility, and why claim accuracy is the next infrastructure layer.</p>
+              </Link>
+              <Link href="/state-of-medspa-ai-answer-reality" className="group block border border-stone-200 bg-stone-50 p-6 rounded-sm hover:border-stone-400 transition-colors">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Category report</div>
+                <h2 className="font-serif text-2xl text-stone-900 mb-3 group-hover:underline underline-offset-4">State of Med-Spa AI Answer Reality</h2>
+                <p className="text-sm text-stone-600 leading-relaxed">The healthcare wedge: claim risk, AI distortion, and proof gaps across GLP-1, body contouring, injectables, IV therapy, and aesthetics pages.</p>
+              </Link>
+              <Link href="/claim-review-methodology" className="group block border border-stone-200 bg-stone-50 p-6 rounded-sm hover:border-stone-400 transition-colors">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">Methodology</div>
+                <h2 className="font-serif text-2xl text-stone-900 mb-3 group-hover:underline underline-offset-4">Claim Review Methodology</h2>
+                <p className="text-sm text-stone-600 leading-relaxed">How AuditGPT classifies public claims, maps visible support, tests AI answer distortion, and issues a dated receipt.</p>
+              </Link>
+            </div>
+          </section>
+
           {/* What AI tells buyers about you vs what you claim */}
           <section className="mb-20">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-6 text-center">Claim Perception Gap</div>
+            <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-6 text-center">Example claim perception gap</div>
             <div className="bg-white border border-stone-200 rounded-md overflow-hidden shadow-sm">
               <div className="grid grid-cols-2 divide-x divide-stone-200">
                 <div className="p-6 sm:p-8">
@@ -68,7 +94,7 @@ export default function AiAnswerRealityPage() {
                       <p className="text-sm text-stone-700 font-medium">&ldquo;Trusted by thousands&rdquo;</p>
                     </div>
                     <div>
-                      <div className="font-mono text-[11px] uppercase tracking-wider text-stone-500 mb-1">Claim 3</div>
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-stone-500 mb-1">Example risky claim, not AuditGPT language</div>
                       <p className="text-sm text-stone-700 font-medium">&ldquo;100% compliance guaranteed&rdquo;</p>
                     </div>
                   </div>
@@ -92,7 +118,7 @@ export default function AiAnswerRealityPage() {
                 </div>
               </div>
               <div className="bg-stone-900 px-6 py-3 text-center">
-                <p className="text-xs font-mono uppercase tracking-widest text-stone-400">This gap costs you credibility. AuditGPT closes it.</p>
+                <p className="text-xs font-mono uppercase tracking-widest text-stone-400">This gap can cost credibility. AuditGPT shows where public support is missing.</p>
               </div>
             </div>
           </section>
@@ -104,17 +130,17 @@ export default function AiAnswerRealityPage() {
               <div className="bg-white border border-stone-200 p-6 rounded-md shadow-sm">
                 <AlertCircle className="h-6 w-6 text-amber-500 mb-4" />
                 <h3 className="font-serif text-xl mb-2 text-stone-900">Overstated Claims</h3>
-                <p className="text-sm text-stone-600 leading-relaxed">AI systems cross-reference claims against external reality. If you say "number one," AI will check. If there's no proof, it will ignore you or label the claim as unverified.</p>
+                <p className="text-sm text-stone-600 leading-relaxed">AI answer systems often compare claims against visible public evidence. If you say "number one" without proof nearby, the claim may be softened, ignored, or treated as unverified.</p>
               </div>
               <div className="bg-white border border-stone-200 p-6 rounded-md shadow-sm">
                 <ShieldCheck className="h-6 w-6 text-amber-500 mb-4" />
                 <h3 className="font-serif text-xl mb-2 text-stone-900">Proof Gaps</h3>
-                <p className="text-sm text-stone-600 leading-relaxed">When evidence is buried on a PDF three clicks deep, LLMs won't find it. They summarize what's immediately adjacent to the claim.</p>
+                <p className="text-sm text-stone-600 leading-relaxed">When evidence is buried on a PDF three clicks deep, answer systems may miss it. They tend to summarize what is easiest to find near the claim.</p>
               </div>
               <div className="bg-white border border-stone-200 p-6 rounded-md shadow-sm">
                 <AlertTriangle className="h-6 w-6 text-amber-500 mb-4" />
                 <h3 className="font-serif text-xl mb-2 text-stone-900">Competitor Displacement</h3>
-                <p className="text-sm text-stone-600 leading-relaxed">If a competitor has weaker marketing but stronger visible evidence, AI answer engines will cite them over you in buyer research queries.</p>
+                <p className="text-sm text-stone-600 leading-relaxed">If a competitor has weaker marketing but stronger visible evidence, answer engines may be more likely to cite that competitor in buyer research queries.</p>
               </div>
             </div>
           </section>
@@ -160,7 +186,7 @@ export default function AiAnswerRealityPage() {
               <div className="p-8 sm:p-10 text-center">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">Remediation Speed</div>
                 <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-serif italic">
-                  &ldquo;After remediation, AI engines stopped recommending competitors for our top intent query within 14 days.&rdquo;
+                  &ldquo;In an anonymized reviewed case, competitor recommendations changed after remediation was observed over a 14-day review window.&rdquo;
                 </p>
               </div>
               <div className="p-8 sm:p-10 text-center">
@@ -172,7 +198,7 @@ export default function AiAnswerRealityPage() {
               <div className="p-8 sm:p-10 text-center">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">Surfaced per Scan</div>
                 <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-serif italic">
-                  &ldquo;Average 10&ndash;20 unsupported claims surfaced per page scanned.&rdquo;
+                  &ldquo;Early reviewed pages often surface multiple unsupported, weakly supported, or overstated claims.&rdquo;
                 </p>
               </div>
             </div>
@@ -197,19 +223,19 @@ export default function AiAnswerRealityPage() {
             </div>
           </section>
 
-          {/* Mini-Case: The $2M deal */}
+          {/* Example scenario: diligence friction */}
           <section className="mb-20">
             <div className="border-l-4 border-amber-500 bg-amber-50 p-6 sm:p-8 rounded-r-md">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 mb-3">The $2M Deal That Died</div>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-amber-600 mb-3">Example diligence scenario</div>
               <blockquote className="font-serif text-lg sm:text-xl leading-relaxed text-stone-800 mb-4">
-                Startup X lost a $2M deal. An AI research agent told the buyer their claims were unverifiable. 
-                The deal died in diligence. AuditGPT exists to prevent this scenario.
+                A buyer or investor using an AI research agent may see unsupported product claims described as unverifiable. 
+                That can create avoidable diligence friction before your team gets to explain the nuance.
               </blockquote>
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-xs">CX</div>
                 <div>
-                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500">Real Prospect Conversation</div>
-                  <div className="text-[10px] font-mono text-stone-400">From AuditGPT discovery interviews, Q1 2025</div>
+                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500">Illustrative buyer-research scenario</div>
+                  <div className="text-[10px] font-mono text-stone-400">Use as risk framing, not a guaranteed outcome claim.</div>
                 </div>
               </div>
             </div>
@@ -219,7 +245,7 @@ export default function AiAnswerRealityPage() {
           <div className="text-center py-12 border-t border-stone-200">
             <h2 className="font-serif text-3xl mb-4 text-stone-900">Stop guessing what AI thinks of you.</h2>
             <p className="text-stone-500 mb-8 max-w-md mx-auto">Get a fast public-page claim snapshot to see exactly where your evidence gaps are.</p>
-            <Link href="/snapshot" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
+            <Link href="/auditgpt" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
               Run Free Snapshot <ArrowRight className="h-4 w-4 ml-2" />
             </Link>
           </div>
@@ -230,7 +256,7 @@ export default function AiAnswerRealityPage() {
               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600">Fast Track</span>
             </div>
-            <h2 className="font-serif text-3xl mb-4 text-stone-900">Ship an AI-safe homepage in the next 7 days.</h2>
+            <h2 className="font-serif text-3xl mb-4 text-stone-900">Ship a better-supported homepage in the next 7 days.</h2>
             <div className="max-w-lg mx-auto mb-8">
               <div className="grid grid-cols-3 gap-4 text-left">
                 <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
@@ -241,7 +267,7 @@ export default function AiAnswerRealityPage() {
                 <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
                   <div className="font-mono text-xs text-stone-400 mb-1">Step 2</div>
                   <div className="font-mono text-sm font-bold text-stone-900">Review findings</div>
-                  <div className="text-[11px] text-stone-500 mt-1">See every unsupported claim</div>
+                  <div className="text-[11px] text-stone-500 mt-1">See priority unsupported claims</div>
                 </div>
                 <div className="bg-stone-50 border border-stone-200 rounded-md p-4">
                   <div className="font-mono text-xs text-stone-400 mb-1">Step 3</div>
@@ -250,7 +276,7 @@ export default function AiAnswerRealityPage() {
                 </div>
               </div>
             </div>
-            <Link href="/snapshot" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
+            <Link href="/auditgpt" className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center justify-center">
               Start Your 7-Day Sprint <ArrowRight className="h-4 w-4 ml-2" />
             </Link>
           </div>
